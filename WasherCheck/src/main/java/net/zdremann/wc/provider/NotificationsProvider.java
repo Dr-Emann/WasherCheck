@@ -47,11 +47,11 @@ public class NotificationsProvider extends ContentProvider {
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int NOTIFICATIONS = 1;
     private static final int NOTIFICATIONS_ID = 2;
-    private static final int NOTIFIED_ROOMS = 3;
+
+    private static final String TABLE_NAME = "notifications";
 
     static {
         URI_MATCHER.addURI(NotificationsContract.AUTHORITY, "notifications", NOTIFICATIONS);
-        URI_MATCHER.addURI(NotificationsContract.AUTHORITY, "notifications/rooms", NOTIFIED_ROOMS);
         URI_MATCHER.addURI(NotificationsContract.AUTHORITY, "notifications/#", NOTIFICATIONS_ID);
     }
 
@@ -67,7 +67,7 @@ public class NotificationsProvider extends ContentProvider {
     public Cursor query(final Uri uri, final String[] projection, String selection, String[] selectionArgs,
                         final String sortOrder) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(Notifications.TABLE_NAME);
+        builder.setTables(TABLE_NAME);
 
         final int uriType = URI_MATCHER.match(uri);
 
@@ -75,7 +75,6 @@ public class NotificationsProvider extends ContentProvider {
             case NOTIFICATIONS_ID:
                 builder.appendWhere(_ID + "=" + uri.getLastPathSegment());
                 break;
-            case NOTIFIED_ROOMS:
             case NOTIFICATIONS:
                 // No Filter
                 break;
@@ -92,8 +91,7 @@ public class NotificationsProvider extends ContentProvider {
             throw new IllegalStateException("Query called before onCreate");
 
         Cursor cursor = builder.query(db, projection,
-                selection, selectionArgs,
-                ((uriType == NOTIFIED_ROOMS) ? ROOM_ID : null), null, sortOrder);
+                selection, selectionArgs, null, null, sortOrder);
 
         assert cursor != null;
 
@@ -107,7 +105,6 @@ public class NotificationsProvider extends ContentProvider {
         final int uriType = URI_MATCHER.match(uri);
         switch (uriType) {
             case NOTIFICATIONS:
-            case NOTIFIED_ROOMS:
                 return Notifications.CONTENT_TYPE;
             case NOTIFICATIONS_ID:
                 return Notifications.CONTENT_ITEM_TYPE;
@@ -127,7 +124,7 @@ public class NotificationsProvider extends ContentProvider {
         SQLiteDatabase db = mWashersDatabase.getWritableDatabase();
         assert db != null;
 
-        id = db.insert(Notifications.TABLE_NAME, null, values);
+        id = db.insert(TABLE_NAME, null, values);
 
         return Uri.withAppendedPath(Notifications.CONTENT_URI, String.valueOf(id));
     }
@@ -158,7 +155,7 @@ public class NotificationsProvider extends ContentProvider {
         if (ctx == null)
             throw new IllegalStateException("delete called before onCreate");
 
-        rowsAffected = db.delete(Notifications.TABLE_NAME, selection, selectionArgs);
+        rowsAffected = db.delete(TABLE_NAME, selection, selectionArgs);
         ctx.getContentResolver().notifyChange(uri, null);
         return rowsAffected;
     }
@@ -190,7 +187,7 @@ public class NotificationsProvider extends ContentProvider {
         if (ctx == null)
             throw new IllegalStateException("delete called before onCreate");
 
-        rowsAffected = db.update(Notifications.TABLE_NAME, values, selection, selectionArgs);
+        rowsAffected = db.update(TABLE_NAME, values, selection, selectionArgs);
         ctx.getContentResolver().notifyChange(uri, null);
         return rowsAffected;
     }
@@ -200,7 +197,7 @@ public class NotificationsProvider extends ContentProvider {
         private static final String DB_NAME = "washers.db";
         private static final int DB_VERSION = 1;
         private static final String SQL_CREATE =
-                "CREATE TABLE " + Notifications.TABLE_NAME + "(" +
+                "CREATE TABLE " + TABLE_NAME + "(" +
                         _ID + " INTEGER PRIMARY KEY, " +
                         DATE + " INTEGER NOT NULL, " +
                         EXTENDED + " INTEGER NOT NULL DEFAULT " + Notifications.EXTENDED_VALUE_NORMAL + ", " +
@@ -209,7 +206,7 @@ public class NotificationsProvider extends ContentProvider {
                         TYPE + " INTEGER NOT NULL, " +
                         STATUS + " INTEGER NOT NULL )";
         private static final String SQL_CREATE_INDEX =
-                "CREATE UNIQUE INDEX " + IDX_NAME + " ON " + Notifications.TABLE_NAME +
+                "CREATE UNIQUE INDEX " + IDX_NAME + " ON " + TABLE_NAME +
                         "(" + ROOM_ID + ", " + NUMBER + ")";
 
         public WashersDatabase(final Context context) {
@@ -225,7 +222,7 @@ public class NotificationsProvider extends ContentProvider {
         public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP INDEX IF EXISTS " + IDX_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + Notifications.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
                 onCreate(db);
             }
         }

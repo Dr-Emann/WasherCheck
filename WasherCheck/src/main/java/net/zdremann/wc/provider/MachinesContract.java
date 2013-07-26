@@ -30,12 +30,15 @@ import android.provider.BaseColumns;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class MachinesContract {
-    public static final String AUTHORITY = "net.zdremann.machines";
+    public static final String AUTHORITY = "net.zdremann.wc.machines";
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     static final String CACHE_PARAMETER_AGE = "cache_age";
 
     public static class Machines implements BaseColumns, MachinesColumns {
+        private Machines() {
+        }
+
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.net.zdremann.wc.provider.machines";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.net.zdremann.wc.provider.machines";
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, "machines");

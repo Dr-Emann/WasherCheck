@@ -26,7 +26,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public final class NotificationsContract {
-    public static final String AUTHORITY = "net.zdremann.notifications";
+    public static final String AUTHORITY = "net.zdremann.wc.notifications";
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     @SuppressWarnings("UnusedDeclaration")
@@ -34,11 +34,13 @@ public final class NotificationsContract {
         private Notifications() {
         }
 
-        public static final String TABLE_NAME = "notification";
         public static final String PATH = "notifications";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.net.zdremann.wc.provider.notifications";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.net.zdremann.wc.provider.notifications";
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
+
+        public static final String[] ALL_COLUMNS =
+                {_ID, DATE, EXTENDED, ROOM_ID, NUMBER, TYPE, STATUS};
 
         public static final int EXTENDED_VALUE_NORMAL = 0;
         public static final int EXTENDED_VALUE_EXTENDED = 1;

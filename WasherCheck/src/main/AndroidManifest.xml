@@ -74,13 +74,13 @@
 
         <provider
                 android:name=".provider.MachinesProvider"
-                android:authorities="net.zdremann.notifications"
+                android:authorities="net.zdremann.wc.machines"
                 android:exported="false">
         </provider>
 
         <provider
-                android:name=".provider.MachinesProvider"
-                android:authorities="net.zdremann.machines"
+                android:name=".provider.NotificationsProvider"
+                android:authorities="net.zdremann.wc.notifications"
                 android:exported="false">
         </provider>
 
