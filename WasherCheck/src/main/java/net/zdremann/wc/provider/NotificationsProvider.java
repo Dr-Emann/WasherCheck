@@ -22,7 +22,6 @@
 
 package net.zdremann.wc.provider;
 
-import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -43,7 +42,7 @@ import static net.zdremann.wc.provider.NotificationsContract.NotificationsColumn
 import static net.zdremann.wc.provider.NotificationsContract.NotificationsColumns.TYPE;
 import static net.zdremann.wc.provider.NotificationsContract.NotificationsColumns._ID;
 
-public class NotificationsProvider extends ContentProvider {
+public class NotificationsProvider extends InjectingProvider {
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int NOTIFICATIONS = 1;
     private static final int NOTIFICATIONS_ID = 2;

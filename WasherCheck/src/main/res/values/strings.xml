@@ -71,8 +71,6 @@
     <string name="title_activity_room_viewer">Washer Check</string>
     <string name="action_settings">Settings</string>
     <string name="machines_empty">No Machines Found</string>
-    <string name="action_notification_specific">These %1$d %2$s</string>
-    <string name="action_notification_generic">Any %1$d %2$s</string>
     <string name="title_activity_notification_center">Notifications</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
@@ -80,5 +78,7 @@
     <string name="room_empty">Room is empty</string>
     <string name="error_room_download">An error occurred when downloading</string>
     <string name="action_notify">Notification</string>
+    <string name="notify_available">Notify when Available</string>
+    <string name="notify_cycle_complete">Notify when Cycle Complete</string>
 
 </resources>

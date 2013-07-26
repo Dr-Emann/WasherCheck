@@ -32,6 +32,7 @@ import android.support.v4.content.Loader;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -48,6 +50,7 @@ import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.provider.MachinesContract;
 import net.zdremann.wc.provider.MachinesContract.Machines;
+import net.zdremann.wc.provider.NotificationsContract;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -178,8 +181,41 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         super.onStart();
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+        registerForContextMenu(getListView());
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        AdapterView.AdapterContextMenuInfo adapterMenuInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        final Cursor item = (Cursor) mAdapter.getItem(adapterMenuInfo.position);
+        final int idx_status = item.getColumnIndex(Machines.STATUS);
+
+        final int status = item.getInt(idx_status);
+
+        if (status <= NotificationsContract.Notifications.STATUS_VALUE_AVAILABLE) {
+            return;
+        }
+
+        final MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.room_view_contextual, menu);
+        final MenuItem completeBtn = menu.findItem(R.id.action_notify_cycle_complete);
+
+        assert completeBtn != null;
+        completeBtn.setEnabled(status > NotificationsContract.Notifications.STATUS_VALUE_CYCLE_COMPLETE);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_notify_available:
+            case R.id.action_notify_cycle_complete:
+
+        }
+        return super.onContextItemSelected(item);
+    }
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
