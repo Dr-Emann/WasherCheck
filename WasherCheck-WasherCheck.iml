@@ -6,6 +6,7 @@
         <option name="SELECTED_BUILD_VARIANT" value="Debug" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="TODO" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/WasherCheck/build/source/aidl/debug" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
@@ -77,9 +78,9 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="annotations" level="project" />
-    <orderEntry type="library" name="javax.inject-1" level="project" />
-    <orderEntry type="library" name="support-v4-13.0.0" level="project" />
+    <orderEntry type="library" exported="" name="annotations" level="project" />
+    <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-13.0.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -89,10 +90,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="dagger-1.0.1" level="project" />
-    <orderEntry type="library" name="javawriter-1.0.5" level="project" />
-    <orderEntry type="library" name="dagger-compiler-1.0.1" level="project" />
-    <orderEntry type="library" name="libGoogleAnalyticsV2" level="project" />
+    <orderEntry type="library" exported="" name="dagger-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="javawriter-1.0.5" level="project" />
+    <orderEntry type="library" exported="" name="dagger-compiler-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="libGoogleAnalyticsV2" level="project" />
   </component>
 </module>
 
