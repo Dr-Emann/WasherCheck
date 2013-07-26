@@ -27,9 +27,6 @@ import java.lang.annotation.RetentionPolicy;
 
 import javax.inject.Qualifier;
 
-/**
- * Created by DremannZ on 6/21/13.
- */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ForActivity {

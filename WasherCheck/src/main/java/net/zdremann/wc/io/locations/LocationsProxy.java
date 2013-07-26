@@ -37,9 +37,6 @@ import java.util.TreeMap;
 
 import javax.inject.Inject;
 
-/**
- * Created by DremannZ on 6/21/13.
- */
 public class LocationsProxy {
     @NotNull
     private MachineGrouping mRoot;

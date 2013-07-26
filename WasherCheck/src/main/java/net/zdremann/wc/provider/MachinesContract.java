@@ -25,9 +25,6 @@ package net.zdremann.wc.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by DremannZ on 7/23/13.
- */
 @SuppressWarnings("UnusedDeclaration")
 public class MachinesContract {
     public static final String AUTHORITY = "net.zdremann.wc.machines";

@@ -29,9 +29,6 @@ import java.util.List;
 
 import dagger.ObjectGraph;
 
-/**
- * Created by DremannZ on 7/23/13.
- */
 public abstract class InjectingProvider extends ContentProvider {
     private ObjectGraph objectGraph;
 

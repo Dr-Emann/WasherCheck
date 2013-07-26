@@ -38,9 +38,6 @@ import static net.zdremann.wc.provider.MachinesContract.Machines.TIME_REMAINING;
 import static net.zdremann.wc.provider.MachinesContract.Machines.TYPE;
 import static net.zdremann.wc.provider.MachinesContract.Machines._ID;
 
-/**
- * Created by DremannZ on 7/23/13.
- */
 public class MachineListCursor extends AbstractCursor {
 
     private final List<Machine> mMachineList;

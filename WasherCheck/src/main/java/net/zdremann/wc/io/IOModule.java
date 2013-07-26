@@ -29,9 +29,6 @@ import net.zdremann.wc.io.rooms.RoomLoaderModule;
 
 import dagger.Module;
 
-/**
- * Created by DremannZ on 6/21/13.
- */
 @Module(
         includes = {
                 RoomLoaderModule.class,

@@ -26,9 +26,6 @@ import net.zdremann.wc.model.MachineGrouping;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by DremannZ on 6/20/13.
- */
 interface LocationsGetter {
     @NotNull
     public MachineGrouping load();

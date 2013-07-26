@@ -25,9 +25,6 @@ package net.zdremann.wc.ui;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-/**
- * Created by DremannZ on 6/21/13.
- */
 abstract class InjectingFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

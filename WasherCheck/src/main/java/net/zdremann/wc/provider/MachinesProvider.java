@@ -43,9 +43,6 @@ import javax.inject.Inject;
 import static net.zdremann.wc.provider.MachinesContract.AUTHORITY;
 import static net.zdremann.wc.provider.MachinesContract.CACHE_PARAMETER_AGE;
 
-/**
- * Created by DremannZ on 7/23/13.
- */
 public class MachinesProvider extends InjectingProvider {
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);

@@ -38,9 +38,6 @@ import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
-/**
- * Created by DremannZ on 6/21/13.
- */
 abstract class InjectingActivity extends FragmentActivity {
 
     @Inject

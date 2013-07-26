@@ -48,9 +48,6 @@ import static net.zdremann.wc.provider.NotificationsContract.NotificationsColumn
 import static net.zdremann.wc.provider.NotificationsContract.NotificationsColumns.TYPE;
 import static net.zdremann.wc.provider.NotificationsContract.NotificationsColumns._ID;
 
-/**
- * Created by DremannZ on 6/25/13.
- */
 public class DBNotificationProxy implements NotificationsProxy {
 
 

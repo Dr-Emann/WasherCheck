@@ -27,9 +27,6 @@ import net.zdremann.wc.ApplicationModule;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by DremannZ on 6/25/13.
- */
 @Module(
         addsTo = ApplicationModule.class,
         library = true

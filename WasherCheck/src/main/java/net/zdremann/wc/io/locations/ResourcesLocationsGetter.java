@@ -42,9 +42,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-/**
- * Created by DremannZ on 6/20/13.
- */
 public class ResourcesLocationsGetter implements LocationsGetter {
     private static final Map<String, MachineGrouping.Type> ALLOWED_TYPES;
 

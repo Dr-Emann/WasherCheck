@@ -26,9 +26,6 @@ import android.app.Application;
 
 import dagger.ObjectGraph;
 
-/**
- * Created by DremannZ on 6/21/13.
- */
 public class MyApplication extends Application {
     private ObjectGraph mObjectGraph;
 

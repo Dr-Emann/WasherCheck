@@ -27,9 +27,6 @@ import android.support.v4.content.CursorLoader;
 
 import net.zdremann.wc.provider.MachinesContract.Machines;
 
-/**
- * Created by DremannZ on 7/24/13.
- */
 public class TmpRoomLoader extends CursorLoader {
     public TmpRoomLoader(Context context, long roomId) {
         super(context, Machines.buildRoomUri(roomId, 60000L),

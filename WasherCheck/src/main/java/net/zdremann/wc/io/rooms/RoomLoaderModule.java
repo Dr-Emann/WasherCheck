@@ -30,9 +30,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by DremannZ on 6/20/13.
- */
 @Module(
 
         addsTo = ApplicationModule.class,

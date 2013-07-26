@@ -27,9 +27,6 @@ import net.zdremann.wc.io.IOModule;
 
 import dagger.Module;
 
-/**
- * Created by DremannZ on 6/26/13.
- */
 @Module(
         addsTo = ApplicationModule.class,
         includes = {

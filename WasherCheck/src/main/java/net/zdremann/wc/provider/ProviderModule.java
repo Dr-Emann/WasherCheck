@@ -33,9 +33,6 @@ import net.zdremann.wc.ForApplication;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by DremannZ on 7/24/13.
- */
 @Module(
         injects = InjectingProvider.class,
         library = true

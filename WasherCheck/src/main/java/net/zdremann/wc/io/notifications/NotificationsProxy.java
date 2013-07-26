@@ -29,9 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * Created by DremannZ on 6/25/13.
- */
 public interface NotificationsProxy {
     public
     @NotNull

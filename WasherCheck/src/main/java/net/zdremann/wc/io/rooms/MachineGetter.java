@@ -27,9 +27,6 @@ import net.zdremann.wc.model.Machine;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by DremannZ on 6/20/13.
- */
 public interface MachineGetter {
     public List<Machine> getMachines(long roomId) throws IOException;
 }
