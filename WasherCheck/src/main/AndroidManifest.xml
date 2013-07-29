@@ -72,6 +72,8 @@
                     android:value=".ui.RoomChooserActivity"/>
         </activity>
 
+        <service android:name=".service.NotificationService"/>
+
         <provider
                 android:name=".provider.MachinesProvider"
                 android:authorities="net.zdremann.wc.machines"

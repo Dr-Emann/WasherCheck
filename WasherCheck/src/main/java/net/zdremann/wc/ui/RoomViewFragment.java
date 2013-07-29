@@ -22,7 +22,10 @@
 
 package net.zdremann.wc.ui;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -48,9 +51,9 @@ import net.zdremann.wc.ForActivity;
 import net.zdremann.wc.R;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
-import net.zdremann.wc.provider.MachinesContract;
 import net.zdremann.wc.provider.MachinesContract.Machines;
-import net.zdremann.wc.provider.NotificationsContract;
+import net.zdremann.wc.provider.NotificationsContract.Notifications;
+import net.zdremann.wc.service.NotificationService;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +65,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class RoomViewFragment extends InjectingListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
@@ -112,7 +116,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         cursor.moveToFirst();
         Machine.Type lastType = null;
 
-        int idx_type = cursor.getColumnIndex(MachinesContract.Machines.TYPE);
+        int idx_type = cursor.getColumnIndex(Machines.TYPE);
         while (!cursor.isAfterLast()) {
             Machine.Type currentType = Machine.Type.fromInt(cursor.getInt(idx_type));
             if (currentType != lastType)
@@ -205,7 +209,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
         final int status = item.getInt(idx_status);
 
-        if (status <= NotificationsContract.Notifications.STATUS_VALUE_AVAILABLE) {
+        if (status <= Notifications.STATUS_VALUE_AVAILABLE) {
             return;
         }
 
@@ -214,17 +218,39 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         final MenuItem completeBtn = menu.findItem(R.id.action_notify_cycle_complete);
 
         assert completeBtn != null;
-        completeBtn.setEnabled(status > NotificationsContract.Notifications.STATUS_VALUE_CYCLE_COMPLETE);
+        completeBtn.setVisible(status > Notifications.STATUS_VALUE_CYCLE_COMPLETE);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        assert menuInfo != null;
+        final int index = menuInfo.position;
+        final Cursor cursor = (Cursor) mAdapter.getItem(index);
+
+        final ContentResolver contentResolver = getActivity().getContentResolver();
+
+        final ContentValues cv = new ContentValues();
+        cv.put(Notifications.ROOM_ID, mRoomId);
+        cv.put(Notifications.NUMBER, cursor.getInt(cursor.getColumnIndex(Machines.NUMBER)));
+        cv.put(Notifications.DATE, System.currentTimeMillis());
+        cv.put(Notifications.TYPE, cursor.getInt(cursor.getColumnIndex(Machines.TYPE)));
+
         switch (item.getItemId()) {
             case R.id.action_notify_available:
+                cv.put(Notifications.STATUS, Notifications.STATUS_VALUE_AVAILABLE);
+                break;
             case R.id.action_notify_cycle_complete:
-
+                cv.put(Notifications.STATUS, Notifications.STATUS_VALUE_CYCLE_COMPLETE);
+                break;
+            default:
+                return super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
+
+        contentResolver.insert(Notifications.CONTENT_URI, cv);
+        Intent intent = new Intent(getActivity(), NotificationService.class);
+        getActivity().startService(intent);
+        return true;
     }
 
     @Override
