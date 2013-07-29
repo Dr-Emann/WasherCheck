@@ -80,7 +80,6 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-13.0.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -94,6 +93,7 @@
     <orderEntry type="library" exported="" name="javawriter-1.0.5" level="project" />
     <orderEntry type="library" exported="" name="dagger-compiler-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="libGoogleAnalyticsV2" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-18.0.0" level="project" />
   </component>
 </module>
 
