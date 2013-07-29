@@ -37,9 +37,14 @@ import dagger.Provides;
         library = true
 )
 public class RoomLoaderModule {
+    private static final boolean USE_FAKE_GETTER = false;
+
     @Provides
     @Singleton
     MachineGetter provideRoomGetter(InternetMachineGetter roomGetter) {
-        return roomGetter;
+        if (USE_FAKE_GETTER)
+            return new RandomMachineGetter();
+        else
+            return roomGetter;
     }
 }
