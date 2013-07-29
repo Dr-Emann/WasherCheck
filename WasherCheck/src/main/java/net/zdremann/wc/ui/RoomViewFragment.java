@@ -62,6 +62,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import static java.util.concurrent.TimeUnit.*;
+
 public class RoomViewFragment extends InjectingListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
     public static final String ARG_SELECT_MODE = "select_mode";
@@ -130,6 +132,14 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         mAdapter.setSections(sections.toArray(dummy));
 
         setIsLoading(false);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setIsLoading(true);
+                getLoaderManager().getLoader(0).forceLoad();
+            }
+        }, MILLISECONDS.convert(5, MINUTES));
     }
 
     @Override
