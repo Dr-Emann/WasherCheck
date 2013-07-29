@@ -56,10 +56,10 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.RoomChooserActivity"
+                android:name="net.zdremann.wc.ui.RoomChooserActivity"
                 android:label="@string/choose_room"
-                android:parentActivityName=".ui.RoomViewer">
-            <meta-data
+                android:parentActivityName="net.zdremann.wc.ui.RoomViewer">
+        <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="net.zdremann.wc.ui.RoomViewer"/>
         </activity>
