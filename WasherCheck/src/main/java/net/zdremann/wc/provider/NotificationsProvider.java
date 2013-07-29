@@ -123,7 +123,7 @@ public class NotificationsProvider extends InjectingProvider {
         SQLiteDatabase db = mWashersDatabase.getWritableDatabase();
         assert db != null;
 
-        id = db.insert(TABLE_NAME, null, values);
+        id = db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
         return Uri.withAppendedPath(Notifications.CONTENT_URI, String.valueOf(id));
     }
