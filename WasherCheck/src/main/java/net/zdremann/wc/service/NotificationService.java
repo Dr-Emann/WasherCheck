@@ -24,23 +24,28 @@ package net.zdremann.wc.service;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
-import android.widget.Toast;
 
+import net.zdremann.wc.R;
 import net.zdremann.wc.provider.MachinesContract.Machines;
 import net.zdremann.wc.provider.NotificationsContract.Notifications;
+import net.zdremann.wc.ui.RoomViewer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class NotificationService extends IntentService {
 
@@ -80,7 +85,7 @@ public class NotificationService extends IntentService {
             long roomId = notifications.getLong(notif_idx_room_id);
             Cursor machines = rooms.get(roomId);
             if (machines == null) {
-                machines = contentResolver.query(Machines.buildRoomUri(roomId, MILLISECONDS.convert(1, MINUTES)), machineProjection, null, null, null);
+                machines = contentResolver.query(Machines.buildRoomUri(roomId, MILLISECONDS.convert(30, SECONDS)), machineProjection, null, null, null);
                 assert machines != null;
                 rooms.put(roomId, machines);
             }
@@ -92,7 +97,7 @@ public class NotificationService extends IntentService {
                     if (machines.getInt(3) <= notifications.getInt(notif_idx_status)) {
                         finishedNotifications.add(notifications.getLong(notif_idx_id));
                     } else {
-                        long checkThisNext = (long) (6000 * machines.getFloat(4));
+                        long checkThisNext = (long) (MILLISECONDS.convert(1, MINUTES) * machines.getFloat(4)) + MILLISECONDS.convert(10, SECONDS);
                         if (checkThisNext <= 0)
                             checkThisNext = DEFAULT_WAIT_FOR_CYCLE_COMPLETE;
                         nextCheckMillis = Math.min(nextCheckMillis, checkThisNext);
@@ -105,7 +110,23 @@ public class NotificationService extends IntentService {
             contentResolver.delete(Notifications.fromId(notificationId), null, null);
         }
 
-        Toast.makeText(this, "Found " + finishedNotifications.size() + " machines", Toast.LENGTH_SHORT).show();
+        if (finishedNotifications.size() > 0) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            final String title = String.format("%d machines ready", finishedNotifications.size());
+            builder.setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL)
+                    .setContentTitle(title)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setWhen(System.currentTimeMillis())
+                    .setTicker(title)
+                    .setUsesChronometer(true)
+                    .setContentIntent(
+                            PendingIntent.getActivity(this, 1,
+                                    new Intent(this, RoomViewer.class), 0));
+            final Notification notification = builder.build();
+            notificationManager.notify(0, notification);
+        }
+
         Log.d(TAG, "Found " + finishedNotifications.size() + " machines");
 
         if (nextCheckMillis != Long.MAX_VALUE) {
