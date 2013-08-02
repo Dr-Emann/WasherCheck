@@ -23,6 +23,9 @@
 package net.zdremann.wc.provider;
 
 import android.content.ContentProvider;
+import android.content.Context;
+
+import net.zdremann.wc.MyApplication;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,10 +35,15 @@ import dagger.ObjectGraph;
 public abstract class InjectingProvider extends ContentProvider {
     private ObjectGraph objectGraph;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean onCreate() {
-        objectGraph = ObjectGraph.create(getModules().toArray());
+        final Context context = getContext();
+
+        assert context != null;
+        final MyApplication app = (MyApplication) context.getApplicationContext();
+
+        assert app != null;
+        objectGraph = app.getApplicationGraph().plus(getModules().toArray());
         objectGraph.inject(this);
         return false;
     }
@@ -45,6 +53,6 @@ public abstract class InjectingProvider extends ContentProvider {
     }
 
     protected List<Object> getModules() {
-        return Arrays.<Object>asList(new ProviderModule(this));
+        return Arrays.<Object>asList(new ProviderModule());
     }
 }

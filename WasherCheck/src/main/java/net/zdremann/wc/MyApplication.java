@@ -29,11 +29,13 @@ import dagger.ObjectGraph;
 public class MyApplication extends Application {
     private ObjectGraph mObjectGraph;
 
+    public MyApplication() {
+        mObjectGraph = ObjectGraph.create(new ApplicationModule(this));
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mObjectGraph = ObjectGraph.create(new ApplicationModule(this));
     }
 
     public ObjectGraph getApplicationGraph() {

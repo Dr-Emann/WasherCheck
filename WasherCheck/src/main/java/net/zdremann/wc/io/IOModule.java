@@ -22,7 +22,6 @@
 
 package net.zdremann.wc.io;
 
-import net.zdremann.wc.ApplicationModule;
 import net.zdremann.wc.io.locations.LocationsProxyModule;
 import net.zdremann.wc.io.notifications.NotificationsModule;
 import net.zdremann.wc.io.rooms.RoomLoaderModule;
@@ -36,8 +35,7 @@ import dagger.Module;
                 NotificationsModule.class
         },
         library = true,
-        addsTo = ApplicationModule.class
+        complete = false
 )
 public class IOModule {
-
 }

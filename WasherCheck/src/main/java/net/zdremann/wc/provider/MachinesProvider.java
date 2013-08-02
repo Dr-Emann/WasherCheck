@@ -22,6 +22,7 @@
 
 package net.zdremann.wc.provider;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -55,6 +56,8 @@ public class MachinesProvider extends InjectingProvider {
     private final Object cacheLock = new Object();
     @Inject
     MachineGetter mRoomGetter;
+    @Inject
+    ContentResolver mResolver;
     private List<Machine> cache;
     private long cachedRoom = -1;
     private long lastCacheUpdate = -1;
@@ -84,6 +87,7 @@ public class MachinesProvider extends InjectingProvider {
                     if (roomId != cachedRoom || System.currentTimeMillis() - cacheLength > lastCacheUpdate)
                         try {
                             machines = loadMachines(roomId);
+                            mResolver.notifyChange(uri, null);
                         } catch (IOException e) {
                             return null;
                         }
@@ -97,7 +101,10 @@ public class MachinesProvider extends InjectingProvider {
 
         Collections.sort(machines);
 
-        return new MachineListCursor(machines, projection);
+        final MachineListCursor cursor = new MachineListCursor(machines, projection);
+
+        cursor.setNotificationUri(mResolver, uri);
+        return cursor;
     }
 
     private List<Machine> loadMachines(long roomId) throws IOException {

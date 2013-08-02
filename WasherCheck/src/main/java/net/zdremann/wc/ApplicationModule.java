@@ -33,6 +33,9 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
+import net.zdremann.wc.io.FakeIOModule;
+import net.zdremann.wc.io.IOModule;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -41,6 +44,10 @@ import dagger.Provides;
 @Module(
         injects = {
                 MyApplication.class
+        },
+        includes = {
+                IOModule.class,
+                FakeIOModule.class
         },
         library = true
 )

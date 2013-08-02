@@ -27,40 +27,45 @@ import net.zdremann.wc.model.Machine;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
-public class RandomMachineGetter implements MachineGetter {
-    private static final int CAPACITY = 32;
+public class DescendingMachineGetter implements MachineGetter {
+    private static final int MACHINES_RETURNED = 8 * 3;
+    private static final AtomicInteger ITERATION = new AtomicInteger(0);
 
     @Inject
-    public RandomMachineGetter() {
+    public DescendingMachineGetter() {
     }
 
     @Override
     public List<Machine> getMachines(long roomId) throws IOException {
-        ArrayList<Machine> machines = new ArrayList<Machine>(CAPACITY);
-        final Random random = new Random();
-        for (int i = 0; i < CAPACITY / 3; i++) {
-            final Machine machine = new Machine(roomId, 0, i, Machine.Type.WASHER);
-            machine.status = Machine.Status.fromInt(random.nextInt(4));
-            if (machine.status.compareTo(Machine.Status.CYCLE_COMPLETE) > 0)
-                machine.minutesRemaining = random.nextInt(30);
+        final int iteration = ITERATION.getAndIncrement();
+        final ArrayList<Machine> machines = new ArrayList<Machine>();
+
+        for (int i = 0; i < MACHINES_RETURNED / 3; ++i) {
+            final Machine machine = new Machine(roomId, -1, i, Machine.Type.WASHER);
+            machine.status = Machine.Status.fromInt(4 - iteration % 5);
+            if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
+                machine.minutesRemaining = 1;
+            }
             machines.add(machine);
         }
-        for (int i = CAPACITY / 3; i < CAPACITY * 2 / 3; i++) {
-            final Machine machine = new Machine(roomId, 0, i, Machine.Type.DRYER);
-            machine.status = Machine.Status.fromInt(random.nextInt(4));
-            if (machine.status.compareTo(Machine.Status.CYCLE_COMPLETE) > 0)
-                machine.minutesRemaining = random.nextInt(60);
+        for (int i = MACHINES_RETURNED / 3; i < 2 * MACHINES_RETURNED / 3; ++i) {
+            final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER);
+            machine.status = Machine.Status.fromInt(4 - iteration % 5);
+            if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
+                machine.minutesRemaining = 1;
+            }
             machines.add(machine);
         }
-        for (int i = CAPACITY * 2 / 3; i < CAPACITY; i++) {
-            final Machine machine = new Machine(roomId, 0, i, Machine.Type.WASHER);
-            machine.status = Machine.Status.fromInt(random.nextInt(4));
-            if (machine.status.compareTo(Machine.Status.CYCLE_COMPLETE) > 0)
-                machine.minutesRemaining = random.nextInt(1000);
+        for (int i = 2 * MACHINES_RETURNED / 3; i < MACHINES_RETURNED; ++i) {
+            final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN);
+            machine.status = Machine.Status.fromInt(4 - iteration % 5);
+            if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
+                machine.minutesRemaining = 1;
+            }
             machines.add(machine);
         }
 

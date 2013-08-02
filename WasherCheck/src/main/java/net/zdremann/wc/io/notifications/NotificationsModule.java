@@ -22,13 +22,11 @@
 
 package net.zdremann.wc.io.notifications;
 
-import net.zdremann.wc.ApplicationModule;
-
 import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        addsTo = ApplicationModule.class,
+        complete = false,
         library = true
 )
 public class NotificationsModule {

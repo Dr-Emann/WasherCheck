@@ -125,6 +125,11 @@ public class NotificationsProvider extends InjectingProvider {
 
         id = db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
+
+        final Context ctx = getContext();
+        assert ctx != null;
+        ctx.getContentResolver().notifyChange(uri, null);
+
         return Uri.withAppendedPath(Notifications.CONTENT_URI, String.valueOf(id));
     }
 

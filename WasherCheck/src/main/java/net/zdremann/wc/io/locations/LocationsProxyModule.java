@@ -22,7 +22,6 @@
 
 package net.zdremann.wc.io.locations;
 
-import net.zdremann.wc.ApplicationModule;
 import net.zdremann.wc.model.MachineGrouping;
 
 import javax.inject.Singleton;
@@ -31,10 +30,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
+        complete = false,
         injects = {
                 LocationsProxy.class
         },
-        addsTo = ApplicationModule.class
+        library = true
 )
 public class LocationsProxyModule {
 

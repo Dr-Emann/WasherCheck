@@ -28,7 +28,6 @@ import android.view.LayoutInflater;
 
 import net.zdremann.wc.ApplicationModule;
 import net.zdremann.wc.ForActivity;
-import net.zdremann.wc.io.IOModule;
 
 import javax.inject.Singleton;
 
@@ -37,14 +36,14 @@ import dagger.Provides;
 
 @Module(
         addsTo = ApplicationModule.class,
+        library = true,
         injects = {
                 RoomViewer.class,
                 RoomViewFragment.class,
+                InjectingActivity.class,
+                InjectingFragment.class,
                 RoomChooserActivity.class,
                 RoomChooserFragment.class
-        },
-        includes = {
-                IOModule.class
         }
 )
 public class ActivityModule {

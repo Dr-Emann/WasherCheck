@@ -22,37 +22,17 @@
 
 package net.zdremann.wc.provider;
 
-import android.content.ContentProvider;
-import android.content.Context;
-
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.Tracker;
-
-import net.zdremann.wc.ForApplication;
+import net.zdremann.wc.ApplicationModule;
 
 import dagger.Module;
-import dagger.Provides;
 
 @Module(
-        injects = InjectingProvider.class,
+        injects = {
+                InjectingProvider.class,
+                MachinesProvider.class
+        },
+        addsTo = ApplicationModule.class,
         library = true
 )
 public class ProviderModule {
-    private ContentProvider mProvider;
-
-    ProviderModule(ContentProvider provider) {
-        mProvider = provider;
-    }
-
-    @Provides
-    @ForApplication
-    public Context provideApplicationContext() {
-        return mProvider.getContext();
-    }
-
-    @Provides
-    public Tracker provideGATracker(@ForApplication Context context) {
-        EasyTracker.getInstance().setContext(context);
-        return EasyTracker.getTracker();
-    }
 }

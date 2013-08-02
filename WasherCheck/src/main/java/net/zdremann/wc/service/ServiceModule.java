@@ -23,15 +23,11 @@
 package net.zdremann.wc.service;
 
 import net.zdremann.wc.ApplicationModule;
-import net.zdremann.wc.io.IOModule;
 
 import dagger.Module;
 
 @Module(
-        addsTo = ApplicationModule.class,
-        includes = {
-                IOModule.class
-        }
+        addsTo = ApplicationModule.class
 )
 public class ServiceModule {
 }
