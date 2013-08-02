@@ -2,3 +2,4 @@
 .idea/tasks.xml
 local.properties
 .gradle
+build/
