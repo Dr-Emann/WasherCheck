@@ -24,6 +24,8 @@
 
 
 
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -47,6 +49,20 @@ dependencies {
     compile files('libs/libGoogleAnalyticsV2.jar')
 }
 
+def getVersionCode = { ->
+    try {
+        def code = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'tag', '--list'
+            standardOutput = code
+        }
+        return code.toString().split("\n").size()
+    }
+    catch (ignored) {
+        return -1;
+    }
+}
+
 def getVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
@@ -68,6 +84,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 18
+        versionCode getVersionCode()
         versionName getVersionName()
     }
 
