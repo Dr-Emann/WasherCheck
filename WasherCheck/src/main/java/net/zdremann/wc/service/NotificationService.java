@@ -102,6 +102,7 @@ public class NotificationService extends IntentService {
                             checkThisNext = DEFAULT_WAIT_FOR_CYCLE_COMPLETE;
                         nextCheckMillis = Math.min(nextCheckMillis, checkThisNext);
                     }
+                    break;
                 }
             }
         }
@@ -127,10 +128,9 @@ public class NotificationService extends IntentService {
             notificationManager.notify(0, notification);
         }
 
-        Log.d(TAG, "Found " + finishedNotifications.size() + " machines");
-
         if (nextCheckMillis != Long.MAX_VALUE) {
             am.cancel(pendingIntent);
+            Log.d(TAG, "retrying in " + SECONDS.convert(nextCheckMillis, MILLISECONDS) + " seconds");
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + nextCheckMillis, pendingIntent);
         }
     }
