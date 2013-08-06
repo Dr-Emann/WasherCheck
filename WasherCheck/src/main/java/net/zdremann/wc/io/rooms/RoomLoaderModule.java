@@ -22,7 +22,6 @@
 
 package net.zdremann.wc.io.rooms;
 
-import net.zdremann.wc.ApplicationModule;
 import net.zdremann.wc.provider.MachinesProvider;
 
 import javax.inject.Singleton;
@@ -31,20 +30,14 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-
-        addsTo = ApplicationModule.class,
+        complete = false,
         injects = MachinesProvider.class,
         library = true
 )
 public class RoomLoaderModule {
-    private static final boolean USE_FAKE_GETTER = false;
-
     @Provides
     @Singleton
     MachineGetter provideRoomGetter(InternetMachineGetter roomGetter) {
-        if (USE_FAKE_GETTER)
-            return new RandomMachineGetter();
-        else
-            return roomGetter;
+        return roomGetter;
     }
 }
