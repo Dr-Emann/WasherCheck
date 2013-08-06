@@ -27,8 +27,7 @@ import android.support.v4.content.CursorLoader;
 
 import net.zdremann.wc.provider.MachinesContract.Machines;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.*;
 
 public class TmpRoomLoader extends CursorLoader {
     public TmpRoomLoader(Context context, long roomId) {

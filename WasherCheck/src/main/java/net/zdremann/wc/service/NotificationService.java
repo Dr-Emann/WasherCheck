@@ -43,9 +43,7 @@ import net.zdremann.wc.ui.RoomViewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.*;
 
 public class NotificationService extends IntentService {
 
