@@ -26,6 +26,7 @@ import android.database.AbstractCursor;
 
 import net.zdremann.wc.model.Machine;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,7 +41,9 @@ import static net.zdremann.wc.provider.MachinesContract.Machines._ID;
 
 public class MachineListCursor extends AbstractCursor {
 
+    @NotNull
     private final List<Machine> mMachineList;
+    @NotNull
     private final String[] mProjection;
 
     private int index = -1;
@@ -53,7 +56,7 @@ public class MachineListCursor extends AbstractCursor {
     private final int idx_status;
     private final int idx_time_remaining;
 
-    public MachineListCursor(List<Machine> machines, String[] projection) {
+    public MachineListCursor(@NotNull List<Machine> machines, @NotNull String[] projection) {
         mMachineList = machines;
         mProjection = projection;
 
@@ -83,12 +86,8 @@ public class MachineListCursor extends AbstractCursor {
     @Nullable
     @Override
     public String getString(int i) {
-        if (i == idx_machine_id || i == idx_number ||
-                i == idx_room_id || i == idx_status ||
-                i == idx_type || i == idx_id)
+        if (getType(i) == FIELD_TYPE_INTEGER)
             return String.valueOf(getLong(i));
-        else if (i == idx_time_remaining)
-            return String.valueOf(getFloat(i));
         else
             return null;
     }
@@ -110,6 +109,8 @@ public class MachineListCursor extends AbstractCursor {
             return getMachine().status.ordinal();
         else if (i == idx_type)
             return getMachine().type.ordinal();
+        else if (i == idx_time_remaining)
+            return (int) getMachine().timeRemaining;
         else if (i == idx_id)
             return (int) getMachine().staticId();
         else
@@ -128,6 +129,8 @@ public class MachineListCursor extends AbstractCursor {
             return getMachine().status.ordinal();
         else if (i == idx_type)
             return getMachine().type.ordinal();
+        else if (i == idx_time_remaining)
+            return getMachine().timeRemaining;
         else if (i == idx_id)
             return getMachine().staticId();
         else
@@ -136,23 +139,17 @@ public class MachineListCursor extends AbstractCursor {
 
     @Override
     public float getFloat(int i) {
-        if (i == idx_time_remaining)
-            return getMachine().minutesRemaining;
-        else
-            return Float.NaN;
+        throw new UnsupportedOperationException("No floats on a machine");
     }
 
     @Override
     public double getDouble(int i) {
-        return getFloat(i);
+        throw new UnsupportedOperationException("No doubles on a machine");
     }
 
     @Override
     public int getType(int c) {
-        if (c == idx_time_remaining)
-            return FIELD_TYPE_FLOAT;
-        else
-            return FIELD_TYPE_INTEGER;
+        return FIELD_TYPE_INTEGER;
     }
 
     @Override

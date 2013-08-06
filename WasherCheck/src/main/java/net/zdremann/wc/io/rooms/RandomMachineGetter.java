@@ -31,6 +31,8 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import static java.util.concurrent.TimeUnit.*;
+
 public class RandomMachineGetter implements MachineGetter {
     private static final int CAPACITY = 32;
 
@@ -46,21 +48,21 @@ public class RandomMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, 0, i, Machine.Type.WASHER);
             machine.status = Machine.Status.fromInt(random.nextInt(4));
             if (machine.status.compareTo(Machine.Status.CYCLE_COMPLETE) > 0)
-                machine.minutesRemaining = random.nextInt(30);
+                machine.timeRemaining = MILLISECONDS.convert(random.nextInt(30), MINUTES);
             machines.add(machine);
         }
         for (int i = CAPACITY / 3; i < CAPACITY * 2 / 3; i++) {
             final Machine machine = new Machine(roomId, 0, i, Machine.Type.DRYER);
             machine.status = Machine.Status.fromInt(random.nextInt(4));
             if (machine.status.compareTo(Machine.Status.CYCLE_COMPLETE) > 0)
-                machine.minutesRemaining = random.nextInt(60);
+                machine.timeRemaining = MILLISECONDS.convert(random.nextInt(60), MINUTES);
             machines.add(machine);
         }
         for (int i = CAPACITY * 2 / 3; i < CAPACITY; i++) {
             final Machine machine = new Machine(roomId, 0, i, Machine.Type.WASHER);
             machine.status = Machine.Status.fromInt(random.nextInt(4));
             if (machine.status.compareTo(Machine.Status.CYCLE_COMPLETE) > 0)
-                machine.minutesRemaining = random.nextInt(1000);
+                machine.timeRemaining = MILLISECONDS.convert(random.nextInt(1000), MINUTES);
             machines.add(machine);
         }
 

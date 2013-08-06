@@ -33,7 +33,7 @@ import net.zdremann.wc.R;
 import org.jetbrains.annotations.NotNull;
 
 public class Machine implements Comparable<Machine>, Parcelable {
-    public static final float NO_TIME_REMAINING = Float.NEGATIVE_INFINITY;
+    public static final long NO_TIME_REMAINING = -1;
     public static final Creator<Machine> CREATOR = new Creator<Machine>() {
 
         @NotNull
@@ -54,7 +54,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
     public final long id;
     @NotNull
     public Status status = Status.UNKNOWN;
-    public float minutesRemaining = NO_TIME_REMAINING;
+    public long timeRemaining = NO_TIME_REMAINING;
 
     public Machine(final long roomId, final long id, int num, @NotNull final Type type) {
         this.id = id;
@@ -69,11 +69,11 @@ public class Machine implements Comparable<Machine>, Parcelable {
         this.num = in.readInt();
         this.type = Type.fromInt(in.readInt());
         this.status = Status.fromInt(in.readInt());
-        this.minutesRemaining = in.readFloat();
+        this.timeRemaining = in.readLong();
     }
 
     public boolean hasTimeRemaining() {
-        return minutesRemaining != NO_TIME_REMAINING;
+        return timeRemaining != NO_TIME_REMAINING;
     }
 
     public int compareTo(Machine another) {
@@ -85,7 +85,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
         if (!this.status.equals(another.status)) {
             return this.status.compareTo(another.status);
         }
-        int timeComp = Float.compare(this.minutesRemaining, another.minutesRemaining);
+        int timeComp = (this.timeRemaining < another.timeRemaining) ? -1 : (this.timeRemaining > another.timeRemaining) ? 1 : 0;
         if (timeComp != 0) {
             return timeComp;
         }
@@ -107,7 +107,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
                 this.num == other.num &&
                 this.type.equals(other.type) &&
                 this.status.equals(other.status) &&
-                this.minutesRemaining == other.minutesRemaining;
+                this.timeRemaining == other.timeRemaining;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
         result = 31 * result + num;
         result = 31 * result + type.hashCode();
         result = 31 * result + status.hashCode();
-        result = 31 * result + Float.floatToIntBits(minutesRemaining);
+        result = 31 * result + (int) (timeRemaining ^ (timeRemaining >>> 32));
         return result;
     }
 
@@ -133,7 +133,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
                 .append(", status=").append(status.toString());
 
         if (hasTimeRemaining())
-            builder.append(", minutesRemaining=").append(minutesRemaining);
+            builder.append(", timeRemaining=").append(timeRemaining);
 
         builder.append('}');
         return builder.toString();
@@ -149,7 +149,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
         destination.writeInt(num);
         destination.writeInt(type.ordinal());
         destination.writeInt(status.ordinal());
-        destination.writeFloat(minutesRemaining);
+        destination.writeLong(timeRemaining);
     }
 
     public long staticId() {

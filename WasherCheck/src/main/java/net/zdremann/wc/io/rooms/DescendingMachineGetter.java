@@ -30,10 +30,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static java.util.concurrent.TimeUnit.*;
+
 public class DescendingMachineGetter implements MachineGetter {
+    public static final int ITERATION_LENGTH = 30;
     private static final int MACHINES_RETURNED = 8 * 3;
     private static final int NUM_ITERATIONS = Machine.Status.values().length;
-    public static final int ITERATION_LENGTH = 30;
 
     @Inject
     public DescendingMachineGetter() {
@@ -48,7 +50,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.WASHER);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.minutesRemaining = 1;
+                machine.timeRemaining = MILLISECONDS.convert(1, MINUTES);
             }
             machines.add(machine);
         }
@@ -56,7 +58,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.minutesRemaining = 1;
+                machine.timeRemaining = 1;
             }
             machines.add(machine);
         }
@@ -64,7 +66,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.minutesRemaining = 1;
+                machine.timeRemaining = 1;
             }
             machines.add(machine);
         }

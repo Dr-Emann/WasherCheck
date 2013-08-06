@@ -54,6 +54,7 @@ import javax.inject.Inject;
 public class InternetMachineGetter implements MachineGetter {
 
     private static final String TAG = "InternetMachineGetter";
+    private static final long ONE_MINUTE = 60000;
     private final EsudsRoomHtmlDownloader mDownloader;
     private final EsudsRoomHtmlParser mParser;
 
@@ -221,13 +222,13 @@ public class InternetMachineGetter implements MachineGetter {
 
             parser.nextTag();
             parser.require(XmlPullParser.START_TAG, "", "td");
-            float machineTimeRemaining = readTimeRemaining(parser);
+            long machineTimeRemaining = readTimeRemaining(parser);
 
             parser.nextTag();
             parser.require(XmlPullParser.END_TAG, "", "tr");
             Machine machine = new Machine(roomId, machineId, machineNum, machineType);
             machine.status = machineStatus;
-            machine.minutesRemaining = machineTimeRemaining;
+            machine.timeRemaining = machineTimeRemaining;
             return machine;
         }
 
@@ -282,14 +283,14 @@ public class InternetMachineGetter implements MachineGetter {
                 return Machine.Status.UNKNOWN;
         }
 
-        protected float readTimeRemaining(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected long readTimeRemaining(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
             final String text = parser.nextText();
-            float time;
+            long time;
             if (TextUtils.isEmpty(text)) {
                 time = Machine.NO_TIME_REMAINING;
             } else {
                 try {
-                    time = Float.parseFloat(text);
+                    time = (long) (Double.parseDouble(text) * ONE_MINUTE);
                 } catch (NumberFormatException nfe) {
                     Log.d(TAG, "Unknown Time Remaining: " + text);
                     time = Machine.NO_TIME_REMAINING;
