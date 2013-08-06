@@ -30,10 +30,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class DescendingMachineGetter implements MachineGetter {
-    public static final int ITERATION_LENGTH = 30;
+    public static final long ITERATION_LENGTH = MILLISECONDS.convert(10, SECONDS);
     private static final int MACHINES_RETURNED = 8 * 3;
     private static final int NUM_ITERATIONS = Machine.Status.values().length;
 
