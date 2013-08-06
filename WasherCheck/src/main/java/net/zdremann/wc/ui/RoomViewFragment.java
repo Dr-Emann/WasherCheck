@@ -65,7 +65,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class RoomViewFragment extends InjectingListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
@@ -327,8 +328,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
             vh.status.setText(status.toString(context));
             vh.status.setTextColor(status.getColor(context));
 
-            if (timeRemaining != Machine.NO_TIME_REMAINING) {
-                String timeText = String.format("%.0d", MINUTES.convert(timeRemaining, MILLISECONDS));
+            if (timeRemaining >= 0) {
+                String timeText = String.format("%.0f", (double) timeRemaining / MINUTES.toMillis(1));
                 String timePostfix = res.getString(R.string.minutes_remaining_postfix);
 
                 Spannable spanRange = new SpannableString(timeText + timePostfix);
