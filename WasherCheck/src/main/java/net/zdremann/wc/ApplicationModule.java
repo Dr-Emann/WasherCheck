@@ -73,6 +73,8 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Tracker provideGoogleTracker(@ForApplication Context context) {
+        EasyTracker tracker = EasyTracker.getInstance();
+        tracker.setContext(context);
         return EasyTracker.getTracker();
     }
 
