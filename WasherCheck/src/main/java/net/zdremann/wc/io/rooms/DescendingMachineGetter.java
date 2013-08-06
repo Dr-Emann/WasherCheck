@@ -27,13 +27,13 @@ import net.zdremann.wc.model.Machine;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
 public class DescendingMachineGetter implements MachineGetter {
     private static final int MACHINES_RETURNED = 8 * 3;
-    private static final AtomicInteger ITERATION = new AtomicInteger(0);
+    private static final int NUM_ITERATIONS = Machine.Status.values().length;
+    public static final int ITERATION_LENGTH = 30;
 
     @Inject
     public DescendingMachineGetter() {
@@ -41,12 +41,12 @@ public class DescendingMachineGetter implements MachineGetter {
 
     @Override
     public List<Machine> getMachines(long roomId) throws IOException {
-        final int iteration = ITERATION.getAndIncrement();
+        final Machine.Status status = getStatus();
         final ArrayList<Machine> machines = new ArrayList<Machine>();
 
         for (int i = 0; i < MACHINES_RETURNED / 3; ++i) {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.WASHER);
-            machine.status = Machine.Status.fromInt(4 - iteration % 5);
+            machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
                 machine.minutesRemaining = 1;
             }
@@ -54,7 +54,7 @@ public class DescendingMachineGetter implements MachineGetter {
         }
         for (int i = MACHINES_RETURNED / 3; i < 2 * MACHINES_RETURNED / 3; ++i) {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER);
-            machine.status = Machine.Status.fromInt(4 - iteration % 5);
+            machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
                 machine.minutesRemaining = 1;
             }
@@ -62,7 +62,7 @@ public class DescendingMachineGetter implements MachineGetter {
         }
         for (int i = 2 * MACHINES_RETURNED / 3; i < MACHINES_RETURNED; ++i) {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN);
-            machine.status = Machine.Status.fromInt(4 - iteration % 5);
+            machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
                 machine.minutesRemaining = 1;
             }
@@ -70,5 +70,13 @@ public class DescendingMachineGetter implements MachineGetter {
         }
 
         return machines;
+    }
+
+    private Machine.Status getStatus() {
+        return Machine.Status.fromInt(NUM_ITERATIONS - 1 - getIteration() % 5);
+    }
+
+    private int getIteration() {
+        return (int) ((System.currentTimeMillis() / ITERATION_LENGTH) % NUM_ITERATIONS);
     }
 }
