@@ -22,10 +22,12 @@
 
 package net.zdremann.wc.io.rooms;
 
+import android.content.SharedPreferences;
+
+import net.zdremann.wc.Main;
 import net.zdremann.wc.provider.MachinesProvider;
 
-import javax.inject.Singleton;
-
+import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;
 
@@ -36,8 +38,13 @@ import dagger.Provides;
 )
 public class RoomLoaderModule {
     @Provides
-    @Singleton
-    MachineGetter provideRoomGetter(InternetMachineGetter roomGetter) {
-        return roomGetter;
+    MachineGetter provideMachineGetter(
+            @Main SharedPreferences preferences,
+            Lazy<InternetMachineGetter> internetGetter,
+            Lazy<DescendingMachineGetter> descendingGetter) {
+        if (preferences.getBoolean("net.zdremann.wc.fake_io", false))
+            return descendingGetter.get();
+        else
+            return internetGetter.get();
     }
 }

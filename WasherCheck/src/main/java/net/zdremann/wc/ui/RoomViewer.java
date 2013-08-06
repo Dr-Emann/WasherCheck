@@ -55,6 +55,11 @@ public class RoomViewer extends InjectingActivity {
 
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.room_viewer, menu);
+        MenuItem fakeIoMenuItem = menu.findItem(R.id.action_fake_io);
+
+        assert fakeIoMenuItem != null;
+
+        fakeIoMenuItem.setChecked(mPreferences.getBoolean("net.zdremann.wc.fake_io", false));
         return true;
     }
 
@@ -66,6 +71,11 @@ public class RoomViewer extends InjectingActivity {
                 return true;
             case R.id.action_change_room:
                 startChooseRoom();
+                return true;
+            case R.id.action_fake_io:
+                boolean useFakeIo = !item.isChecked();
+                mPreferences.edit().putBoolean("net.zdremann.wc.fake_io", useFakeIo).apply();
+                item.setChecked(useFakeIo);
                 return true;
             default:
                 return false;

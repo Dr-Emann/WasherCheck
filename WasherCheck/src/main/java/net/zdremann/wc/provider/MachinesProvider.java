@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static net.zdremann.wc.provider.MachinesContract.AUTHORITY;
 import static net.zdremann.wc.provider.MachinesContract.CACHE_PARAMETER_AGE;
@@ -55,7 +56,7 @@ public class MachinesProvider extends InjectingProvider {
 
     private final Object cacheLock = new Object();
     @Inject
-    MachineGetter mRoomGetter;
+    Provider<MachineGetter> mRoomGetterFactory;
     @Inject
     ContentResolver mResolver;
     private List<Machine> cache;
@@ -108,7 +109,7 @@ public class MachinesProvider extends InjectingProvider {
     }
 
     private List<Machine> loadMachines(long roomId) throws IOException {
-        List<Machine> machines = mRoomGetter.getMachines(roomId);
+        List<Machine> machines = mRoomGetterFactory.get().getMachines(roomId);
         cache = machines;
         lastCacheUpdate = System.currentTimeMillis();
         cachedRoom = roomId;
