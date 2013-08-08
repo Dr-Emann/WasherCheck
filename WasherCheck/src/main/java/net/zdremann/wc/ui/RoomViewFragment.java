@@ -88,7 +88,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         @Override
         public void run() {
             setIsLoading(true);
-            mActivityContext.getContentResolver().notifyChange(Machines.buildRoomUri(mRoomId, MILLISECONDS.convert(5, SECONDS)), null);
+            mActivityContext.getContentResolver().notifyChange(Machines.buildRoomUri(mRoomId), null);
         }
     };
 

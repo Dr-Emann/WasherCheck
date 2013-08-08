@@ -104,7 +104,7 @@ public class MachinesProvider extends InjectingProvider {
 
         final MachineListCursor cursor = new MachineListCursor(machines, projection);
 
-        cursor.setNotificationUri(mResolver, uri);
+        cursor.setNotificationUri(mResolver, Machines.buildRoomUri(roomId));
         return cursor;
     }
 

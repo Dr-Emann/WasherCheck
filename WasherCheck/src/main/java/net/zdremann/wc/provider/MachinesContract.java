@@ -44,9 +44,20 @@ public class MachinesContract {
         public static final String[] ALL_COLUMNS =
                 {_ID, ROOM_ID, MACHINE_ID, NUMBER, TYPE, STATUS, TIME_REMAINING};
 
+        /**
+         * Return the uri for the room specified by roomId.
+         * There is no caching performed.
+         *
+         * @param roomId the id of the desired room
+         * @return the Uri by which the machines can be queried
+         */
+        public static Uri buildRoomUri(long roomId) {
+            return CONTENT_URI.buildUpon().appendPath("rooms")
+                    .appendPath(String.valueOf(roomId)).build();
+        }
+
         public static Uri buildRoomUri(long roomId, long cacheAge) {
-            final Uri.Builder builder = CONTENT_URI.buildUpon().appendPath("rooms")
-                    .appendPath(String.valueOf(roomId))
+            final Uri.Builder builder = buildRoomUri(roomId).buildUpon()
                     .appendQueryParameter(CACHE_PARAMETER_AGE, String.valueOf(cacheAge));
             return builder.build();
         }
