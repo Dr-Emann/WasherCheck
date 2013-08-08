@@ -65,8 +65,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.*;
 
 public class RoomViewFragment extends InjectingListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
@@ -85,6 +84,13 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     @Inject
     @ForActivity
     Context mActivityContext;
+    private final Runnable mRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            setIsLoading(true);
+            mActivityContext.getContentResolver().notifyChange(Machines.buildRoomUri(mRoomId, MILLISECONDS.convert(5, SECONDS)), null);
+        }
+    };
 
     protected void setIsLoading(final boolean isLoading) {
         if (mRefreshItem != null) {
@@ -137,13 +143,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
         setIsLoading(false);
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setIsLoading(true);
-                getLoaderManager().getLoader(0).forceLoad();
-            }
-        }, MILLISECONDS.convert(5, MINUTES));
+        mHandler.postDelayed(mRefreshRunnable, MILLISECONDS.convert(5, SECONDS));
     }
 
     @Override
@@ -219,6 +219,12 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
         assert completeBtn != null;
         completeBtn.setVisible(status > Notifications.STATUS_VALUE_CYCLE_COMPLETE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(mRefreshRunnable);
     }
 
     @Override
