@@ -30,9 +30,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.*;
 
 public class DescendingMachineGetter implements MachineGetter {
     public static final long ITERATION_LENGTH = MILLISECONDS.convert(10, SECONDS);
@@ -71,6 +69,12 @@ public class DescendingMachineGetter implements MachineGetter {
                 machine.timeRemaining = 1;
             }
             machines.add(machine);
+        }
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            // Do nothing, we only want to _try_ to sleep 3 seconds
         }
 
         return machines;
