@@ -143,12 +143,13 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
         setIsLoading(false);
 
-        mHandler.postDelayed(mRefreshRunnable, MILLISECONDS.convert(5, SECONDS));
+        mHandler.postDelayed(mRefreshRunnable, MILLISECONDS.convert(5, MINUTES));
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
         mRoomViewAdapter.swapCursor(null);
+        setIsLoading(false);
     }
 
     @Override
