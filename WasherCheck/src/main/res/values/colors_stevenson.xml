@@ -22,7 +22,6 @@
   -->
 
 <resources>
-
-    <color name="pressed_stevenson">#CC87CB87</color>
-
+    <color name="pressed_stevenson">#CC00E17A</color>
+    <color name="main_color_stevenson">#00552E</color>
 </resources>

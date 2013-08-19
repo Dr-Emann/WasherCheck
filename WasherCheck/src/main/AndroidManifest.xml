@@ -45,7 +45,7 @@
             android:allowBackup="false"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light">
+            android:theme="@style/AppTheme">
         <activity
                 android:name=".ui.RoomViewer"
                 android:label="@string/title_activity_room_viewer">
@@ -59,7 +59,7 @@
                 android:name="net.zdremann.wc.ui.RoomChooserActivity"
                 android:label="@string/choose_room"
                 android:parentActivityName="net.zdremann.wc.ui.RoomViewer">
-        <meta-data
+            <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="net.zdremann.wc.ui.RoomViewer"/>
         </activity>

@@ -23,7 +23,7 @@
 
 <resources>
 
-    <style name="Theme.Stevenson" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.Stevenson" parent="AppBaseTheme.DarkBar">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_stevenson
         </item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Stevenson</item>
@@ -35,6 +35,15 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_stevenson
         </item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Stevenson
+        </item>
+        <item name="android:listSeparatorTextViewStyle">
+            @style/Theme.Stevenson.Widget.TextView.ListSeparator
+        </item>
+        <item name="android:listChoiceBackgroundIndicator">
+            @drawable/stevenson_list_selector_holo_light
+        </item>
+        <item name="android:activatedBackgroundIndicator">
+            @drawable/stevenson_activated_background_holo_light
         </item>
 
         <!-- Light.DarkActionBar specific -->
@@ -84,6 +93,12 @@
     <style name="Theme.Stevenson.Widget" parent="@android:style/Theme.Holo">
         <item name="android:popupMenuStyle">@style/PopupMenu.Stevenson</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Stevenson</item>
+    </style>
+
+    <style name="Theme.Stevenson.Widget.TextView.ListSeparator" parent="ListSeparator">
+        <item name="android:background">@drawable/list_section_divider_holo_light_stevenson</item>
+        <item name="android:textColor">@color/main_color_stevenson</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
 </resources>
