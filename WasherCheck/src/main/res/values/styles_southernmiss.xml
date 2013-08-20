@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2013. Zachary Dremann
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<resources>
+
+    <style name="Theme.Southernmiss" parent="AppBaseTheme.LightBar">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_southernmiss
+        </item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Southernmiss</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Southernmiss</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Southernmiss</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Southernmiss</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Southernmiss</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_southernmiss</item>
+        <item name="android:actionModeSplitBackground">
+            @drawable/cab_background_bottom_southernmiss
+        </item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Southernmiss
+        </item>
+        <item name="android:listChoiceBackgroundIndicator">
+            @drawable/southernmiss_list_selector_holo_light
+        </item>
+        <item name="android:activatedBackgroundIndicator">
+            @drawable/southernmiss_activated_background_holo_light
+        </item>
+
+    </style>
+
+    <style name="ActionBar.Solid.Southernmiss" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/ab_solid_southernmiss</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_southernmiss</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_southernmiss</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Southernmiss</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Southernmiss" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_southernmiss</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Southernmiss</item>
+    </style>
+
+    <style name="PopupMenu.Southernmiss" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_southernmiss</item>
+    </style>
+
+    <style name="DropDownListView.Southernmiss" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_southernmiss</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Southernmiss" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_southernmiss</item>
+    </style>
+
+    <style name="DropDownNav.Southernmiss" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_southernmiss</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_southernmiss</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_southernmiss</item>
+    </style>
+
+    <style name="ProgressBar.Southernmiss" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_southernmiss</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Southernmiss" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_southernmiss</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Southernmiss.Widget" parent="@android:style/Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.Southernmiss</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Southernmiss</item>
+    </style>
+
+</resources>
