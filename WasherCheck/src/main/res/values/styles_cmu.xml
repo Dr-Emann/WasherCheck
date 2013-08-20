@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2013. Zachary Dremann
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<resources>
+
+    <style name="Theme.Cmu" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_cmu</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Cmu</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Cmu</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Cmu</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Cmu</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Cmu</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_cmu</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_cmu</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Cmu</item>
+        <item name="android:listSeparatorTextViewStyle">
+            @style/Theme.Cmu.Widget.TextView.ListSeparator
+        </item>
+        <item name="android:listChoiceBackgroundIndicator">
+            @drawable/cmu_list_selector_holo_light
+        </item>
+        <item name="android:activatedBackgroundIndicator">
+            @drawable/cmu_activated_background_holo_light
+        </item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Cmu.Widget</item>
+
+    </style>
+
+    <style name="ActionBar.Solid.Cmu" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_cmu</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_cmu</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_cmu</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Cmu</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Cmu" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_cmu</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Cmu</item>
+    </style>
+
+    <style name="PopupMenu.Cmu" parent="@android:style/Widget.Holo.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_cmu</item>
+    </style>
+
+    <style name="DropDownListView.Cmu" parent="@android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_cmu</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Cmu" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_cmu</item>
+    </style>
+
+    <style name="DropDownNav.Cmu" parent="@android:style/Widget.Holo.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_cmu</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_cmu</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_cmu</item>
+    </style>
+
+    <style name="ProgressBar.Cmu" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_cmu</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Cmu" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_cmu</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Cmu.Widget" parent="@android:style/Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.Cmu</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Cmu</item>
+    </style>
+
+    <style name="Theme.Cmu.Widget.TextView.ListSeparator" parent="ListSeparator">
+        <item name="android:background">@drawable/list_section_divider_holo_light_cmu</item>
+        <item name="android:textColor">@color/main_color_cmu</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+</resources>
