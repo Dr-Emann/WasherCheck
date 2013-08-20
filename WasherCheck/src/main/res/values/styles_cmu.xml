@@ -23,8 +23,8 @@
 
 <resources>
 
-    <style name="Theme.Cmu" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_cmu</item>
+    <style name="Theme.Cmu" parent="AppBaseTheme.DarkBar">
+    <item name="android:actionBarItemBackground">@drawable/selectable_background_cmu</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Cmu</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Cmu</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Cmu</item>

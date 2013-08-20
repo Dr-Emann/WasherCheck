@@ -23,8 +23,8 @@
 
 <resources>
 
-    <style name="Theme.Maryland" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_maryland</item>
+    <style name="Theme.Maryland" parent="AppBaseTheme.DarkBar">
+    <item name="android:actionBarItemBackground">@drawable/selectable_background_maryland</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Maryland</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Maryland</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Maryland</item>

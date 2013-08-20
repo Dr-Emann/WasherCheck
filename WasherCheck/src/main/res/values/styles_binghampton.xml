@@ -23,8 +23,8 @@
 
 <resources>
 
-    <style name="Theme.Binghampton" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_binghampton
+    <style name="Theme.Binghampton" parent="AppBaseTheme.DarkBar">
+    <item name="android:actionBarItemBackground">@drawable/selectable_background_binghampton
         </item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Binghampton</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Binghampton</item>
