@@ -142,7 +142,8 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     }
 
     public static enum Theme {
-        BINGHAMPTON(R.style.Theme_Binghampton), CMU(R.style.Theme_Cmu), UMARYLAND(R.style.Theme_Maryland), STEVENSON(R.style.Theme_Stevenson), UNKNOWN(0);
+        BINGHAMPTON(R.style.Theme_Binghampton), CMU(R.style.Theme_Cmu), LOYOLA(R.style.Theme_Loyola),
+        UMARYLAND(R.style.Theme_Maryland), STEVENSON(R.style.Theme_Stevenson), UNKNOWN(0);
 
         public static Theme parse(@Nullable String str) {
             if (TextUtils.isEmpty(str))
