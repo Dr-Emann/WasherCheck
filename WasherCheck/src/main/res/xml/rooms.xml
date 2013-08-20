@@ -27,6 +27,7 @@
     <school
             id="-1"
             name="Binghamton University"
+            theme="Binghampton"
             latitude="42.085038"
             longitude="-75.968792">
         <campus
@@ -185,6 +186,7 @@
     <school
             id="-2"
             name="Carnegie Mellon University"
+            theme="CMU"
             latitude="40.44391"
             longitude="-79.941612">
         <room
@@ -242,6 +244,7 @@
     <school
             id="-3"
             name="Loyola University"
+            theme="Loyola"
             latitude="39.34613"
             longitude="-76.618784">
         <room
@@ -299,6 +302,7 @@
     <school
             id="-4"
             name="University of Maryland"
+            theme="UMaryland"
             latitude="38.987034"
             longitude="-76.940015">
         <hall
@@ -386,6 +390,7 @@
     <school
             id="-5"
             name="University of Southern Mississippi"
+            theme="SouthernMiss"
             latitude="31.329079"
             longitude="-89.332158">
         <room
@@ -404,6 +409,7 @@
     <school
             id="-6"
             name="Stevens Institute of Technology"
+            theme="StevensTech"
             latitude="40.744412"
             longitude="-74.024874">
         <hall
@@ -475,6 +481,7 @@
     <school
             id="-7"
             name="Stevenson University"
+            theme="Stevenson"
             latitude="39.427276"
             longitude="-76.779634">
         <room
@@ -520,6 +527,7 @@
     <school
             id="-8"
             name="Wayne State University"
+            them="WayneState"
             latitude="42.357164"
             longitude="-83.065141">
         <room

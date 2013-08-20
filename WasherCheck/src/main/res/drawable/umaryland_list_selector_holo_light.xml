@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2013. Zachary Dremann
   ~
@@ -20,18 +21,15 @@
   ~ THE SOFTWARE.
   -->
 
-<resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    -->
-    <style name="AppBaseTheme.LightBar" parent="android:Theme.Holo.Light">
-        <item name="ic_menu_refresh">@drawable/ic_menu_refresh_light</item>
-    </style>
+    <item android:state_window_focused="false" android:drawable="@android:color/transparent"/>
 
-    <style name="AppBaseTheme.DarkBar" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="ic_menu_refresh">@drawable/ic_menu_refresh_dark</item>
-    </style>
+    <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
+    <item android:state_focused="true" android:state_enabled="false" android:state_pressed="true" android:drawable="@drawable/umaryland_list_selector_disabled_holo_light"/>
+    <item android:state_focused="true" android:state_enabled="false" android:drawable="@drawable/umaryland_list_selector_disabled_holo_light"/>
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/umaryland_list_selector_background_transition_holo_light"/>
+    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/umaryland_list_selector_background_transition_holo_light"/>
+    <item android:state_focused="true" android:drawable="@drawable/umaryland_list_focused_holo"/>
 
-</resources>
+</selector>
