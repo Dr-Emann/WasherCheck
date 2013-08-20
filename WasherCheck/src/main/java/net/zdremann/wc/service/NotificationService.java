@@ -95,7 +95,7 @@ public class NotificationService extends IntentService {
                     if (machines.getInt(3) <= notifications.getInt(notif_idx_status)) {
                         finishedNotifications.add(notifications.getLong(notif_idx_id));
                     } else {
-                        long checkThisNext = (long) (MILLISECONDS.convert(1, MINUTES) * machines.getFloat(4)) + MILLISECONDS.convert(10, SECONDS);
+                        long checkThisNext = machines.getLong(4) + MILLISECONDS.convert(30, SECONDS);
                         if (checkThisNext <= 0)
                             checkThisNext = DEFAULT_WAIT_FOR_CYCLE_COMPLETE;
                         nextCheckMillis = Math.min(nextCheckMillis, checkThisNext);
