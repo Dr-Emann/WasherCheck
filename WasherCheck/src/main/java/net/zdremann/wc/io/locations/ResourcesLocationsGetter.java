@@ -23,10 +23,12 @@
 package net.zdremann.wc.io.locations;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import net.zdremann.wc.ForApplication;
 import net.zdremann.wc.R;
 import net.zdremann.wc.model.MachineGrouping;
+import net.zdremann.wc.model.MachineGroupingBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -114,7 +116,17 @@ public class ResourcesLocationsGetter implements LocationsGetter {
 
         }
 
-        MachineGrouping grouping = new MachineGrouping(id, name, type, latitude, longitude);
+        String themeStr = parser.getAttributeValue(null, "theme");
+
+        final MachineGroupingBuilder builder = new MachineGroupingBuilder()
+                .setId(id).setName(name).setType(type)
+                .setLatitude(latitude).setLongitude(longitude);
+
+        if (!TextUtils.isEmpty(themeStr))
+            builder.setTheme(MachineGrouping.Theme.parse(themeStr));
+
+        MachineGrouping grouping = builder
+                .build();
 
         List<MachineGrouping> children = new ArrayList<MachineGrouping>();
 

@@ -25,6 +25,7 @@ package net.zdremann.wc.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -40,14 +41,14 @@ import javax.inject.Inject;
 
 public class RoomViewer extends InjectingActivity {
     public static final String ARG_ROOM_ID = "room_id";
-    private long mRoomId;
-
     @Inject
     LocationsProxy mLocationsProxy;
-
     @Inject
     @Main
     SharedPreferences mPreferences;
+
+    private Handler mHandler = new Handler();
+    private long mRoomId;
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -94,6 +95,12 @@ public class RoomViewer extends InjectingActivity {
                     gaTracker.setCustomDimension(1, String.valueOf(roomId));
                     gaTracker.sendEvent("Room", "Chosen", String.valueOf(roomId), 0L);
 
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recreate();
+                        }
+                    });
                     setRoomId(roomId);
                 } else {
                     if (!mPreferences.contains(ARG_ROOM_ID))
@@ -106,13 +113,18 @@ public class RoomViewer extends InjectingActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_room_viewer);
-
         if (mPreferences.contains(ARG_ROOM_ID)) {
             setRoomId(mPreferences.getLong(ARG_ROOM_ID, 0));
         } else {
             startChooseSchool(true);
         }
+
+        MachineGrouping grouping = mLocationsProxy.getGrouping(mRoomId);
+
+        if (grouping != null)
+            setTheme(grouping.getTheme().getResource());
+
+        setContentView(R.layout.activity_room_viewer);
 
         gaTracker.setCustomDimension(1, String.valueOf(mRoomId));
     }

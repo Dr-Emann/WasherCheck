@@ -25,6 +25,9 @@ package net.zdremann.wc.model;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import net.zdremann.wc.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,13 +35,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.zdremann.wc.model.MachineGroupingBuilder.LOCATION_PROVIDER;
+
 public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> {
     public static final Creator<MachineGrouping> CREATOR = new Creator<MachineGrouping>() {
         public MachineGrouping createFromParcel(Parcel in) {
             Location loc = new Location(LOCATION_PROVIDER);
-            MachineGrouping value = new MachineGrouping(in.readLong(),
-                    in.readString(),
-                    Type.values()[in.readInt()], loc);
+            MachineGrouping value = new MachineGrouping(in.readLong(), in.readString(), Type.ofInt(in.readInt()), loc, Theme.ofInt(in.readInt()));
             loc.setLatitude(in.readDouble());
             loc.setLongitude(in.readDouble());
 
@@ -53,7 +56,6 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
             return new MachineGrouping[size];
         }
     };
-    private static final String LOCATION_PROVIDER = "static";
 
     public final long id;
     @NotNull
@@ -66,25 +68,15 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     public final Location location;
     @Nullable
     public MachineGrouping parent;
+    @Nullable
+    private Theme mTheme;
 
-    public MachineGrouping(final long id, @NotNull final String name, @NotNull final Type type, final double latitude, final double longitude) {
-        Location loc = new Location(LOCATION_PROVIDER);
-        loc.setLatitude(latitude);
-        loc.setLongitude(longitude);
-
+    public MachineGrouping(final long id, @NotNull final String name, @NotNull final Type type, @NotNull final Location location, @Nullable final Theme theme) {
         this.id = id;
         this.name = name;
         this.type = type;
-
-        this.location = loc;
-    }
-
-    public MachineGrouping(final long id, @NotNull final String name, @NotNull final Type type, @NotNull final Location location) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-
         this.location = location;
+        this.mTheme = theme;
     }
 
     @Override
@@ -135,10 +127,53 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
         destination.writeInt(type.ordinal());
         destination.writeDouble(location.getLatitude());
         destination.writeDouble(location.getLongitude());
+        destination.writeInt(getTheme().ordinal());
         destination.writeTypedList(children);
     }
 
+    @NotNull
+    public Theme getTheme() {
+        if (mTheme != null)
+            return mTheme;
+        else if (parent != null)
+            return parent.getTheme();
+        else
+            return Theme.UNKNOWN;
+    }
+
+    public static enum Theme {
+        UMARYLAND(R.style.Theme_Maryland), STEVENSON(R.style.Theme_Stevenson), UNKNOWN(0);
+
+        public static Theme parse(@Nullable String str) {
+            if (TextUtils.isEmpty(str))
+                return null;
+            for (Theme theme : values()) {
+                if (theme.toString().equalsIgnoreCase(str))
+                    return theme;
+            }
+            return UNKNOWN;
+        }
+
+        private final int themeId;
+
+        Theme(int id) {
+            this.themeId = id;
+        }
+
+        public int getResource() {
+            return themeId;
+        }
+
+        public static Theme ofInt(int i) {
+            return values()[i];
+        }
+    }
+
     public static enum Type {
-        ROOT, SCHOOL, CAMPUS, HALL, ROOM
+        ROOT, SCHOOL, CAMPUS, HALL, ROOM;
+
+        public static Type ofInt(int i) {
+            return values()[i];
+        }
     }
 }
