@@ -455,7 +455,7 @@
     <school
             id="-8"
             name="Wayne State University"
-            them="WayneState"
+            theme="WayneState"
             latitude="42.357164"
             longitude="-83.065141">
         <room
