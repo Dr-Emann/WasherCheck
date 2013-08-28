@@ -34,7 +34,7 @@
         -->
     </style>
 
-    <style name="AppBaseTheme.DarkBar" parent="AppBaseTheme.LightBar"/>
+    <style name="AppBaseTheme.DarkBar" parent="AppBaseTheme.LightBar" />
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme.DarkBar">
@@ -51,6 +51,6 @@
         <item name="android:paddingLeft">8dip</item>
     </style>
 
-    <attr name="ic_menu_refresh" format="reference"/>
+    <attr name="ic_menu_refresh" format="reference" />
 
 </resources>

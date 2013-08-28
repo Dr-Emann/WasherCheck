@@ -21,28 +21,28 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".AboutActivity"
-                android:padding="16dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutActivity"
+    android:padding="16dp">
 
     <TextView
-            style="@android:style/TextAppearance.Large"
-            android:id="@+id/label_version"
-            android:text="@string/label_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
+        style="@android:style/TextAppearance.Large"
+        android:id="@+id/label_version"
+        android:text="@string/label_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
 
     <TextView
-            style="@android:style/TextAppearance.Large"
-            android:id="@+id/data_version"
-            android:text="@string/version"
-            android:layout_marginLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/label_version"/>
+        style="@android:style/TextAppearance.Large"
+        android:id="@+id/data_version"
+        android:text="@string/version"
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/label_version" />
 
 </RelativeLayout>

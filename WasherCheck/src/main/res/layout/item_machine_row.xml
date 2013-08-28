@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2013. Zachary Dremann
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,50 +21,50 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:minHeight="?android:listPreferredItemHeight"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minHeight="?android:listPreferredItemHeight"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <TextView
-            android:id="@+id/number"
-            style="?android:textAppearanceListItem"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/status"
-            android:fontFamily="sans-serif-thin"
-            android:text="@string/machine_number_unknown"
-            android:textColor="@android:color/primary_text_light"/>
+        android:id="@+id/number"
+        style="?android:textAppearanceListItem"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/status"
+        android:fontFamily="sans-serif-thin"
+        android:text="@string/machine_number_unknown"
+        android:textColor="@android:color/primary_text_light" />
 
     <TextView
-            android:id="@+id/status"
-            style="?android:textAppearanceListItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/machine_status_unknown"
-            android:textColor="@color/text_machine_unknown"
-            android:textStyle="bold"/>
+        android:id="@+id/status"
+        style="?android:textAppearanceListItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/machine_status_unknown"
+        android:textColor="@color/text_machine_unknown"
+        android:textStyle="bold" />
 
     <TextView
-            android:id="@+id/time_remaining"
-            style="?android:textAppearanceListItem"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/status"
-            android:bufferType="spannable"
-            android:fontFamily="sans-serif-thin"
-            android:gravity="right"
-            android:maxLines="1"
-            android:textColor="@android:color/primary_text_light"
-            android:visibility="gone"/>
+        android:id="@+id/time_remaining"
+        style="?android:textAppearanceListItem"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/status"
+        android:bufferType="spannable"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="right"
+        android:maxLines="1"
+        android:textColor="@android:color/primary_text_light"
+        android:visibility="gone" />
 
 </RelativeLayout>

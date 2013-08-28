@@ -23,25 +23,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@+id/action_change_room"
-            android:orderInCategory="98"
-            android:showAsAction="never"
-            android:title="@string/change_room"/>
+        android:id="@+id/action_change_room"
+        android:orderInCategory="98"
+        android:showAsAction="never"
+        android:title="@string/change_room" />
     <item
-            android:id="@+id/action_change_school"
-            android:orderInCategory="99"
-            android:showAsAction="never"
-            android:title="@string/change_school"/>
+        android:id="@+id/action_change_school"
+        android:orderInCategory="99"
+        android:showAsAction="never"
+        android:title="@string/change_school" />
     <item
-            android:id="@+id/action_fake_io"
-            android:title="Use fake IO"
-            android:checkable="true"
-            android:showAsAction="never"
-            android:orderInCategory="99"/>
+        android:id="@+id/action_fake_io"
+        android:title="Use fake IO"
+        android:checkable="true"
+        android:showAsAction="never"
+        android:orderInCategory="99" />
     <item
-            android:id="@+id/action_settings"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/action_settings"/>
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings" />
 
 </menu>

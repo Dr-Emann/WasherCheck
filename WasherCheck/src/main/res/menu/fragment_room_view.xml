@@ -23,15 +23,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@+id/action_refresh"
-            android:icon="?attr/ic_menu_refresh"
-            android:showAsAction="ifRoom"
-            android:title="@string/action_refresh"/>
+        android:id="@+id/action_refresh"
+        android:icon="?attr/ic_menu_refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_refresh" />
 
     <item
-            android:id="@+id/action_notify"
-            android:icon="@android:drawable/alert_dark_frame"
-            android:showAsAction="withText"
-            android:title="@string/action_notify"/>
+        android:id="@+id/action_notify"
+        android:icon="@android:drawable/alert_dark_frame"
+        android:showAsAction="withText"
+        android:title="@string/action_notify" />
 
 </menu>

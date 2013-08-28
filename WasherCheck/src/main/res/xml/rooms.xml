@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2013. Zachary Dremann
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,444 +21,444 @@
   -->
 
 <root
-        id="0"
-        name="root">
+    id="0"
+    name="root">
     <school
-            id="-1"
-            name="Binghamton University"
-            theme="Binghampton"
-            latitude="42.085038"
-            longitude="-75.968792">
+        id="-1"
+        name="Binghamton University"
+        theme="Binghampton"
+        latitude="42.085038"
+        longitude="-75.968792">
         <campus
-                id="-65"
-                name="College in the Woods">
+            id="-65"
+            name="College in the Woods">
             <room
-                    id="1008716"
-                    name="Cayuga"/>
+                id="1008716"
+                name="Cayuga" />
             <room
-                    id="1008720"
-                    name="Mohawk"/>
+                id="1008720"
+                name="Mohawk" />
             <room
-                    id="1008712"
-                    name="Oneida"/>
+                id="1008712"
+                name="Oneida" />
             <room
-                    id="1008718"
-                    name="Onondaga"/>
+                id="1008718"
+                name="Onondaga" />
             <room
-                    id="1008714"
-                    name="Seneca"/>
+                id="1008714"
+                name="Seneca" />
         </campus>
         <campus
-                id="-66"
-                name="Dickinson">
+            id="-66"
+            name="Dickinson">
             <room
-                    id="1039287"
-                    name="Champlaign"/>
+                id="1039287"
+                name="Champlaign" />
             <room
-                    id="1039188"
-                    name="Digman"/>
+                id="1039188"
+                name="Digman" />
             <room
-                    id="1039268"
-                    name="Rafuse"/>
+                id="1039268"
+                name="Rafuse" />
             <room
-                    id="1039235"
-                    name="Whitney A Side"/>
+                id="1039235"
+                name="Whitney A Side" />
             <room
-                    id="1039196"
-                    name="Whitney B Side"/>
+                id="1039196"
+                name="Whitney B Side" />
         </campus>
         <campus
-                id="-67"
-                name="Hinman">
+            id="-67"
+            name="Hinman">
             <hall
-                    id="-129"
-                    name="Cleveland">
+                id="-129"
+                name="Cleveland">
                 <room
-                        id="7205"
-                        name="Cleveland A"/>
+                    id="7205"
+                    name="Cleveland A" />
                 <room
-                        id="1008730"
-                        name="Cleveland B"/>
+                    id="1008730"
+                    name="Cleveland B" />
             </hall>
             <hall
-                    id="-130"
-                    name="Hughes">
+                id="-130"
+                name="Hughes">
                 <room
-                        id="1008728"
-                        name="Hughes A"/>
+                    id="1008728"
+                    name="Hughes A" />
                 <room
-                        id="1008729"
-                        name="Hughes B"/>
+                    id="1008729"
+                    name="Hughes B" />
             </hall>
             <hall
-                    id="-131"
-                    name="Lehman">
+                id="-131"
+                name="Lehman">
                 <room
-                        id="1008732"
-                        name="Lehman A"/>
+                    id="1008732"
+                    name="Lehman A" />
                 <room
-                        id="1008733"
-                        name="Lehman B"/>
+                    id="1008733"
+                    name="Lehman B" />
             </hall>
             <hall
-                    id="-132"
-                    name="Roosevelt">
+                id="-132"
+                name="Roosevelt">
                 <room
-                        id="1008722"
-                        name="Roosevelt A"/>
+                    id="1008722"
+                    name="Roosevelt A" />
                 <room
-                        id="1008723"
-                        name="Roosevelt B"/>
+                    id="1008723"
+                    name="Roosevelt B" />
             </hall>
             <hall
-                    id="-133"
-                    name="Smith Hall">
+                id="-133"
+                name="Smith Hall">
                 <room
-                        id="1008725"
-                        name="Smith A"/>
+                    id="1008725"
+                    name="Smith A" />
                 <room
-                        id="1008726"
-                        name="Smith B"/>
-            </hall>
-        </campus>
-        <campus
-                id="-68"
-                name="Newing">
-            <hall
-                    id="-134"
-                    name="Bingham">
-                <room
-                        id="1033795"
-                        name="Bingham 1"/>
-                <room
-                        id="1033937"
-                        name="Bingham 2"/>
-            </hall>
-            <hall
-                    id="-135"
-                    name="Broome">
-                <room
-                        id="1040603"
-                        name="Broome Washers"/>
-                <room
-                        id="1040623"
-                        name="Broome Dryers"/>
-            </hall>
-            <hall
-                    id="-136"
-                    name="Delaware">
-                <room
-                        id="1040604"
-                        name="Delaware Washers"/>
-                <room
-                        id="1040605"
-                        name="Delaware Dryers"/>
-            </hall>
-            <hall
-                    id="-137"
-                    name="Endicott">
-                <room
-                        id="1040624"
-                        name="Endicott Washers"/>
-                <room
-                        id="1040646"
-                        name="Endicott Dryers"/>
+                    id="1008726"
+                    name="Smith B" />
             </hall>
         </campus>
         <campus
-                id="-69"
-                name="Susquehanna Graduate Community">
+            id="-68"
+            name="Newing">
+            <hall
+                id="-134"
+                name="Bingham">
+                <room
+                    id="1033795"
+                    name="Bingham 1" />
+                <room
+                    id="1033937"
+                    name="Bingham 2" />
+            </hall>
+            <hall
+                id="-135"
+                name="Broome">
+                <room
+                    id="1040603"
+                    name="Broome Washers" />
+                <room
+                    id="1040623"
+                    name="Broome Dryers" />
+            </hall>
+            <hall
+                id="-136"
+                name="Delaware">
+                <room
+                    id="1040604"
+                    name="Delaware Washers" />
+                <room
+                    id="1040605"
+                    name="Delaware Dryers" />
+            </hall>
+            <hall
+                id="-137"
+                name="Endicott">
+                <room
+                    id="1040624"
+                    name="Endicott Washers" />
+                <room
+                    id="1040646"
+                    name="Endicott Dryers" />
+            </hall>
+        </campus>
+        <campus
+            id="-69"
+            name="Susquehanna Graduate Community">
             <room
-                    id="1013011"
-                    name="Brandywine"/>
+                id="1013011"
+                name="Brandywine" />
             <room
-                    id="1013008"
-                    name="Choconut"/>
+                id="1013008"
+                name="Choconut" />
             <room
-                    id="1012989"
-                    name="Glenwood"/>
+                id="1012989"
+                name="Glenwood" />
             <room
-                    id="1012991"
-                    name="Nanticoke"/>
+                id="1012991"
+                name="Nanticoke" />
         </campus>
     </school>
     <school
-            id="-2"
-            name="Carnegie Mellon University"
-            theme="CMU"
-            latitude="40.44391"
-            longitude="-79.941612">
+        id="-2"
+        name="Carnegie Mellon University"
+        theme="CMU"
+        latitude="40.44391"
+        longitude="-79.941612">
         <room
-                id="331"
-                name="Boss House"/>
+            id="331"
+            name="Boss House" />
         <room
-                id="325"
-                name="Doherty Apartments"/>
+            id="325"
+            name="Doherty Apartments" />
         <room
-                id="679"
-                name="Donner House"/>
+            id="679"
+            name="Donner House" />
         <room
-                id="341"
-                name="Hammerschlag House"/>
+            id="341"
+            name="Hammerschlag House" />
         <room
-                id="345"
-                name="Henderson House"/>
+            id="345"
+            name="Henderson House" />
         <room
-                id="343"
-                name="Margaret Morrison Plaza 4"/>
+            id="343"
+            name="Margaret Morrison Plaza 4" />
         <room
-                id="322"
-                name="McGill House"/>
+            id="322"
+            name="McGill House" />
         <room
-                id="319"
-                name="Morewood Gardens A Tower"/>
+            id="319"
+            name="Morewood Gardens A Tower" />
         <room
-                id="104"
-                name="Moorwood Gardens D Tower"/>
+            id="104"
+            name="Moorwood Gardens D Tower" />
         <room
-                id="327"
-                name="Mudge House B Tower"/>
+            id="327"
+            name="Mudge House B Tower" />
         <room
-                id="446"
-                name="Mudge House C Tower"/>
+            id="446"
+            name="Mudge House C Tower" />
         <room
-                id="329"
-                name="Scobell House"/>
+            id="329"
+            name="Scobell House" />
         <room
-                id="333"
-                name="Shirley Apartments"/>
+            id="333"
+            name="Shirley Apartments" />
         <room
-                id="339"
-                name="Stever House Laundry"/>
+            id="339"
+            name="Stever House Laundry" />
         <room
-                id="347"
-                name="Welch House"/>
+            id="347"
+            name="Welch House" />
         <room
-                id="105"
-                name="West Wing/Resnik"/>
+            id="105"
+            name="West Wing/Resnik" />
         <room
-                id="335"
-                name="Woodlawn Apartment"/>
+            id="335"
+            name="Woodlawn Apartment" />
     </school>
     <school
-            id="-3"
-            name="Loyola University"
-            theme="Loyola"
-            latitude="39.34613"
-            longitude="-76.618784">
+        id="-3"
+        name="Loyola University"
+        theme="Loyola"
+        latitude="39.34613"
+        longitude="-76.618784">
         <room
-                id="1015212"
-                name="404 Tantallion"/>
+            id="1015212"
+            name="404 Tantallion" />
         <room
-                id="1015214"
-                name="405 Tantallion"/>
+            id="1015214"
+            name="405 Tantallion" />
         <room
-                id="1015192"
-                name="412 Tantallion"/>
+            id="1015192"
+            name="412 Tantallion" />
         <room
-                id="1015194"
-                name="417 Tantallion"/>
+            id="1015194"
+            name="417 Tantallion" />
         <room
-                id="1015209"
-                name="405 Bokel"/>
+            id="1015209"
+            name="405 Bokel" />
         <room
-                id="1015191"
-                name="415 Bokel"/>
+            id="1015191"
+            name="415 Bokel" />
         <room
-                id="1015217"
-                name="5204 Crowson"/>
+            id="1015217"
+            name="5204 Crowson" />
         <room
-                id="1015204"
-                name="5204 Gallagher"/>
+            id="1015204"
+            name="5204 Gallagher" />
         <room
-                id="1015208"
-                name="5205 Gallagher"/>
+            id="1015208"
+            name="5205 Gallagher" />
         <room
-                id="7006"
-                name="Butler"/>
+            id="7006"
+            name="Butler" />
         <room
-                id="5035"
-                name="Campion"/>
+            id="5035"
+            name="Campion" />
         <room
-                id="7017"
-                name="Flannery O'Connor Washers"/>
+            id="7017"
+            name="Flannery O'Connor Washers" />
         <room
-                id="7004"
-                name="Flannery O'Connor Dryers"/>
+            id="7004"
+            name="Flannery O'Connor Dryers" />
         <room
-                id="7005"
-                name="Hammerman"/>
+            id="7005"
+            name="Hammerman" />
         <room
-                id="5038"
-                name="Hopkins Court"/>
+            id="5038"
+            name="Hopkins Court" />
         <room
-                id="1009197"
-                name="Newman Towers Washers"/>
+            id="1009197"
+            name="Newman Towers Washers" />
         <room
-                id="7023"
-                name="Newman Towers Dryers"/>
+            id="7023"
+            name="Newman Towers Dryers" />
     </school>
     <school
-            id="-4"
-            name="University of Maryland"
-            theme="UMaryland"
-            latitude="38.987034"
-            longitude="-76.940015">
+        id="-4"
+        name="University of Maryland"
+        theme="UMaryland"
+        latitude="38.987034"
+        longitude="-76.940015">
         <hall
-                id="-138"
-                name="Chesapeake Hall">
+            id="-138"
+            name="Chesapeake Hall">
             <room
-                    id="6831"
-                    name="Chesapeake North"/>
+                id="6831"
+                name="Chesapeake North" />
             <room
-                    id="6835"
-                    name="Chesapeake South"/>
+                id="6835"
+                name="Chesapeake South" />
         </hall>
         <hall
-                id="-139"
-                name="Erickson Hall">
+            id="-139"
+            name="Erickson Hall">
             <room
-                    id="6834"
-                    name="Erickson Upper"/>
+                id="6834"
+                name="Erickson Upper" />
             <room
-                    id="5099"
-                    name="Erickson Lower"/>
+                id="5099"
+                name="Erickson Lower" />
         </hall>
         <hall
-                id="-140"
-                name="Harbor Hall">
+            id="-140"
+            name="Harbor Hall">
             <room
-                    id="6838"
-                    name="Harbor Front"/>
+                id="6838"
+                name="Harbor Front" />
             <room
-                    id="6997"
-                    name="Harbor Back"/>
+                id="6997"
+                name="Harbor Back" />
         </hall>
         <hall
-                id="-141"
-                name="Hillside Apartments">
+            id="-141"
+            name="Hillside Apartments">
             <room
-                    id="6849"
-                    name="Hillside Laundry"/>
+                id="6849"
+                name="Hillside Laundry" />
         </hall>
         <hall
-                id="-142"
-                name="Patapsco Hall">
+            id="-142"
+            name="Patapsco Hall">
             <room
-                    id="6841"
-                    name="Patapsco North"/>
+                id="6841"
+                name="Patapsco North" />
             <room
-                    id="6842"
-                    name="Patapsco South"/>
+                id="6842"
+                name="Patapsco South" />
         </hall>
         <hall
-                id="-143"
-                name="Potomac Hall">
+            id="-143"
+            name="Potomac Hall">
             <room
-                    id="6844"
-                    name="Potomac North"/>
+                id="6844"
+                name="Potomac North" />
             <room
-                    id="6845"
-                    name="Potomac South"/>
+                id="6845"
+                name="Potomac South" />
         </hall>
         <hall
-                id="-144"
-                name="Susquehanna Hall">
+            id="-144"
+            name="Susquehanna Hall">
             <room
-                    id="6833"
-                    name="Susquehanna North"/>
+                id="6833"
+                name="Susquehanna North" />
             <room
-                    id="6836"
-                    name="Susquehanna South"/>
+                id="6836"
+                name="Susquehanna South" />
         </hall>
         <hall
-                id="-145"
-                name="Terrace Apartments">
+            id="-145"
+            name="Terrace Apartments">
             <room
-                    id="6847"
-                    name="Terrace Laundry"/>
+                id="6847"
+                name="Terrace Laundry" />
         </hall>
         <hall
-                id="-146"
-                name="West Hill Apartments">
+            id="-146"
+            name="West Hill Apartments">
             <room
-                    id="6851"
-                    name="West Hill Laundry"/>
+                id="6851"
+                name="West Hill Laundry" />
         </hall>
     </school>
     <school
-            id="-5"
-            name="University of Southern Mississippi"
-            theme="SouthernMiss"
-            latitude="31.329079"
-            longitude="-89.332158">
+        id="-5"
+        name="University of Southern Mississippi"
+        theme="SouthernMiss"
+        latitude="31.329079"
+        longitude="-89.332158">
         <room
-                id="1037745"
-                name="Century Park 1"/>
+            id="1037745"
+            name="Century Park 1" />
         <room
-                id="1037724"
-                name="Century Park 2"/>
+            id="1037724"
+            name="Century Park 2" />
         <room
-                id="1037746"
-                name="Century Park 3"/>
+            id="1037746"
+            name="Century Park 3" />
         <room
-                id="1037725"
-                name="Century Park 4"/>
+            id="1037725"
+            name="Century Park 4" />
     </school>
     <school
-            id="-7"
-            name="Stevenson University"
-            theme="Stevenson"
-            latitude="39.427276"
-            longitude="-76.779634">
+        id="-7"
+        name="Stevenson University"
+        theme="Stevenson"
+        latitude="39.427276"
+        longitude="-76.779634">
         <room
-                id="1166"
-                name="Belfast Hall"/>
+            id="1166"
+            name="Belfast Hall" />
         <room
-                id="1169"
-                name="Cromwell Hall"/>
+            id="1169"
+            name="Cromwell Hall" />
         <room
-                id="1165"
-                name="Dunlaney Hall"/>
+            id="1165"
+            name="Dunlaney Hall" />
         <room
-                id="1164"
-                name="Greenspring Hall"/>
+            id="1164"
+            name="Greenspring Hall" />
         <room
-                id="1040367"
-                name="Hering Run"/>
+            id="1040367"
+            name="Hering Run" />
         <room
-                id="1163"
-                name="Long Green Hall"/>
+            id="1163"
+            name="Long Green Hall" />
         <room
-                id="1171"
-                name="Patapsco Hall"/>
+            id="1171"
+            name="Patapsco Hall" />
         <room
-                id="1167"
-                name="Shawan Hall"/>
+            id="1167"
+            name="Shawan Hall" />
         <room
-                id="1170"
-                name="Susquehanna Hall"/>
+            id="1170"
+            name="Susquehanna Hall" />
         <room
-                id="1040368"
-                name="Wakefield Hall"/>
+            id="1040368"
+            name="Wakefield Hall" />
         <room
-                id="2822"
-                name="Western Run Hall"/>
+            id="2822"
+            name="Western Run Hall" />
         <room
-                id="1026712"
-                name="Wooded Way"/>
+            id="1026712"
+            name="Wooded Way" />
         <room
-                id="1168"
-                name="Worthington Hall"/>
+            id="1168"
+            name="Worthington Hall" />
     </school>
     <school
-            id="-8"
-            name="Wayne State University"
-            theme="WayneState"
-            latitude="42.357164"
-            longitude="-83.065141">
+        id="-8"
+        name="Wayne State University"
+        theme="WayneState"
+        latitude="42.357164"
+        longitude="-83.065141">
         <room
-                id="5617"
-                name="University Towers"/>
+            id="5617"
+            name="University Towers" />
     </school>
 </root>

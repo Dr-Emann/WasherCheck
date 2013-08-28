@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2013. Zachary Dremann
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +23,7 @@
 <resources>
 
     <style name="Theme.Binghampton" parent="AppBaseTheme.DarkBar">
-    <item name="android:actionBarItemBackground">@drawable/selectable_background_binghampton
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_binghampton
         </item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Binghampton</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Binghampton</item>

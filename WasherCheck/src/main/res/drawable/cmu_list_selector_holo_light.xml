@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2013. Zachary Dremann
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,13 +22,13 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_window_focused="false" android:drawable="@android:color/transparent"/>
+    <item android:state_window_focused="false" android:drawable="@android:color/transparent" />
 
     <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
-    <item android:state_focused="true" android:state_enabled="false" android:state_pressed="true" android:drawable="@drawable/cmu_list_selector_disabled_holo_light"/>
-    <item android:state_focused="true" android:state_enabled="false" android:drawable="@drawable/cmu_list_selector_disabled_holo_light"/>
-    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/cmu_list_selector_background_transition_holo_light"/>
-    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/cmu_list_selector_background_transition_holo_light"/>
-    <item android:state_focused="true" android:drawable="@drawable/cmu_list_focused_holo"/>
+    <item android:state_focused="true" android:state_enabled="false" android:state_pressed="true" android:drawable="@drawable/cmu_list_selector_disabled_holo_light" />
+    <item android:state_focused="true" android:state_enabled="false" android:drawable="@drawable/cmu_list_selector_disabled_holo_light" />
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/cmu_list_selector_background_transition_holo_light" />
+    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/cmu_list_selector_background_transition_holo_light" />
+    <item android:state_focused="true" android:drawable="@drawable/cmu_list_focused_holo" />
 
 </selector>
