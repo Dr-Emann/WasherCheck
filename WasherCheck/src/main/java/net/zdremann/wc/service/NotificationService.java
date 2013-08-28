@@ -43,7 +43,9 @@ import net.zdremann.wc.ui.RoomViewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class NotificationService extends IntentService {
 
@@ -61,7 +63,7 @@ public class NotificationService extends IntentService {
 
         final ContentResolver contentResolver = getContentResolver();
         final Cursor notifications = contentResolver.query(Notifications.CONTENT_URI, null, null, null, Notifications.ROOM_ID);
-        if (notifications == null || !notifications.moveToFirst()) {
+        if (notifications == null) {
             throw new IllegalStateException("Notifications Cursor is Invalid");
         }
 
