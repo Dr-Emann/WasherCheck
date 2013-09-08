@@ -47,25 +47,32 @@ public class Machine implements Comparable<Machine>, Parcelable {
         }
 
     };
+    public long id;
     public final int num;
     public final long roomId;
     @NotNull
     public final Type type;
-    public final long id;
+    public final long esudsId;
     @NotNull
     public Status status = Status.UNKNOWN;
     public long timeRemaining = NO_TIME_REMAINING;
 
-    public Machine(final long roomId, final long id, int num, @NotNull final Type type) {
+    public Machine(final long roomId, final long esudsId, int num, @NotNull final Type type) {
+        this(-1, roomId, esudsId, num, type);
+    }
+
+    public Machine(final long id, final long roomId, final long esudsId, int num, @NotNull final Type type) {
         this.id = id;
+        this.esudsId = esudsId;
         this.num = num;
         this.type = type;
         this.roomId = roomId;
     }
 
     private Machine(Parcel in) {
-        this.roomId = in.readLong();
         this.id = in.readLong();
+        this.roomId = in.readLong();
+        this.esudsId = in.readLong();
         this.num = in.readInt();
         this.type = Type.fromInt(in.readInt());
         this.status = Status.fromInt(in.readInt());
@@ -103,7 +110,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
 
         Machine other = (Machine) o;
         return this.roomId == other.roomId &&
-                this.id == other.id &&
+                this.esudsId == other.esudsId &&
                 this.num == other.num &&
                 this.type.equals(other.type) &&
                 this.status.equals(other.status) &&
@@ -114,7 +121,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
     public int hashCode() {
         int result = 12;
         result = 31 * result + (int) (roomId ^ (roomId >>> 32));
-        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (esudsId ^ (esudsId >>> 32));
         result = 31 * result + num;
         result = 31 * result + type.hashCode();
         result = 31 * result + status.hashCode();
@@ -127,7 +134,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
         StringBuilder builder = new StringBuilder();
         builder.append("Machine{")
                 .append("roomId=").append(roomId)
-                .append(", id=").append(id)
+                .append(", id=").append(esudsId)
                 .append(", num=").append(num)
                 .append(", type=").append(type.toString())
                 .append(", status=").append(status.toString());
@@ -144,8 +151,9 @@ public class Machine implements Comparable<Machine>, Parcelable {
     }
 
     public void writeToParcel(Parcel destination, int flags) {
-        destination.writeLong(roomId);
         destination.writeLong(id);
+        destination.writeLong(roomId);
+        destination.writeLong(esudsId);
         destination.writeInt(num);
         destination.writeInt(type.ordinal());
         destination.writeInt(status.ordinal());

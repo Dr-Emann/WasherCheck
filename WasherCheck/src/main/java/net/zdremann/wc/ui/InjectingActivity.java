@@ -80,6 +80,10 @@ abstract class InjectingActivity extends FragmentActivity {
         activityGraph.inject(injected);
     }
 
+    public <T> T get(Class<T> clazz) {
+        return activityGraph.get(clazz);
+    }
+
     protected List<Object> getModules() {
         return Arrays.<Object>asList(new ActivityModule(this));
     }

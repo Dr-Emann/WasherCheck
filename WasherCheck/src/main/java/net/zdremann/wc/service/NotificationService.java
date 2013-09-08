@@ -36,16 +36,14 @@ import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 import net.zdremann.wc.R;
-import net.zdremann.wc.provider.MachinesContract.Machines;
-import net.zdremann.wc.provider.NotificationsContract.Notifications;
 import net.zdremann.wc.ui.RoomViewer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.SECONDS;
+
+import static java.util.concurrent.TimeUnit.*;
+import static net.zdremann.wc.provider.WasherCheckContract.*;
 
 public class NotificationService extends IntentService {
 
@@ -62,19 +60,19 @@ public class NotificationService extends IntentService {
         final PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
 
         final ContentResolver contentResolver = getContentResolver();
-        final Cursor notifications = contentResolver.query(Notifications.CONTENT_URI, null, null, null, Notifications.ROOM_ID);
+        final Cursor notifications = contentResolver.query(PendingNotificationMachine.CONTENT_URI, null, null, null, PendingNotificationMachine.ROOM_ID);
         if (notifications == null) {
-            throw new IllegalStateException("Notifications Cursor is Invalid");
+            throw new IllegalStateException("Notification Cursor is Invalid");
         }
 
         final String[] machineProjection =
-                {Machines._ID, Machines.TYPE, Machines.NUMBER, Machines.STATUS, Machines.TIME_REMAINING};
+                {MachineStatus._ID, MachineStatus.MACHINE_TYPE, MachineStatus.NUMBER, MachineStatus.STATUS, MachineStatus.TIME_REMAINING};
 
-        final int notif_idx_id = notifications.getColumnIndexOrThrow(Notifications._ID);
-        final int notif_idx_room_id = notifications.getColumnIndexOrThrow(Notifications.ROOM_ID);
-        final int notif_idx_type = notifications.getColumnIndexOrThrow(Notifications.TYPE);
-        final int notif_idx_number = notifications.getColumnIndexOrThrow(Notifications.NUMBER);
-        final int notif_idx_status = notifications.getColumnIndexOrThrow(Notifications.STATUS);
+        final int notif_idx_id = notifications.getColumnIndexOrThrow(PendingNotificationMachine._ID);
+        final int notif_idx_room_id = notifications.getColumnIndexOrThrow(PendingNotificationMachine.ROOM_ID);
+        final int notif_idx_type = notifications.getColumnIndexOrThrow(PendingNotificationMachine.MACHINE_TYPE);
+        final int notif_idx_number = notifications.getColumnIndexOrThrow(PendingNotificationMachine.NUMBER);
+        final int notif_idx_status = notifications.getColumnIndexOrThrow(PendingNotificationMachine.DESIRED_STATUS);
 
         final LongSparseArray<Cursor> rooms = new LongSparseArray<Cursor>();
 
@@ -85,7 +83,7 @@ public class NotificationService extends IntentService {
             long roomId = notifications.getLong(notif_idx_room_id);
             Cursor machines = rooms.get(roomId);
             if (machines == null) {
-                machines = contentResolver.query(Machines.buildRoomUri(roomId, MILLISECONDS.convert(30, SECONDS)), machineProjection, null, null, null);
+                machines = contentResolver.query(MachineStatus.fromRoomId(roomId), machineProjection, null, null, null);
                 assert machines != null;
                 rooms.put(roomId, machines);
             }
@@ -108,7 +106,7 @@ public class NotificationService extends IntentService {
         }
 
         for (Long notificationId : finishedNotifications) {
-            contentResolver.delete(Notifications.fromId(notificationId), null, null);
+            contentResolver.delete(PendingNotificationMachine.fromId(notificationId), null, null);
         }
 
         if (finishedNotifications.size() > 0) {

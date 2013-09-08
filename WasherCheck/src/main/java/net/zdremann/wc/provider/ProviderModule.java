@@ -29,7 +29,7 @@ import dagger.Module;
 @Module(
         injects = {
                 InjectingProvider.class,
-                MachinesProvider.class
+                WasherCheckProvider.class
         },
         addsTo = ApplicationModule.class,
         library = true

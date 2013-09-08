@@ -25,7 +25,6 @@ package net.zdremann.wc.io.rooms;
 import android.content.SharedPreferences;
 
 import net.zdremann.wc.Main;
-import net.zdremann.wc.provider.MachinesProvider;
 
 import dagger.Lazy;
 import dagger.Module;
@@ -33,7 +32,6 @@ import dagger.Provides;
 
 @Module(
         complete = false,
-        injects = MachinesProvider.class,
         library = true
 )
 public class RoomLoaderModule {

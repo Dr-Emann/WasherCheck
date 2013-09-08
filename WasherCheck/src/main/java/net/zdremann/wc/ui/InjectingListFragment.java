@@ -32,4 +32,14 @@ abstract class InjectingListFragment extends ListFragment {
         final InjectingActivity injector = (InjectingActivity) getActivity();
         injector.inject(this);
     }
+
+    public void inject(Object toInject) {
+        final InjectingActivity activity = (InjectingActivity) getActivity();
+        activity.inject(toInject);
+    }
+
+    public <T> T get(Class<T> clazz) {
+        final InjectingActivity activity = (InjectingActivity) getActivity();
+        return activity.get(clazz);
+    }
 }

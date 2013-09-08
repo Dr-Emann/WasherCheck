@@ -34,6 +34,7 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
 import net.zdremann.wc.io.IOModule;
+import net.zdremann.wc.service.RoomRefresher;
 
 import javax.inject.Singleton;
 
@@ -42,7 +43,8 @@ import dagger.Provides;
 
 @Module(
         injects = {
-                MyApplication.class
+                MyApplication.class,
+                RoomRefresher.class
         },
         includes = {
                 IOModule.class

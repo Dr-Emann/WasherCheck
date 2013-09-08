@@ -25,13 +25,11 @@ package net.zdremann.wc.io.rooms;
 import android.content.Context;
 import android.support.v4.content.CursorLoader;
 
-import net.zdremann.wc.provider.MachinesContract.Machines;
-
-import static java.util.concurrent.TimeUnit.*;
+import net.zdremann.wc.provider.WasherCheckContract;
 
 public class TmpRoomLoader extends CursorLoader {
     public TmpRoomLoader(Context context, long roomId) {
-        super(context, Machines.buildRoomUri(roomId, MILLISECONDS.convert(5, SECONDS)),
-                null, null, null, Machines.DEFAULT_SORT);
+        super(context, WasherCheckContract.MachineStatus.fromRoomId(roomId),
+                WasherCheckContract.MachineStatus.ALL_COLUMNS, null, null, null);
     }
 }

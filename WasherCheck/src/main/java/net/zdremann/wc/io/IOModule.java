@@ -23,7 +23,6 @@
 package net.zdremann.wc.io;
 
 import net.zdremann.wc.io.locations.LocationsProxyModule;
-import net.zdremann.wc.io.notifications.NotificationsModule;
 import net.zdremann.wc.io.rooms.RoomLoaderModule;
 
 import dagger.Module;
@@ -31,8 +30,7 @@ import dagger.Module;
 @Module(
         includes = {
                 RoomLoaderModule.class,
-                LocationsProxyModule.class,
-                NotificationsModule.class
+                LocationsProxyModule.class
         },
         library = true,
         complete = false
