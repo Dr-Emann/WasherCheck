@@ -71,10 +71,11 @@ public class RoomRefresher extends AsyncTask<Long, Void, Void> {
                 cv.put(WasherCheckContract.MachineStatus.TIME_REMAINING, machine.timeRemaining);
                 cv.put(WasherCheckContract.MachineStatus.LAST_UPDATED, time);
                 values[i++] = cv;
-                mResolver.insert(WasherCheckContract.MachineStatus.CONTENT_URI, cv);
             }
 
-            //mResolver.bulkInsert(WasherCheckContract.MachineStatus.CONTENT_URI, values);
+            mResolver.delete(WasherCheckContract.Machine.fromRoomId(roomId), null, null);
+
+            mResolver.bulkInsert(WasherCheckContract.MachineStatus.CONTENT_URI, values);
 
             mResolver.notifyChange(WasherCheckContract.MachineStatus.fromRoomId(roomId), null);
         } catch (IOException e) {

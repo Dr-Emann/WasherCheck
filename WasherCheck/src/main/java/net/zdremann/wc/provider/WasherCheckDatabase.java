@@ -54,6 +54,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
         StatusUpdateTable.onCreate(db);
         MachineStatusView.onCreate(db);
         MachineGroupTable.onCreate(db, mLocations);
+        PendingNotificationMachineView.onCreate(db);
     }
 
     @Override
@@ -63,6 +64,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
         StatusUpdateTable.onUpgrade(db, oldVersion, newVersion);
         MachineStatusView.onUpgrade(db, oldVersion, newVersion);
         MachineGroupTable.onUpgrade(db, mLocations, oldVersion, newVersion);
+        PendingNotificationMachineView.onUpgrade(db, oldVersion, newVersion);
     }
 
     static final class PendingNotificationTable
@@ -75,7 +77,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
                         MACHINE_ID + " INTEGER NOT NULL " +
                         "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
                         DATE + " INTEGER NOT NULL,\n" +
-                        EXTENDED + " INTEGER NOT NULL,\n" +
+                        EXTENDED + " INTEGER NOT NULL DEFAULT " + 0 + " ,\n" +
                         DESIRED_STATUS + " INTEGER NOT NULL )";
 
         public static void onCreate(SQLiteDatabase db) {
@@ -95,9 +97,9 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
         public static final String VIEW_NAME = WasherCheckContract.PendingNotificationMachine.PATH;
         public static final String SQL_CREATE =
                 "CREATE VIEW " + VIEW_NAME + " AS\n" +
-                        "SELECT " + MACHINE_ID + ", " + NUMBER + ", " +
-                        MACHINE_TYPE + ", " + ROOM_ID + ", " + ESUDS_ID + ", " + DATE + ", " +
-                        EXTENDED + ", " + DESIRED_STATUS + "\n" +
+                        "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
+                        MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
+                        ESUDS_ID + ", " + DATE + ", " + EXTENDED + ", " + DESIRED_STATUS + "\n" +
                         "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
                         " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
                         PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID;

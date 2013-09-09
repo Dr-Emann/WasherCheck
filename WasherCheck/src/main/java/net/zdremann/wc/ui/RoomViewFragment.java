@@ -239,23 +239,21 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         final ContentResolver contentResolver = getActivity().getContentResolver();
 
         final ContentValues cv = new ContentValues();
-        cv.put(PendingNotificationMachine.ROOM_ID, mRoomId);
-        cv.put(PendingNotificationMachine.NUMBER, cursor.getInt(cursor.getColumnIndex(MachineColumns.NUMBER)));
-        cv.put(PendingNotificationMachine.DATE, System.currentTimeMillis());
-        cv.put(PendingNotificationMachine.MACHINE_TYPE, cursor.getInt(cursor.getColumnIndex(MachineColumns.MACHINE_TYPE)));
+        cv.put(PendingNotificationColumns.MACHINE_ID, cursor.getInt(cursor.getColumnIndex(MachineStatusColumns.MACHINE_ID)));
+        cv.put(PendingNotificationColumns.DATE, System.currentTimeMillis());
 
         switch (item.getItemId()) {
         case R.id.action_notify_available:
-            cv.put(PendingNotificationMachine.DESIRED_STATUS, Machine.Status.AVAILABLE.ordinal());
+            cv.put(PendingNotificationMachineColumns.DESIRED_STATUS, Machine.Status.AVAILABLE.ordinal());
             break;
         case R.id.action_notify_cycle_complete:
-            cv.put(PendingNotificationMachine.DESIRED_STATUS, Machine.Status.CYCLE_COMPLETE.ordinal());
+            cv.put(PendingNotificationMachineColumns.DESIRED_STATUS, Machine.Status.CYCLE_COMPLETE.ordinal());
             break;
         default:
             return super.onContextItemSelected(item);
         }
 
-        contentResolver.insert(PendingNotificationMachine.CONTENT_URI, cv);
+        contentResolver.insert(PendingNotification.CONTENT_URI, cv);
         Intent intent = new Intent(getActivity(), NotificationService.class);
         getActivity().startService(intent);
         return true;
