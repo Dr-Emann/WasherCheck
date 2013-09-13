@@ -26,6 +26,7 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 
 import net.zdremann.wc.BuildConfig;
@@ -78,14 +79,19 @@ public class InternetMachineGetter implements MachineGetter {
 
             long parseTime = System.currentTimeMillis() - timeStart;
 
-            gaTracker.sendTiming("room_loading", parseTime, "parsing", null);
-
+            gaTracker.send(
+                    MapBuilder.createTiming("loading", parseTime, "room_loading", "parsing").build()
+            );
             return machines;
         } catch (IOException e) {
-            gaTracker.sendException(TAG + ":downloading", e, false);
+            gaTracker.send(
+                    MapBuilder.createException("downloading: " + e.getMessage(), false).build()
+            );
             throw e;
         } catch (XmlPullParserException e) {
-            gaTracker.sendException(TAG + ":roomParsing", e, false);
+            gaTracker.send(
+                    MapBuilder.createException("parsing: " + e.getMessage(), false).build()
+            );
             Log.d(TAG, "Wrong format when downloading for room " + roomId);
             throw new IOException(e);
         }
@@ -148,7 +154,9 @@ public class InternetMachineGetter implements MachineGetter {
             html = m.replaceAll("");
 
             long timeSpent = SystemClock.elapsedRealtime() - timeStart;
-            gaTracker.sendTiming("room_loading", timeSpent, "download", null);
+            gaTracker.send(
+                    MapBuilder.createTiming("loading", timeSpent, "room_loading", "download").build()
+            );
 
             if (BuildConfig.DEBUG)
                 Log.i(TAG, "Html Loading took " + (SystemClock.elapsedRealtime() - timeStart) + " millis");

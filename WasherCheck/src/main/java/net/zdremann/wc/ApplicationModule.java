@@ -65,25 +65,18 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     GoogleAnalytics provideGoogleAnalytics(@ForApplication Context context) {
         return GoogleAnalytics.getInstance(context);
     }
 
     @Provides
-    @Singleton
-    Tracker provideGoogleTracker(@ForApplication Context context) {
-        EasyTracker tracker = EasyTracker.getInstance();
-        tracker.setContext(context);
-        return EasyTracker.getTracker();
+    public EasyTracker provideEasyTracker(@ForApplication Context context) {
+        return EasyTracker.getInstance(context);
     }
 
     @Provides
-    @Singleton
-    public EasyTracker provideEasyTracker(@ForApplication Context context) {
-        EasyTracker tracker = EasyTracker.getInstance();
-        tracker.setContext(context);
-        return tracker;
+    Tracker provideGoogleTracker(EasyTracker easyTracker) {
+        return easyTracker;
     }
 
     @Provides

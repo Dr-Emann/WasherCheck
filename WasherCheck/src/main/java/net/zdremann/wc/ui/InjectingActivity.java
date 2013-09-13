@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.Tracker;
 
 import net.zdremann.wc.BuildConfig;
 import net.zdremann.wc.MyApplication;
@@ -41,10 +40,7 @@ import dagger.ObjectGraph;
 abstract class InjectingActivity extends FragmentActivity {
 
     @Inject
-    EasyTracker easyTracker;
-
-    @Inject
-    Tracker gaTracker;
+    EasyTracker gaTracker;
 
     protected ObjectGraph activityGraph;
 
@@ -64,14 +60,13 @@ abstract class InjectingActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        easyTracker.activityStart(this);
+        gaTracker.activityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        easyTracker.activityStop(this);
-        easyTracker.dispatch();
+        gaTracker.activityStop(this);
     }
 
     public void inject(Object injected) {

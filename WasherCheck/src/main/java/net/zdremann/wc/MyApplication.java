@@ -24,18 +24,36 @@ package net.zdremann.wc;
 
 import android.app.Application;
 
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Logger;
+
+import javax.inject.Inject;
+
 import dagger.ObjectGraph;
 
 public class MyApplication extends Application {
     private ObjectGraph mObjectGraph;
 
+    @Inject
+    GoogleAnalytics googleAnalytics;
+
+    @Inject
     public MyApplication() {
+        super();
         mObjectGraph = ObjectGraph.create(new ApplicationModule(this));
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mObjectGraph.inject(this);
+        googleAnalytics.setDryRun(BuildConfig.DEBUG);
+        googleAnalytics.getLogger().setLogLevel(
+                BuildConfig.DEBUG ?
+                        Logger.LogLevel.VERBOSE :
+                        Logger.LogLevel.WARNING
+        );
     }
 
     public ObjectGraph getApplicationGraph() {

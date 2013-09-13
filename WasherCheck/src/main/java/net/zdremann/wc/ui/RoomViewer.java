@@ -32,6 +32,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+
 import net.zdremann.wc.Main;
 import net.zdremann.wc.R;
 import net.zdremann.wc.io.locations.LocationsProxy;
@@ -91,10 +94,6 @@ public class RoomViewer extends InjectingActivity {
                     long roomId = data.getLongExtra(ARG_ROOM_ID, 0);
                     mPreferences.edit().putLong(ARG_ROOM_ID, roomId).apply();
 
-                    gaTracker.setStartSession(mRoomId != roomId);
-                    gaTracker.setCustomDimension(1, String.valueOf(roomId));
-                    gaTracker.sendEvent("Room", "Chosen", String.valueOf(roomId), 0L);
-
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -126,7 +125,10 @@ public class RoomViewer extends InjectingActivity {
 
         setContentView(R.layout.activity_room_viewer);
 
-        gaTracker.setCustomDimension(1, String.valueOf(mRoomId));
+        gaTracker.send(
+                MapBuilder.createAppView()
+                        .set(Fields.customDimension(1), String.valueOf(mRoomId)).build()
+        );
     }
 
     protected void startChooseRoom() {
