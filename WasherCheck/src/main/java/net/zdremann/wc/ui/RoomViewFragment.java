@@ -61,8 +61,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 
 import static java.util.concurrent.TimeUnit.*;
@@ -76,22 +78,26 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         @Override
         public void run() {
             setIsLoading(true);
-            final RoomRefresher refresher = RoomViewFragment.this.get(RoomRefresher.class);
+            final RoomRefresher refresher = mRoomRefreshGetter.get();
             refresher.execute(mRoomId);
         }
     };
     MyRoomViewAdapter mRoomViewAdapter;
     SimpleSectionedListAdapter mAdapter;
     @Inject
+     Provider<RoomRefresher> mRoomRefreshGetter;
+    @Inject
     @ForActivity
     Context mActivityContext;
     private long mRoomId;
-    private boolean mSelectMode;
+    private boolean mIsLoading = false;
     private MenuItem mRefreshItem;
     private Handler mHandler = new Handler();
+    private ScheduledThreadPoolExecutor mRefreshPool;
 
     protected void setIsLoading(final boolean isLoading) {
-        if (mRefreshItem != null) {
+        mIsLoading = isLoading;
+            if (mRefreshItem != null) {
             if (isLoading) {
                 mRefreshItem.setActionView(R.layout.actionbar_indeterminite_progress);
             } else {
@@ -110,8 +116,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         if (getActivity() == null)
             return;
 
-        setEmptyText(getText(R.string.error_room_download));
-
+        setEmptyText(getText(R.string.room_empty));
 
         final ArrayList<SimpleSectionedListAdapter.Section> sections =
                 new ArrayList<SimpleSectionedListAdapter.Section>(Machine.Type.values().length);
@@ -140,8 +145,6 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
             SimpleSectionedListAdapter.Section[] dummy =
                     new SimpleSectionedListAdapter.Section[sections.size()];
             mAdapter.setSections(sections.toArray(dummy));
-
-            mHandler.postDelayed(mRefreshRunnable, MILLISECONDS.convert(5, MINUTES));
         }
     }
 
@@ -154,8 +157,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     @Override
     public String toString() {
         return "RoomViewFragment{" +
-                "mSelectMode=" + mSelectMode +
-                ", mRoomId=" + mRoomId +
+                "mRoomId=" + mRoomId +
                 '}';
     }
 
@@ -182,14 +184,24 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
         if (arguments == null) {
             mRoomId = 0;
-            mSelectMode = false;
         } else {
             mRoomId = arguments.getLong(ARG_ROOM_ID);
-            mSelectMode = arguments.getBoolean(ARG_SELECT_MODE, false);
             getLoaderManager().initLoader(0, null, this);
         }
+    }
 
-        mRefreshRunnable.run();
+    @Override
+    public void onResume() {
+        super.onResume();
+        //mRefreshRunnable.run();
+        mRefreshPool = new ScheduledThreadPoolExecutor(1);
+        mRefreshPool.scheduleWithFixedDelay(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mHandler.post(mRefreshRunnable);
+                    }
+                }, 0, 5, MINUTES);
     }
 
     @Override
@@ -226,7 +238,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     @Override
     public void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(mRefreshRunnable);
+        mRefreshPool.shutdown();
     }
 
     @Override
@@ -254,8 +266,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         }
 
         contentResolver.insert(PendingNotification.CONTENT_URI, cv);
-        Intent intent = new Intent(getActivity(), NotificationService.class);
-        getActivity().startService(intent);
+        Intent intent = new Intent("net.zdremann.wc.NEED_PENDING_NOTIF_CHECK");
+        getActivity().sendBroadcast(intent);
         return true;
     }
 
@@ -263,6 +275,12 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_room_view, menu);
         mRefreshItem = menu.findItem(R.id.action_refresh);
+        assert mRefreshItem != null;
+        if (mIsLoading) {
+            mRefreshItem.setActionView(R.layout.actionbar_indeterminite_progress);
+        } else {
+            mRefreshItem.setActionView(null);
+        }
     }
 
     @Override

@@ -20,24 +20,26 @@
   ~ THE SOFTWARE.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
     package="net.zdremann.wc"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
     android:versionName="0.8">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="18"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.location"
-        android:required="false" />
+        android:required="false"/>
 
     <application
         android:name=".MyApplication"
@@ -49,9 +51,9 @@
             android:name=".ui.RoomViewer"
             android:label="@string/title_activity_room_viewer">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -60,7 +62,7 @@
             android:parentActivityName="net.zdremann.wc.ui.RoomViewer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.zdremann.wc.ui.RoomViewer" />
+                android:value="net.zdremann.wc.ui.RoomViewer"/>
         </activity>
         <activity
             android:name=".ui.AboutActivity"
@@ -68,15 +70,22 @@
             android:parentActivityName=".ui.RoomChooserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.RoomChooserActivity" />
+                android:value=".ui.RoomChooserActivity"/>
         </activity>
 
-        <service android:name=".service.NotificationService" />
+        <service android:name=".service.NotificationService"/>
 
         <provider
             android:name=".provider.WasherCheckProvider"
             android:authorities="net.zdremann.wc"
             android:exported="false"></provider>
+
+        <receiver
+            android:name=".service.PendingNotifCheckNeededBroadcastRec">
+            <intent-filter>
+                <action android:name="net.zdremann.wc.NEED_PENDING_NOTIF_CHECK"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

@@ -27,7 +27,11 @@ import net.zdremann.wc.ApplicationModule;
 import dagger.Module;
 
 @Module(
-        addsTo = ApplicationModule.class
+        addsTo = ApplicationModule.class,
+        injects = {
+                NotificationService.class,
+                InjectingIntentService.class
+        }
 )
 public class ServiceModule {
 }

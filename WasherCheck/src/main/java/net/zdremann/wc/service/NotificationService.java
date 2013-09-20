@@ -30,25 +30,36 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
+import net.zdremann.wc.BuildConfig;
 import net.zdremann.wc.R;
 import net.zdremann.wc.ui.RoomViewer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 
 import static java.util.concurrent.TimeUnit.*;
 import static net.zdremann.wc.provider.WasherCheckContract.*;
 
-public class NotificationService extends IntentService {
+public class NotificationService extends InjectingIntentService {
 
     public static final String TAG = "NotificationService";
     private static final long DEFAULT_WAIT_FOR_CYCLE_COMPLETE = MILLISECONDS.convert(5, MINUTES);
+    private static final long WIGGLE_CHECK_TIME = MILLISECONDS.convert(30, SECONDS);
+
+    @Inject
+    Provider<RoomRefresher> roomRefresherProvider;
 
     public NotificationService() {
         super(TAG);
@@ -56,8 +67,12 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        if(BuildConfig.DEBUG) {
+            Log.v(TAG, "Checking for satisfied pending notifications");
+        }
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-        final PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+        final Intent broadcastIntent = new Intent("net.zdremann.wc.NEED_PENDING_NOTIF_CHECK");
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0);
 
         final ContentResolver contentResolver = getContentResolver();
         final Cursor notifications = contentResolver.query(PendingNotificationMachine.CONTENT_URI, null, null, null, PendingNotificationMachine.ROOM_ID);
@@ -83,6 +98,14 @@ public class NotificationService extends IntentService {
             long roomId = notifications.getLong(notif_idx_room_id);
             Cursor machines = rooms.get(roomId);
             if (machines == null) {
+                final AsyncTask<Long,Void,Void> refresher = roomRefresherProvider.get().execute(roomId);
+                try {
+                    refresher.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 machines = contentResolver.query(MachineStatus.fromRoomId(roomId), machineProjection, null, null, null);
                 assert machines != null;
                 rooms.put(roomId, machines);
@@ -95,18 +118,26 @@ public class NotificationService extends IntentService {
                     if (machines.getInt(3) <= notifications.getInt(notif_idx_status)) {
                         finishedNotifications.add(notifications.getLong(notif_idx_id));
                     } else {
-                        long checkThisNext = machines.getLong(4) + MILLISECONDS.convert(30, SECONDS);
-                        if (checkThisNext <= 0)
-                            checkThisNext = DEFAULT_WAIT_FOR_CYCLE_COMPLETE;
-                        nextCheckMillis = Math.min(nextCheckMillis, checkThisNext);
+                        long currentMachineTime = machines.getLong(4);
+                        if (currentMachineTime <= 0)
+                            currentMachineTime = DEFAULT_WAIT_FOR_CYCLE_COMPLETE;
+                        else
+                            currentMachineTime += WIGGLE_CHECK_TIME;
+                        nextCheckMillis = Math.min(nextCheckMillis, currentMachineTime);
                     }
                     break;
                 }
             }
         }
 
+        // Clean up cursors
+        notifications.close();
+        for (int i = 0; i < rooms.size(); i++) {
+            rooms.valueAt(i).close();
+        }
+
         for (Long notificationId : finishedNotifications) {
-            contentResolver.delete(PendingNotificationMachine.fromId(notificationId), null, null);
+            contentResolver.delete(PendingNotification.fromId(notificationId), null, null);
         }
 
         if (finishedNotifications.size() > 0) {
@@ -128,8 +159,12 @@ public class NotificationService extends IntentService {
 
         if (nextCheckMillis != Long.MAX_VALUE) {
             am.cancel(pendingIntent);
-            Log.d(TAG, "retrying in " + SECONDS.convert(nextCheckMillis, MILLISECONDS) + " seconds");
+            if(BuildConfig.DEBUG) {
+                Log.v(TAG, "Pending notification check retry in " + SECONDS.convert(nextCheckMillis, MILLISECONDS) + " seconds");
+            }
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + nextCheckMillis, pendingIntent);
         }
+
+        PendingNotifCheckNeededBroadcastRec.completeWakefulIntent(intent);
     }
 }

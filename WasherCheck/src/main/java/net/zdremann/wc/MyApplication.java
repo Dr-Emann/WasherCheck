@@ -24,6 +24,8 @@ package net.zdremann.wc;
 
 import android.app.Application;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger;
 

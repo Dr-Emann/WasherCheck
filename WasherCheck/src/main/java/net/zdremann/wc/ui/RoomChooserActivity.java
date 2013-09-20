@@ -176,7 +176,7 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
             data.putLong(ARG_GROUPING_ID, newRoot.id);
             fragment.setArguments(data);
             transaction.replace(android.R.id.content, fragment);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
             updateTitle(newRoot);
         }
     }
