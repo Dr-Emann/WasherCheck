@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+
 import static java.util.concurrent.TimeUnit.*;
 
 public class DescendingMachineGetter implements MachineGetter {
@@ -58,7 +59,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = 1;
+                machine.timeRemaining = MILLISECONDS.convert(30, MINUTES);
             }
             machines.add(machine);
         }
@@ -66,7 +67,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = 1;
+                machine.timeRemaining = MILLISECONDS.convert(60, MINUTES);
             }
             machines.add(machine);
         }
