@@ -62,7 +62,7 @@
         <item quantity="other">Unknown</item>
     </plurals>
 
-    <string name="minutes_remaining_postfix">" m"</string>
+    <string name="minutes_remaining_postfix">Min</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_notification_changer">Pending Notifications</string>

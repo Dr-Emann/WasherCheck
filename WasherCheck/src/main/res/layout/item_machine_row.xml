@@ -35,7 +35,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/status"
-        android:fontFamily="sans-serif-thin"
+        android:fontFamily="sans-serif"
         android:text="@string/machine_number_unknown"
         android:textColor="@android:color/primary_text_light" />
 
@@ -61,7 +61,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/status"
         android:bufferType="spannable"
-        android:fontFamily="sans-serif-thin"
+        android:fontFamily="sans-serif"
         android:gravity="right"
         android:maxLines="1"
         android:textColor="@android:color/primary_text_light"

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -51,7 +52,6 @@ import net.zdremann.wc.ForActivity;
 import net.zdremann.wc.R;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
-import net.zdremann.wc.service.NotificationService;
 import net.zdremann.wc.service.RoomRefresher;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
@@ -66,9 +66,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-
-import static java.util.concurrent.TimeUnit.*;
-import static net.zdremann.wc.provider.WasherCheckContract.*;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static net.zdremann.wc.provider.WasherCheckContract.MachineStatus;
+import static net.zdremann.wc.provider.WasherCheckContract.MachineStatusColumns;
+import static net.zdremann.wc.provider.WasherCheckContract.PendingNotification;
+import static net.zdremann.wc.provider.WasherCheckContract.PendingNotificationColumns;
+import static net.zdremann.wc.provider.WasherCheckContract.PendingNotificationMachineColumns;
 
 public class RoomViewFragment extends InjectingListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
@@ -297,7 +300,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     static class MyRoomViewAdapter extends CursorAdapter {
 
         private final LayoutInflater mLayoutInflater;
-        private final TypefaceSpan mPostfixSpan = new TypefaceSpan("sans-serif-light");
+        private final TypefaceSpan mPostfixSpan = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) ? new TypefaceSpan("sans-serif-thin") : new TypefaceSpan("sans-serif-light");
         private int idx_id;
         private int idx_room_id;
         private int idx_machine_id;
@@ -356,7 +359,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
                 String timeText = String.format("%.0f", (double) timeRemaining / MINUTES.toMillis(1));
                 String timePostfix = res.getString(R.string.minutes_remaining_postfix);
 
-                Spannable spanRange = new SpannableString(timeText + timePostfix);
+                Spannable spanRange = new SpannableString(timeText + " " + timePostfix);
                 spanRange.setSpan(mPostfixSpan, timeText.length(), spanRange.length(), 0);
                 vh.time.setText(spanRange, TextView.BufferType.SPANNABLE);
 
