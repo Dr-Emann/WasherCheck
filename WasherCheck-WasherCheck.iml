@@ -71,12 +71,12 @@
     <orderEntry type="jdk" jdkName="Android 4.3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-v4-18.0.0" level="project" />
-    <orderEntry type="library" exported="" name="dagger-compiler-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="dagger-compiler-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="libGoogleAnalyticsServices" level="project" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
-    <orderEntry type="library" exported="" name="dagger-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="javawriter-1.0.5" level="project" />
+    <orderEntry type="library" exported="" name="javawriter-2.1.1" level="project" />
+    <orderEntry type="library" exported="" name="dagger-1.1.0" level="project" />
   </component>
 </module>
 
