@@ -22,6 +22,7 @@
 
 package net.zdremann.wc.ui;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import net.zdremann.wc.Main;
 import net.zdremann.wc.R;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
+import net.zdremann.wc.provider.WasherCheckContract;
 
 import javax.inject.Inject;
 
@@ -49,6 +51,9 @@ public class RoomViewer extends InjectingActivity {
     @Inject
     @Main
     SharedPreferences mPreferences;
+
+    @Inject
+    ContentResolver mResolver;
 
     private Handler mHandler = new Handler();
     private long mRoomId;
@@ -75,6 +80,10 @@ public class RoomViewer extends InjectingActivity {
                 return true;
             case R.id.action_change_room:
                 startChooseRoom();
+                return true;
+            case R.id.action_remove_notifications:
+                // Delete all, use a null where clause
+                mResolver.delete(WasherCheckContract.PendingNotification.CONTENT_URI, null, null);
                 return true;
             case R.id.action_fake_io:
                 boolean useFakeIo = !item.isChecked();

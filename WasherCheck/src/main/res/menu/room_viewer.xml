@@ -33,6 +33,11 @@
         android:showAsAction="never"
         android:title="@string/change_school" />
     <item
+        android:id="@+id/action_remove_notifications"
+        android:orderInCategory="99"
+        android:showAsAction="never"
+        android:title="@string/remove_notifications" />
+    <item
         android:id="@+id/action_fake_io"
         android:title="Use fake IO"
         android:checkable="true"

@@ -79,5 +79,6 @@
     <string name="action_notify">Notification</string>
     <string name="notify_available">Notify when Available</string>
     <string name="notify_cycle_complete">Notify when Cycle Complete</string>
+    <string name="remove_notifications">Remove Pending Notifications</string>
 
 </resources>
