@@ -36,6 +36,9 @@
         </item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Southernmiss
         </item>
+        <item name="android:listSeparatorTextViewStyle">
+            @style/Theme.Southernmiss.Widget.TextView.ListSeparator
+        </item>
         <item name="android:listChoiceBackgroundIndicator">
             @drawable/southernmiss_list_selector_holo_light
         </item>
@@ -81,6 +84,12 @@
 
     <style name="ActionButton.CloseMode.Southernmiss" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_southernmiss</item>
+    </style>
+
+    <style name="Theme.Southernmiss.Widget.TextView.ListSeparator" parent="ListSeparator">
+        <item name="android:background">@drawable/list_section_divider_holo_light_southernmiss
+        </item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
