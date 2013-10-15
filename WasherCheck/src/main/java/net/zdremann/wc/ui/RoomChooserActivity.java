@@ -183,7 +183,7 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
 
     private void updateTitle(@Nullable MachineGrouping grouping) {
         if (grouping == null || grouping.id == ROOT_ID)
-            this.setTitle(R.string.choose_room);
+            this.setTitle(R.string.title_room_chooser);
         else
             this.setTitle(grouping.name);
     }

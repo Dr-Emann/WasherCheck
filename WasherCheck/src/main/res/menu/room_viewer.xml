@@ -26,12 +26,14 @@
         android:id="@+id/action_change_room"
         android:orderInCategory="98"
         android:showAsAction="never"
-        android:title="@string/change_room" />
+        android:title="@string/change_room"
+        android:titleCondensed="@string/change_room_short" />
     <item
         android:id="@+id/action_change_school"
         android:orderInCategory="99"
         android:showAsAction="never"
-        android:title="@string/change_school" />
+        android:title="@string/change_school"
+        android:titleCondensed="@string/change_school_short" />
     <item
         android:id="@+id/action_remove_notifications"
         android:orderInCategory="99"

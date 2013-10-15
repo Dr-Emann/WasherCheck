@@ -119,7 +119,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         if (getActivity() == null)
             return;
 
-        setEmptyText(getText(R.string.room_empty));
+        setEmptyText(getText(R.string.machines_empty));
 
         final ArrayList<SimpleSectionedListAdapter.Section> sections =
                 new ArrayList<SimpleSectionedListAdapter.Section>(Machine.Type.values().length);
@@ -179,7 +179,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         mAdapter = new SimpleSectionedListAdapter(
                 mActivityContext, R.layout.item_machine_header, mRoomViewAdapter);
 
-        setEmptyText(getText(R.string.room_empty));
+        setEmptyText(getText(R.string.machines_empty));
 
         final Bundle arguments = getArguments();
 

@@ -25,10 +25,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_notify_cycle_complete"
-        android:title="@string/notify_cycle_complete"
+        android:title="@string/notify_complete_long"
         android:showAsAction="withText" />
     <item
         android:id="@+id/action_notify_available"
-        android:title="@string/notify_available"
+        android:title="@string/notify_available_long"
         android:showAsAction="withText" />
 </menu>

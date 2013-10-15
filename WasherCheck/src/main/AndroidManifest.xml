@@ -58,7 +58,7 @@
         </activity>
         <activity
             android:name="net.zdremann.wc.ui.RoomChooserActivity"
-            android:label="@string/choose_room"
+            android:label="@string/title_room_chooser"
             android:parentActivityName="net.zdremann.wc.ui.RoomViewer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
