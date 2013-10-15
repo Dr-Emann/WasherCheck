@@ -64,7 +64,6 @@
 
     <string name="minutes_remaining_postfix">Min</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
     <string name="title_activity_notification_changer">Pending Notifications</string>
     <string name="change_room">Change Room</string>
     <string name="title_activity_room_viewer">Washer Check</string>
@@ -76,7 +75,6 @@
     <string name="title_section3">Section 3</string>
     <string name="room_empty">Room is empty</string>
     <string name="error_room_download">An error occurred when downloading</string>
-    <string name="action_notify">Notification</string>
     <string name="notify_available">Notify when Available</string>
     <string name="notify_cycle_complete">Notify when Cycle Complete</string>
     <string name="remove_notifications">Remove Pending Notifications</string>
