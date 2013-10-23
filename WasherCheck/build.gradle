@@ -27,7 +27,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.6.3+'
     }
 }
 apply plugin: 'android'
@@ -37,10 +37,9 @@ repositories {
 }
 
 dependencies {
-    compile "com.squareup.dagger:dagger:1.1.0"
-    compile "com.squareup.dagger:dagger-compiler:1.1.0"
-    compile "com.android.support:support-v4:18.0.+"
-
+    compile 'com.squareup.dagger:dagger:1.1.0'
+    compile 'com.squareup.dagger:dagger-compiler:1.1.0'
+    compile 'com.android.support:support-v4:18.0.+'
     compile files('libs/annotations.jar')
     compile files('libs/libGoogleAnalyticsServices.jar')
 }
