@@ -24,8 +24,6 @@ package net.zdremann.wc;
 
 import android.app.Application;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger;
 
@@ -52,9 +50,9 @@ public class MyApplication extends Application {
         mObjectGraph.inject(this);
         googleAnalytics.setDryRun(BuildConfig.DEBUG);
         googleAnalytics.getLogger().setLogLevel(
-                BuildConfig.DEBUG ?
-                        Logger.LogLevel.VERBOSE :
-                        Logger.LogLevel.WARNING
+              BuildConfig.DEBUG ?
+              Logger.LogLevel.VERBOSE :
+              Logger.LogLevel.WARNING
         );
     }
 

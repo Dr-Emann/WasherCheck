@@ -80,17 +80,17 @@ public class InternetMachineGetter implements MachineGetter {
             long parseTime = System.currentTimeMillis() - timeStart;
 
             gaTracker.send(
-                    MapBuilder.createTiming("loading", parseTime, "room_loading", "parsing").build()
+                  MapBuilder.createTiming("loading", parseTime, "room_loading", "parsing").build()
             );
             return machines;
         } catch (IOException e) {
             gaTracker.send(
-                    MapBuilder.createException("downloading: " + e.getMessage(), false).build()
+                  MapBuilder.createException("downloading: " + e.getMessage(), false).build()
             );
             throw e;
         } catch (XmlPullParserException e) {
             gaTracker.send(
-                    MapBuilder.createException("parsing: " + e.getMessage(), false).build()
+                  MapBuilder.createException("parsing: " + e.getMessage(), false).build()
             );
             Log.d(TAG, "Wrong format when downloading for room " + roomId);
             throw new IOException(e);
@@ -107,13 +107,16 @@ public class InternetMachineGetter implements MachineGetter {
         Tracker gaTracker;
 
         static {
-            final String[] HTML_REMOVALS = new String[]{"xmlns=\"[^\"]*\"", "<!DOCTYPE[^>]*>",
-                    "<script[^>]*>(?>.*?</script>)", "&nbsp;"};
+            final String[] HTML_REMOVALS = new String[]{
+                  "xmlns=\"[^\"]*\"", "<!DOCTYPE[^>]*>",
+                  "<script[^>]*>(?>.*?</script>)", "&nbsp;"
+            };
             StringBuilder regexp = new StringBuilder(HTML_REMOVALS[0]);
             for (int i = 1; i < HTML_REMOVALS.length; i++) {
                 regexp.append('|').append(HTML_REMOVALS[i]);
             }
-            HTML_REMOVE_PATTERN = Pattern.compile(regexp.toString(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            HTML_REMOVE_PATTERN = Pattern
+                  .compile(regexp.toString(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         }
 
         @Inject
@@ -155,11 +158,14 @@ public class InternetMachineGetter implements MachineGetter {
 
             long timeSpent = SystemClock.elapsedRealtime() - timeStart;
             gaTracker.send(
-                    MapBuilder.createTiming("loading", timeSpent, "room_loading", "download").build()
+                  MapBuilder.createTiming("loading", timeSpent, "room_loading", "download").build()
             );
 
             if (BuildConfig.DEBUG)
-                Log.i(TAG, "Html Loading took " + (SystemClock.elapsedRealtime() - timeStart) + " millis");
+                Log.i(
+                      TAG,
+                      "Html Loading took " + (SystemClock.elapsedRealtime() - timeStart) + " millis"
+                );
 
             return new StringReader(html);
         }
@@ -185,7 +191,8 @@ public class InternetMachineGetter implements MachineGetter {
         }
 
         @NotNull
-        public List<Machine> readMachines(long roomId, Reader reader) throws XmlPullParserException, IOException {
+        public List<Machine> readMachines(
+              long roomId, Reader reader) throws XmlPullParserException, IOException {
             long startTime = SystemClock.elapsedRealtime();
             List<Machine> result = new ArrayList<Machine>();
 
@@ -203,13 +210,18 @@ public class InternetMachineGetter implements MachineGetter {
             }
 
             if (BuildConfig.DEBUG)
-                Log.i(TAG, "Parsing took " + (SystemClock.elapsedRealtime() - startTime) + " millis");
+                Log.i(
+                      TAG, "Parsing took " + (SystemClock.elapsedRealtime() - startTime) + " millis"
+                );
 
             return result;
         }
 
         @NotNull
-        protected Machine readMachine(final long roomId, @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected Machine readMachine(
+              final long roomId,
+              @NotNull
+              XmlPullParser parser) throws XmlPullParserException, IOException {
             parser.require(XmlPullParser.START_TAG, "", "tr");
 
             parser.nextTag();
@@ -240,7 +252,8 @@ public class InternetMachineGetter implements MachineGetter {
             return machine;
         }
 
-        protected int readId(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected int readId(
+              @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
             int eventType = parser.next();
             int value = -1;
             while (eventType != XmlPullParser.END_TAG || !"td".equals(parser.getName())) {
@@ -257,7 +270,8 @@ public class InternetMachineGetter implements MachineGetter {
             return value;
         }
 
-        protected int readNum(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected int readNum(
+              @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
             int num;
             try {
                 num = Integer.parseInt(parser.nextText());
@@ -269,7 +283,8 @@ public class InternetMachineGetter implements MachineGetter {
         }
 
         @NotNull
-        protected Machine.Status readStatus(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected Machine.Status readStatus(
+              @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
             parser.nextTag();
 
             parser.require(XmlPullParser.START_TAG, null, "font");
@@ -291,7 +306,8 @@ public class InternetMachineGetter implements MachineGetter {
                 return Machine.Status.UNKNOWN;
         }
 
-        protected long readTimeRemaining(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected long readTimeRemaining(
+              @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
             final String text = parser.nextText();
             long time;
             if (TextUtils.isEmpty(text)) {
@@ -309,7 +325,8 @@ public class InternetMachineGetter implements MachineGetter {
         }
 
         @NotNull
-        protected Machine.Type readType(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+        protected Machine.Type readType(
+              @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
             String text = parser.nextText();
             if (text.contains("Washer") || text.contains("washer"))
                 return Machine.Type.WASHER;

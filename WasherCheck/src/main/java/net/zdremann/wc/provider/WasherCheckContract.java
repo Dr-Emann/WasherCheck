@@ -39,7 +39,7 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-                {MACHINE_ID, STATUS, TIME_REMAINING, LAST_UPDATED};
+              {MACHINE_ID, STATUS, TIME_REMAINING, LAST_UPDATED};
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
@@ -63,10 +63,11 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-                {_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID};
+              {_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID};
 
         public static Uri fromRoomId(long roomId) {
-            return CONTENT_URI.buildUpon().appendPath("room").appendPath(String.valueOf(roomId)).build();
+            return CONTENT_URI.buildUpon().appendPath("room").appendPath(String.valueOf(roomId))
+                  .build();
         }
 
         public static Uri fromId(long id) {
@@ -91,7 +92,7 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-                {_ID, GROUP_TYPE, NAME, LATITUDE, LONGITUDE, PARENT, THEME};
+              {_ID, GROUP_TYPE, NAME, LATITUDE, LONGITUDE, PARENT, THEME};
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
@@ -108,7 +109,7 @@ public class WasherCheckContract {
     }
 
     public static final class PendingNotificationMachine
-            implements PendingNotificationMachineColumns {
+          implements PendingNotificationMachineColumns {
         private PendingNotificationMachine() {
         }
 
@@ -118,7 +119,10 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-                {MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, DATE, EXTENDED, DESIRED_STATUS};
+              {
+                    MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, DATE, EXTENDED,
+                    DESIRED_STATUS, EST_TIME_OF_COMPLETION
+              };
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
@@ -126,7 +130,7 @@ public class WasherCheckContract {
     }
 
     public static interface PendingNotificationMachineColumns
-            extends PendingNotificationColumns, MachineColumns {
+          extends PendingNotificationColumns, MachineColumns {
 
     }
 
@@ -140,7 +144,7 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-                {_ID, MACHINE_ID, DATE, EXTENDED, DESIRED_STATUS};
+              {_ID, MACHINE_ID, DATE, EXTENDED, DESIRED_STATUS, EST_TIME_OF_COMPLETION};
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
@@ -173,6 +177,11 @@ public class WasherCheckContract {
          * <p>TYPE: INTEGER</p>
          */
         public static final String DESIRED_STATUS = "machine_status";
+        /**
+         * The estimated number of milliseconds until the pending notification is fulfilled
+         * <p>TYPE: INTEGER</p>
+         */
+        public static final String EST_TIME_OF_COMPLETION = "estimated_completion";
     }
 
     public static final class MachineStatus implements MachineStatusColumns {
@@ -185,14 +194,18 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-                {_ID, MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, STATUS, TIME_REMAINING, LAST_UPDATED};
+              {
+                    _ID, MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, STATUS,
+                    TIME_REMAINING, LAST_UPDATED
+              };
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
         }
 
         public static Uri fromRoomId(long roomId) {
-            return CONTENT_URI.buildUpon().appendPath("room").appendPath(String.valueOf(roomId)).build();
+            return CONTENT_URI.buildUpon().appendPath("room").appendPath(String.valueOf(roomId))
+                  .build();
         }
     }
 

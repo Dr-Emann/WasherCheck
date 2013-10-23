@@ -114,13 +114,12 @@ public class RoomChooserFragment extends InjectingListFragment {
             text.setText(group.name);
             return convertView;
         }
-
     }
 
     @Override
     public String toString() {
         return "RoomChooserFragment{" +
-                "mRootId=" + mRootId +
-                '}';
+              "mRootId=" + mRootId +
+              '}';
     }
 }

@@ -41,15 +41,17 @@ public class LocationsProxy {
     @NotNull
     private MachineGrouping mRoot;
     private final LongSparseArray<MachineGrouping> mLocations = new LongSparseArray<MachineGrouping>();
-    private final NavigableMap<Location, MachineGrouping> mLocationMap = new TreeMap<Location, MachineGrouping>(new Comparator<Location>() {
-        @Override
-        public int compare(final Location lhs, final Location rhs) {
-            double dist1 = lhs.getLatitude() + lhs.getLongitude();
-            double dist2 = rhs.getLatitude() + rhs.getLongitude();
+    private final NavigableMap<Location, MachineGrouping> mLocationMap = new TreeMap<Location, MachineGrouping>(
+          new Comparator<Location>() {
+              @Override
+              public int compare(final Location lhs, final Location rhs) {
+                  double dist1 = lhs.getLatitude() + lhs.getLongitude();
+                  double dist2 = rhs.getLatitude() + rhs.getLongitude();
 
-            return Double.compare(dist1, dist2);
-        }
-    });
+                  return Double.compare(dist1, dist2);
+              }
+          }
+    );
 
     @Inject
     public LocationsProxy(@NotNull @Root MachineGrouping root) {

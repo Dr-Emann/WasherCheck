@@ -30,7 +30,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 import static java.util.concurrent.TimeUnit.*;
 
 public class DescendingMachineGetter implements MachineGetter {

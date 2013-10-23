@@ -45,7 +45,6 @@ public class Machine implements Comparable<Machine>, Parcelable {
         public Machine[] newArray(int size) {
             return new Machine[size];
         }
-
     };
     public long id;
     public final int num;
@@ -61,7 +60,9 @@ public class Machine implements Comparable<Machine>, Parcelable {
         this(-1, roomId, esudsId, num, type);
     }
 
-    public Machine(final long id, final long roomId, final long esudsId, int num, @NotNull final Type type) {
+    public Machine(
+          final long id, final long roomId, final long esudsId, int num,
+          @NotNull final Type type) {
         this.id = id;
         this.esudsId = esudsId;
         this.num = num;
@@ -92,7 +93,9 @@ public class Machine implements Comparable<Machine>, Parcelable {
         if (!this.status.equals(another.status)) {
             return this.status.compareTo(another.status);
         }
-        int timeComp = (this.timeRemaining < another.timeRemaining) ? -1 : (this.timeRemaining > another.timeRemaining) ? 1 : 0;
+        int timeComp = (this.timeRemaining < another.timeRemaining) ?
+                       -1 :
+                       (this.timeRemaining > another.timeRemaining) ? 1 : 0;
         if (timeComp != 0) {
             return timeComp;
         }
@@ -110,11 +113,11 @@ public class Machine implements Comparable<Machine>, Parcelable {
 
         Machine other = (Machine) o;
         return this.roomId == other.roomId &&
-                this.esudsId == other.esudsId &&
-                this.num == other.num &&
-                this.type.equals(other.type) &&
-                this.status.equals(other.status) &&
-                this.timeRemaining == other.timeRemaining;
+              this.esudsId == other.esudsId &&
+              this.num == other.num &&
+              this.type.equals(other.type) &&
+              this.status.equals(other.status) &&
+              this.timeRemaining == other.timeRemaining;
     }
 
     @Override
@@ -133,11 +136,11 @@ public class Machine implements Comparable<Machine>, Parcelable {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Machine{")
-                .append("roomId=").append(roomId)
-                .append(", id=").append(esudsId)
-                .append(", num=").append(num)
-                .append(", type=").append(type.toString())
-                .append(", status=").append(status.toString());
+              .append("roomId=").append(roomId)
+              .append(", id=").append(esudsId)
+              .append(", num=").append(num)
+              .append(", type=").append(type.toString())
+              .append(", status=").append(status.toString());
 
         if (hasTimeRemaining())
             builder.append(", timeRemaining=").append(timeRemaining);
@@ -162,7 +165,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
 
     public long staticId() {
         return ((this.roomId & 0xFFFFFFFF00000000L) ^ (this.roomId << 32))
-                | (this.type.ordinal() << 30) | this.num;
+              | (this.type.ordinal() << 30) | this.num;
     }
 
     public static enum Type {

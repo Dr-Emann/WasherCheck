@@ -42,14 +42,14 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {
-                MyApplication.class,
-                RoomRefresher.class
-        },
-        includes = {
-                IOModule.class
-        },
-        library = true
+      injects = {
+            MyApplication.class,
+            RoomRefresher.class
+      },
+      includes = {
+            IOModule.class
+      },
+      library = true
 )
 public class ApplicationModule {
     private final MyApplication mApplication;

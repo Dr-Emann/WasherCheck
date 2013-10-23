@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
-
 import static net.zdremann.wc.provider.WasherCheckContract.*;
 import static net.zdremann.wc.provider.WasherCheckDatabase.*;
 
@@ -74,14 +73,18 @@ public class WasherCheckProvider extends InjectingProvider {
         URI_MATCHER.addURI(AUTHORITY, MachineStatus.PATH + "/#", MACHINE_STATUS_ID);
 
         URI_MATCHER.addURI(AUTHORITY, PendingNotificationMachine.PATH, NOTIFICATIONS_MACHINES);
-        URI_MATCHER.addURI(AUTHORITY, PendingNotificationMachine.PATH + "/room/#", NOTIFICATIONS_MACHINES_ROOM);
+        URI_MATCHER.addURI(
+              AUTHORITY, PendingNotificationMachine.PATH + "/room/#", NOTIFICATIONS_MACHINES_ROOM
+        );
     }
 
     @Inject
     WasherCheckDatabase mDbOpener;
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(
+          Uri uri, String[] projection, String selection, String[] selectionArgs,
+          String sortOrder) {
         final int uriType = URI_MATCHER.match(uri);
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(getTable(uriType));
@@ -112,17 +115,19 @@ public class WasherCheckProvider extends InjectingProvider {
         case MACHINE_STATUS:
             if (TextUtils.isEmpty(sortOrder))
                 sortOrder = MachineStatusColumns.ROOM_ID + "," + MachineStatusColumns.MACHINE_TYPE +
-                        "," + MachineStatusColumns.TIME_REMAINING + "," + MachineStatusColumns.NUMBER;
+                      "," + MachineStatusColumns.TIME_REMAINING + "," + MachineStatusColumns.NUMBER;
             break;
         case MACHINE_STATUS_BY_ROOM:
             if (TextUtils.isEmpty(sortOrder))
                 sortOrder = MachineStatusColumns.ROOM_ID + "," + MachineStatusColumns.MACHINE_TYPE +
-                        ", " + MachineStatusColumns.STATUS + "," + MachineStatusColumns.TIME_REMAINING +
-                        "," + MachineStatusColumns.NUMBER;
+                      ", " + MachineStatusColumns.STATUS + "," + MachineStatusColumns.TIME_REMAINING +
+                      "," + MachineStatusColumns.NUMBER;
             builder.appendWhere(MachineStatusColumns.ROOM_ID + "=" + uri.getLastPathSegment());
             break;
         case NOTIFICATIONS_MACHINES_ROOM:
-            builder.appendWhere(PendingNotificationMachineColumns.ROOM_ID + "=" + uri.getLastPathSegment());
+            builder.appendWhere(
+                  PendingNotificationMachineColumns.ROOM_ID + "=" + uri.getLastPathSegment()
+            );
         default:
             // No filter by default
         }
@@ -131,7 +136,8 @@ public class WasherCheckProvider extends InjectingProvider {
 
         assert db != null;
 
-        Cursor cursor = builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = builder
+              .query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
         assert cursor != null;
 
@@ -213,11 +219,16 @@ public class WasherCheckProvider extends InjectingProvider {
             cv.put(MachineColumns.ROOM_ID, roomId);
             cv.put(MachineColumns.MACHINE_TYPE, type);
 
-            long machineId = db.insertWithOnConflict(MachineTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
+            long machineId = db.insertWithOnConflict(
+                  MachineTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_IGNORE
+            );
             if (machineId == -1) {
-                final Cursor c = db.query(MachineTable.TABLE_NAME, new String[]{MachineColumns._ID},
-                        MachineColumns.ROOM_ID + "=?" + " AND " + MachineColumns.MACHINE_TYPE + "=?" +
-                                " AND " + MachineColumns.NUMBER + "=?", new String[]{roomId, type, number}, null, null, null, "1");
+                final Cursor c = db.query(
+                      MachineTable.TABLE_NAME, new String[]{MachineColumns._ID},
+                      MachineColumns.ROOM_ID + "=?" + " AND " + MachineColumns.MACHINE_TYPE + "=?" +
+                            " AND " + MachineColumns.NUMBER + "=?",
+                      new String[]{roomId, type, number}, null, null, null, "1"
+                );
                 c.moveToFirst();
                 machineId = c.getLong(0);
                 c.close();
@@ -229,10 +240,18 @@ public class WasherCheckProvider extends InjectingProvider {
             }
             cv.clear();
             cv.put(StatusUpdateColumns.MACHINE_ID, machineId);
-            cv.put(StatusUpdateColumns.LAST_UPDATED, values.getAsLong(MachineStatusColumns.LAST_UPDATED));
+            cv.put(
+                  StatusUpdateColumns.LAST_UPDATED,
+                  values.getAsLong(MachineStatusColumns.LAST_UPDATED)
+            );
             cv.put(StatusUpdateColumns.STATUS, values.getAsInteger(MachineStatusColumns.STATUS));
-            cv.put(StatusUpdateColumns.TIME_REMAINING, values.getAsLong(MachineStatusColumns.TIME_REMAINING));
-            id = db.insertWithOnConflict(StatusUpdateTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            cv.put(
+                  StatusUpdateColumns.TIME_REMAINING,
+                  values.getAsLong(MachineStatusColumns.TIME_REMAINING)
+            );
+            id = db.insertWithOnConflict(
+                  StatusUpdateTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE
+            );
             db.setTransactionSuccessful();
             db.endTransaction();
             return MachineStatus.fromId(id);
@@ -272,7 +291,9 @@ public class WasherCheckProvider extends InjectingProvider {
             throw new UnsupportedOperationException("Cannot delete from URI: " + uri);
 
         case NOTIFICATIONS_ID:
-            selection = appendWhere(selection, PendingNotificationColumns._ID + "=" + uri.getLastPathSegment());
+            selection = appendWhere(
+                  selection, PendingNotificationColumns._ID + "=" + uri.getLastPathSegment()
+            );
         case NOTIFICATIONS:
             break;
 
@@ -284,7 +305,9 @@ public class WasherCheckProvider extends InjectingProvider {
             break;
 
         case STATUS_UPDATE_ID:
-            selection = appendWhere(selection, StatusUpdateColumns._ID + "=" + uri.getLastPathSegment());
+            selection = appendWhere(
+                  selection, StatusUpdateColumns._ID + "=" + uri.getLastPathSegment()
+            );
         case STATUS_UPDATE:
             break;
 
@@ -326,7 +349,9 @@ public class WasherCheckProvider extends InjectingProvider {
             throw new UnsupportedOperationException("Cannot delete from URI: " + uri);
 
         case NOTIFICATIONS_ID:
-            selection = appendWhere(selection, PendingNotificationColumns._ID + "=" + uri.getLastPathSegment());
+            selection = appendWhere(
+                  selection, PendingNotificationColumns._ID + "=" + uri.getLastPathSegment()
+            );
         case NOTIFICATIONS:
             break;
 
@@ -338,7 +363,9 @@ public class WasherCheckProvider extends InjectingProvider {
             break;
 
         case STATUS_UPDATE_ID:
-            selection = appendWhere(selection, StatusUpdateColumns._ID + "=" + uri.getLastPathSegment());
+            selection = appendWhere(
+                  selection, StatusUpdateColumns._ID + "=" + uri.getLastPathSegment()
+            );
         case STATUS_UPDATE:
             break;
 

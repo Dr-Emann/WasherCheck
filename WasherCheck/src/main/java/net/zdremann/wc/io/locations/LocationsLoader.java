@@ -78,5 +78,4 @@ public class LocationsLoader extends AsyncTaskLoader<MachineGrouping> {
 
         mRoot = null;
     }
-
 }

@@ -28,12 +28,12 @@ import net.zdremann.wc.io.rooms.RoomLoaderModule;
 import dagger.Module;
 
 @Module(
-        includes = {
-                RoomLoaderModule.class,
-                LocationsProxyModule.class
-        },
-        library = true,
-        complete = false
+      includes = {
+            RoomLoaderModule.class,
+            LocationsProxyModule.class
+      },
+      library = true,
+      complete = false
 )
 public class IOModule {
 }

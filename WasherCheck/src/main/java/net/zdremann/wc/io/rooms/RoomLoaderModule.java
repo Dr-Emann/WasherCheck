@@ -31,15 +31,15 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        complete = false,
-        library = true
+      complete = false,
+      library = true
 )
 public class RoomLoaderModule {
     @Provides
     MachineGetter provideMachineGetter(
-            @Main SharedPreferences preferences,
-            Lazy<InternetMachineGetter> internetGetter,
-            Lazy<DescendingMachineGetter> descendingGetter) {
+          @Main SharedPreferences preferences,
+          Lazy<InternetMachineGetter> internetGetter,
+          Lazy<DescendingMachineGetter> descendingGetter) {
         if (preferences.getBoolean("net.zdremann.wc.fake_io", false))
             return descendingGetter.get();
         else

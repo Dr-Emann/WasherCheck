@@ -41,7 +41,10 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     public static final Creator<MachineGrouping> CREATOR = new Creator<MachineGrouping>() {
         public MachineGrouping createFromParcel(Parcel in) {
             Location loc = new Location(LOCATION_PROVIDER);
-            MachineGrouping value = new MachineGrouping(in.readLong(), in.readString(), Type.ofInt(in.readInt()), loc, Theme.ofInt(in.readInt()));
+            MachineGrouping value = new MachineGrouping(
+                  in.readLong(), in.readString(), Type.ofInt(in.readInt()), loc,
+                  Theme.ofInt(in.readInt())
+            );
             loc.setLatitude(in.readDouble());
             loc.setLongitude(in.readDouble());
 
@@ -71,7 +74,11 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     @Nullable
     private Theme mTheme;
 
-    public MachineGrouping(final long id, @NotNull final String name, @NotNull final Type type, @NotNull final Location location, @Nullable final Theme theme) {
+    public MachineGrouping(
+          final long id,
+          @NotNull final String name,
+          @NotNull final Type type,
+          @NotNull final Location location, @Nullable final Theme theme) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -88,7 +95,7 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
 
         MachineGrouping other = (MachineGrouping) o;
         return (this.type.equals(other.type))
-                && (this.name.equals(other.name));
+              && (this.name.equals(other.name));
     }
 
     @Override
@@ -105,11 +112,11 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     @Override
     public String toString() {
         return "MachineGrouping{" +
-                "id=" + id +
-                ", type=" + type +
-                ", name='" + name + '\'' +
-                ", location=" + location +
-                '}';
+              "id=" + id +
+              ", type=" + type +
+              ", name='" + name + '\'' +
+              ", location=" + location +
+              '}';
     }
 
     @Override
@@ -142,9 +149,14 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     }
 
     public static enum Theme {
-        BINGHAMPTON(R.style.Theme_Binghampton), CMU(R.style.Theme_Cmu), LOYOLA(R.style.Theme_Loyola),
-        UMARYLAND(R.style.Theme_Maryland), SOUTHERNMISS(R.style.Theme_Southernmiss),
-        STEVENSON(R.style.Theme_Stevenson), WAYNESTATE(R.style.Theme_Waynestate), UNKNOWN(0);
+        BINGHAMPTON(R.style.Theme_Binghampton),
+        CMU(R.style.Theme_Cmu),
+        LOYOLA(R.style.Theme_Loyola),
+        UMARYLAND(R.style.Theme_Maryland),
+        SOUTHERNMISS(R.style.Theme_Southernmiss),
+        STEVENSON(R.style.Theme_Stevenson),
+        WAYNESTATE(R.style.Theme_Waynestate),
+        UNKNOWN(0);
 
         public static Theme parse(@Nullable String str) {
             if (TextUtils.isEmpty(str))
@@ -172,7 +184,11 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     }
 
     public static enum Type {
-        ROOT, SCHOOL, CAMPUS, HALL, ROOM;
+        ROOT,
+        SCHOOL,
+        CAMPUS,
+        HALL,
+        ROOM;
 
         public static Type ofInt(int i) {
             return values()[i];

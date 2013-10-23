@@ -37,7 +37,7 @@ import javax.inject.Inject;
 
 public class WasherCheckDatabase extends SQLiteOpenHelper {
     private static final String DB_NAME = "WasherCheckDatabase.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private final LocationsProxy mLocations;
 
@@ -68,23 +68,25 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     }
 
     static final class PendingNotificationTable
-            implements WasherCheckContract.PendingNotificationColumns {
+          implements WasherCheckContract.PendingNotificationColumns {
 
         public static final String TABLE_NAME = WasherCheckContract.PendingNotification.PATH;
         public static final String SQL_CREATE =
-                "CREATE TABLE " + TABLE_NAME + " (\n" +
-                        _ID + " INTEGER PRIMARY KEY,\n" +
-                        MACHINE_ID + " INTEGER NOT NULL " +
-                        "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
-                        DATE + " INTEGER NOT NULL,\n" +
-                        EXTENDED + " INTEGER NOT NULL DEFAULT " + 0 + " ,\n" +
-                        DESIRED_STATUS + " INTEGER NOT NULL )";
+              "CREATE TABLE " + TABLE_NAME + " (\n" +
+                    _ID + " INTEGER PRIMARY KEY,\n" +
+                    MACHINE_ID + " INTEGER NOT NULL " +
+                    "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
+                    DATE + " INTEGER NOT NULL,\n" +
+                    EXTENDED + " INTEGER NOT NULL DEFAULT " + 0 + " ,\n" +
+                    DESIRED_STATUS + " INTEGER NOT NULL,\n" +
+                    EST_TIME_OF_COMPLETION + " INTEGER )";
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
         }
 
-        public static void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        public static void onUpgrade(
+              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
                 onCreate(db);
@@ -93,22 +95,23 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     }
 
     static final class PendingNotificationMachineView
-            implements WasherCheckContract.PendingNotificationMachineColumns {
+          implements WasherCheckContract.PendingNotificationMachineColumns {
         public static final String VIEW_NAME = WasherCheckContract.PendingNotificationMachine.PATH;
         public static final String SQL_CREATE =
-                "CREATE VIEW " + VIEW_NAME + " AS\n" +
-                        "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
-                        MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
-                        ESUDS_ID + ", " + DATE + ", " + EXTENDED + ", " + DESIRED_STATUS + "\n" +
-                        "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
-                        " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
-                        PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID;
+              "CREATE VIEW " + VIEW_NAME + " AS\n" +
+                    "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
+                    MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
+                    ESUDS_ID + ", " + DATE + ", " + EXTENDED + ", " + DESIRED_STATUS + "\n" +
+                    "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
+                    " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
+                    PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID;
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
         }
 
-        public static void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        public static void onUpgrade(
+              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP VIEW IF EXISTS " + VIEW_NAME);
                 onCreate(db);
@@ -117,24 +120,25 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     }
 
     static final class MachineTable
-            implements WasherCheckContract.MachineColumns {
+          implements WasherCheckContract.MachineColumns {
         public static final String TABLE_NAME = WasherCheckContract.Machine.PATH;
         public static final String SQL_CREATE =
-                "CREATE TABLE " + TABLE_NAME + " (\n" +
-                        _ID + " INTEGER PRIMARY KEY,\n" +
-                        NUMBER + " INTEGER NOT NULL,\n" +
-                        MACHINE_TYPE + " INTEGER NOT NULL,\n" +
-                        ROOM_ID + " INTEGER NOT NULL,\n" +
-                        ESUDS_ID + " INTEGER UNIQUE,\n" +
-                        "UNIQUE (" + ROOM_ID + "," + NUMBER + "," + MACHINE_TYPE + ") " +
-                        "ON CONFLICT IGNORE\n" +
-                        ")";
+              "CREATE TABLE " + TABLE_NAME + " (\n" +
+                    _ID + " INTEGER PRIMARY KEY,\n" +
+                    NUMBER + " INTEGER NOT NULL,\n" +
+                    MACHINE_TYPE + " INTEGER NOT NULL,\n" +
+                    ROOM_ID + " INTEGER NOT NULL,\n" +
+                    ESUDS_ID + " INTEGER UNIQUE,\n" +
+                    "UNIQUE (" + ROOM_ID + "," + NUMBER + "," + MACHINE_TYPE + ") " +
+                    "ON CONFLICT IGNORE\n" +
+                    ")";
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
         }
 
-        public static void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        public static void onUpgrade(
+              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
                 onCreate(db);
@@ -143,20 +147,20 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     }
 
     static final class MachineGroupTable
-            implements WasherCheckContract.MachineGroupColumns {
+          implements WasherCheckContract.MachineGroupColumns {
         public static final String TABLE_NAME = WasherCheckContract.MachineGroup.PATH;
         public static final String SQL_CREATE =
-                "CREATE TABLE " + TABLE_NAME + " (\n" +
-                        _ID + " INTEGER PRIMARY KEY,\n" +
-                        GROUP_TYPE + " INTEGER,\n" +
-                        NAME + " TEXT NOT NULL,\n" +
-                        LATITUDE + " REAL,\n" +
-                        LONGITUDE + " REAL,\n" +
-                        PARENT + " INTEGER " +
-                        "REFERENCES " + TABLE_NAME + "(" + _ID + "),\n" +
-                        THEME + " INTEGER)";
+              "CREATE TABLE " + TABLE_NAME + " (\n" +
+                    _ID + " INTEGER PRIMARY KEY,\n" +
+                    GROUP_TYPE + " INTEGER,\n" +
+                    NAME + " TEXT NOT NULL,\n" +
+                    LATITUDE + " REAL,\n" +
+                    LONGITUDE + " REAL,\n" +
+                    PARENT + " INTEGER " +
+                    "REFERENCES " + TABLE_NAME + "(" + _ID + "),\n" +
+                    THEME + " INTEGER)";
         public static final String SQL_INSERT =
-                "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?,?,?)";
+              "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?,?,?)";
 
         public static void onCreate(SQLiteDatabase db, LocationsProxy locations) {
             db.execSQL(SQL_CREATE);
@@ -170,7 +174,8 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
             db.endTransaction();
         }
 
-        private static void insertGrouping(@NotNull MachineGrouping grouping, @NotNull SQLiteStatement insertStatement) {
+        private static void insertGrouping(
+              @NotNull MachineGrouping grouping, @NotNull SQLiteStatement insertStatement) {
             insertStatement.bindLong(1, grouping.id);
             insertStatement.bindLong(2, grouping.type.ordinal());
             insertStatement.bindString(3, grouping.name);
@@ -187,7 +192,9 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
             }
         }
 
-        public static void onUpgrade(final SQLiteDatabase db, LocationsProxy locations, final int oldVersion, final int newVersion) {
+        public static void onUpgrade(
+              final SQLiteDatabase db, LocationsProxy locations, final int oldVersion,
+              final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
                 onCreate(db, locations);
@@ -196,23 +203,24 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     }
 
     static final class StatusUpdateTable
-            implements WasherCheckContract.StatusUpdateColumns {
+          implements WasherCheckContract.StatusUpdateColumns {
         public static final String TABLE_NAME = WasherCheckContract.StatusUpdate.PATH;
         public static final String SQL_CREATE =
-                "CREATE TABLE " + TABLE_NAME + " (\n" +
-                        _ID + " INTEGER PRIMARY KEY,\n" +
-                        MACHINE_ID + " INTEGER UNIQUE " +
-                        "ON CONFLICT REPLACE " +
-                        "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
-                        STATUS + " INTEGER NOT NULL,\n" +
-                        TIME_REMAINING + " INTEGER,\n" +
-                        LAST_UPDATED + " INTEGER NOT NULL )";
+              "CREATE TABLE " + TABLE_NAME + " (\n" +
+                    _ID + " INTEGER PRIMARY KEY,\n" +
+                    MACHINE_ID + " INTEGER UNIQUE " +
+                    "ON CONFLICT REPLACE " +
+                    "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
+                    STATUS + " INTEGER NOT NULL,\n" +
+                    TIME_REMAINING + " INTEGER,\n" +
+                    LAST_UPDATED + " INTEGER NOT NULL )";
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
         }
 
-        public static void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        public static void onUpgrade(
+              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
                 onCreate(db);
@@ -221,22 +229,23 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     }
 
     static final class MachineStatusView
-            implements WasherCheckContract.MachineColumns, WasherCheckContract.StatusUpdateColumns {
+          implements WasherCheckContract.MachineColumns, WasherCheckContract.StatusUpdateColumns {
         public static final String VIEW_NAME = WasherCheckContract.MachineStatus.PATH;
         public static final String SQL_CREATE =
-                "CREATE VIEW " + VIEW_NAME + " AS\n" +
-                        "SELECT " + MachineTable.TABLE_NAME + "." + _ID + ", " + MACHINE_ID + ", " + NUMBER + ", " +
-                        MACHINE_TYPE + ", " + ROOM_ID + ", " + ESUDS_ID + ", " + STATUS + ", " +
-                        TIME_REMAINING + ", " + LAST_UPDATED + "\n" +
-                        "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + StatusUpdateTable.TABLE_NAME +
-                        " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
-                        StatusUpdateTable.TABLE_NAME + "." + MACHINE_ID;
+              "CREATE VIEW " + VIEW_NAME + " AS\n" +
+                    "SELECT " + MachineTable.TABLE_NAME + "." + _ID + ", " + MACHINE_ID + ", " + NUMBER + ", " +
+                    MACHINE_TYPE + ", " + ROOM_ID + ", " + ESUDS_ID + ", " + STATUS + ", " +
+                    TIME_REMAINING + ", " + LAST_UPDATED + "\n" +
+                    "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + StatusUpdateTable.TABLE_NAME +
+                    " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
+                    StatusUpdateTable.TABLE_NAME + "." + MACHINE_ID;
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
         }
 
-        public static void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        public static void onUpgrade(
+              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP VIEW IF EXISTS " + VIEW_NAME);
                 onCreate(db);

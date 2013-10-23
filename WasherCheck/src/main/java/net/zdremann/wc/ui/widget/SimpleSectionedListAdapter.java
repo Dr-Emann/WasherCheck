@@ -58,37 +58,43 @@ public class SimpleSectionedListAdapter extends BaseAdapter {
         }
     }
 
-    public SimpleSectionedListAdapter(Context context, int sectionResourceId,
-                                      ListAdapter baseAdapter) {
-        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public SimpleSectionedListAdapter(
+          Context context, int sectionResourceId,
+          ListAdapter baseAdapter) {
+        mLayoutInflater = (LayoutInflater) context
+              .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSectionResourceId = sectionResourceId;
         mBaseAdapter = baseAdapter;
-        mBaseAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                mValid = !mBaseAdapter.isEmpty();
-                notifyDataSetChanged();
-            }
+        mBaseAdapter.registerDataSetObserver(
+              new DataSetObserver() {
+                  @Override
+                  public void onChanged() {
+                      mValid = !mBaseAdapter.isEmpty();
+                      notifyDataSetChanged();
+                  }
 
-            @Override
-            public void onInvalidated() {
-                mValid = false;
-                notifyDataSetInvalidated();
-            }
-        });
+                  @Override
+                  public void onInvalidated() {
+                      mValid = false;
+                      notifyDataSetInvalidated();
+                  }
+              }
+        );
     }
 
     public void setSections(Section[] sections) {
         mSections.clear();
 
-        Arrays.sort(sections, new Comparator<Section>() {
+        Arrays.sort(
+              sections, new Comparator<Section>() {
             @Override
             public int compare(Section o, Section o1) {
                 return (o.firstPosition == o1.firstPosition)
-                        ? 0
-                        : ((o.firstPosition < o1.firstPosition) ? -1 : 1);
+                       ? 0
+                       : ((o.firstPosition < o1.firstPosition) ? -1 : 1);
             }
-        });
+        }
+        );
 
         int offset = 0; // offset positions for the headers we're adding
         for (Section section : sections) {
@@ -138,30 +144,30 @@ public class SimpleSectionedListAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return isSectionHeaderPosition(position)
-                ? mSections.get(position)
-                : mBaseAdapter.getItem(sectionedPositionToPosition(position));
+               ? mSections.get(position)
+               : mBaseAdapter.getItem(sectionedPositionToPosition(position));
     }
 
     @Override
     public long getItemId(int position) {
         return isSectionHeaderPosition(position)
-                ? Integer.MAX_VALUE - mSections.indexOfKey(position)
-                : mBaseAdapter.getItemId(sectionedPositionToPosition(position));
+               ? Integer.MAX_VALUE - mSections.indexOfKey(position)
+               : mBaseAdapter.getItemId(sectionedPositionToPosition(position));
     }
 
     @Override
     public int getItemViewType(int position) {
         return isSectionHeaderPosition(position)
-                ? getViewTypeCount() - 1
-                : mBaseAdapter.getItemViewType(position);
+               ? getViewTypeCount() - 1
+               : mBaseAdapter.getItemViewType(position);
     }
 
     @Override
     public boolean isEnabled(int position) {
         //noinspection SimplifiableConditionalExpression
         return isSectionHeaderPosition(position)
-                ? false
-                : mBaseAdapter.isEnabled(sectionedPositionToPosition(position));
+               ? false
+               : mBaseAdapter.isEnabled(sectionedPositionToPosition(position));
     }
 
     @Override
@@ -193,7 +199,6 @@ public class SimpleSectionedListAdapter extends BaseAdapter {
             }
             view.setText(mSections.get(position).title);
             return view;
-
         } else {
             return mBaseAdapter.getView(sectionedPositionToPosition(position), convertView, parent);
         }

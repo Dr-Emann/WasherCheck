@@ -66,14 +66,11 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static net.zdremann.wc.provider.WasherCheckContract.MachineStatus;
-import static net.zdremann.wc.provider.WasherCheckContract.MachineStatusColumns;
-import static net.zdremann.wc.provider.WasherCheckContract.PendingNotification;
-import static net.zdremann.wc.provider.WasherCheckContract.PendingNotificationColumns;
-import static net.zdremann.wc.provider.WasherCheckContract.PendingNotificationMachineColumns;
+import static java.util.concurrent.TimeUnit.*;
+import static net.zdremann.wc.provider.WasherCheckContract.*;
 
-public class RoomViewFragment extends InjectingListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class RoomViewFragment extends InjectingListFragment
+      implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
     public static final String ARG_SELECT_MODE = "select_mode";
     private final Set<Integer> mSelectedIndices = new HashSet<Integer>();
@@ -88,7 +85,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     MyRoomViewAdapter mRoomViewAdapter;
     SimpleSectionedListAdapter mAdapter;
     @Inject
-     Provider<RoomRefresher> mRoomRefreshGetter;
+    Provider<RoomRefresher> mRoomRefreshGetter;
     @Inject
     @ForActivity
     Context mActivityContext;
@@ -100,7 +97,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
     protected void setIsLoading(final boolean isLoading) {
         mIsLoading = isLoading;
-            if (mRefreshItem != null) {
+        if (mRefreshItem != null) {
             if (isLoading) {
                 mRefreshItem.setActionView(R.layout.actionbar_indeterminite_progress);
             } else {
@@ -122,7 +119,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         setEmptyText(getText(R.string.machines_empty));
 
         final ArrayList<SimpleSectionedListAdapter.Section> sections =
-                new ArrayList<SimpleSectionedListAdapter.Section>(Machine.Type.values().length);
+              new ArrayList<SimpleSectionedListAdapter.Section>(Machine.Type.values().length);
 
         setIsLoading(false);
 
@@ -135,10 +132,11 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
                 Machine.Type currentType = Machine.Type.fromInt(cursor.getInt(idx_type));
                 if (currentType != lastType)
                     sections.add(
-                            new SimpleSectionedListAdapter.Section(
-                                    cursor.getPosition(),
-                                    currentType.toString(mActivityContext)
-                            ));
+                          new SimpleSectionedListAdapter.Section(
+                                cursor.getPosition(),
+                                currentType.toString(mActivityContext)
+                          )
+                    );
 
                 lastType = currentType;
                 cursor.moveToNext();
@@ -146,7 +144,7 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
             mRoomViewAdapter.changeCursor(cursor);
             SimpleSectionedListAdapter.Section[] dummy =
-                    new SimpleSectionedListAdapter.Section[sections.size()];
+                  new SimpleSectionedListAdapter.Section[sections.size()];
             mAdapter.setSections(sections.toArray(dummy));
         }
     }
@@ -160,8 +158,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     @Override
     public String toString() {
         return "RoomViewFragment{" +
-                "mRoomId=" + mRoomId +
-                '}';
+              "mRoomId=" + mRoomId +
+              '}';
     }
 
     @Override
@@ -177,7 +175,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
         mRoomViewAdapter = new MyRoomViewAdapter(mActivityContext);
         mAdapter = new SimpleSectionedListAdapter(
-                mActivityContext, R.layout.item_machine_header, mRoomViewAdapter);
+              mActivityContext, R.layout.item_machine_header, mRoomViewAdapter
+        );
 
         setEmptyText(getText(R.string.machines_empty));
 
@@ -199,12 +198,13 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         //mRefreshRunnable.run();
         mRefreshPool = new ScheduledThreadPoolExecutor(1);
         mRefreshPool.scheduleWithFixedDelay(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        mHandler.post(mRefreshRunnable);
-                    }
-                }, 0, 5, MINUTES);
+              new Runnable() {
+                  @Override
+                  public void run() {
+                      mHandler.post(mRefreshRunnable);
+                  }
+              }, 0, 5, MINUTES
+        );
     }
 
     @Override
@@ -216,7 +216,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+          ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo adapterMenuInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -246,7 +247,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        final AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
+              .getMenuInfo();
         assert menuInfo != null;
         final int index = menuInfo.position;
         final Cursor cursor = (Cursor) mAdapter.getItem(index);
@@ -254,15 +256,24 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
         final ContentResolver contentResolver = getActivity().getContentResolver();
 
         final ContentValues cv = new ContentValues();
-        cv.put(PendingNotificationColumns.MACHINE_ID, cursor.getInt(cursor.getColumnIndex(MachineStatusColumns.MACHINE_ID)));
+        cv.put(
+              PendingNotificationColumns.MACHINE_ID,
+              cursor.getInt(cursor.getColumnIndex(MachineStatusColumns.MACHINE_ID))
+        );
         cv.put(PendingNotificationColumns.DATE, System.currentTimeMillis());
 
         switch (item.getItemId()) {
         case R.id.action_notify_available:
-            cv.put(PendingNotificationMachineColumns.DESIRED_STATUS, Machine.Status.AVAILABLE.ordinal());
+            cv.put(
+                  PendingNotificationMachineColumns.DESIRED_STATUS,
+                  Machine.Status.AVAILABLE.ordinal()
+            );
             break;
         case R.id.action_notify_cycle_complete:
-            cv.put(PendingNotificationMachineColumns.DESIRED_STATUS, Machine.Status.CYCLE_COMPLETE.ordinal());
+            cv.put(
+                  PendingNotificationMachineColumns.DESIRED_STATUS,
+                  Machine.Status.CYCLE_COMPLETE.ordinal()
+            );
             break;
         default:
             return super.onContextItemSelected(item);
@@ -300,7 +311,11 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
     static class MyRoomViewAdapter extends CursorAdapter {
 
         private final LayoutInflater mLayoutInflater;
-        private final TypefaceSpan mPostfixSpan = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) ? new TypefaceSpan("sans-serif-thin") : new TypefaceSpan("sans-serif-light");
+        private final TypefaceSpan mPostfixSpan = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) ?
+                                                  new TypefaceSpan(
+                                                        "sans-serif-thin"
+                                                  ) :
+                                                  new TypefaceSpan("sans-serif-light");
         private int idx_id;
         private int idx_room_id;
         private int idx_machine_id;
@@ -356,7 +371,8 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
             vh.status.setTextColor(status.getColor(context));
 
             if (timeRemaining >= 0) {
-                String timeText = String.format("%.0f", (double) timeRemaining / MINUTES.toMillis(1));
+                String timeText = String
+                      .format("%.0f", (double) timeRemaining / MINUTES.toMillis(1));
                 String timePostfix = res.getString(R.string.minutes_remaining_postfix);
 
                 Spannable spanRange = new SpannableString(timeText + " " + timePostfix);
@@ -385,5 +401,4 @@ public class RoomViewFragment extends InjectingListFragment implements LoaderMan
             }
         }
     }
-
 }

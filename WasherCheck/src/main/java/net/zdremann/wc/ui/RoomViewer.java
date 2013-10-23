@@ -75,45 +75,47 @@ public class RoomViewer extends InjectingActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_change_school:
-                startChooseSchool(false);
-                return true;
-            case R.id.action_change_room:
-                startChooseRoom();
-                return true;
-            case R.id.action_remove_notifications:
-                // Delete all, use a null where clause
-                mResolver.delete(WasherCheckContract.PendingNotification.CONTENT_URI, null, null);
-                return true;
-            case R.id.action_fake_io:
-                boolean useFakeIo = !item.isChecked();
-                mPreferences.edit().putBoolean("net.zdremann.wc.fake_io", useFakeIo).apply();
-                item.setChecked(useFakeIo);
-                return true;
-            default:
-                return false;
+        case R.id.action_change_school:
+            startChooseSchool(false);
+            return true;
+        case R.id.action_change_room:
+            startChooseRoom();
+            return true;
+        case R.id.action_remove_notifications:
+            // Delete all, use a null where clause
+            mResolver.delete(WasherCheckContract.PendingNotification.CONTENT_URI, null, null);
+            return true;
+        case R.id.action_fake_io:
+            boolean useFakeIo = !item.isChecked();
+            mPreferences.edit().putBoolean("net.zdremann.wc.fake_io", useFakeIo).apply();
+            item.setChecked(useFakeIo);
+            return true;
+        default:
+            return false;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    long roomId = data.getLongExtra(ARG_ROOM_ID, 0);
-                    mPreferences.edit().putLong(ARG_ROOM_ID, roomId).apply();
+        case 0:
+            if (resultCode == RESULT_OK) {
+                long roomId = data.getLongExtra(ARG_ROOM_ID, 0);
+                mPreferences.edit().putLong(ARG_ROOM_ID, roomId).apply();
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            recreate();
-                        }
-                    });
-                    setRoomId(roomId);
-                } else {
-                    if (!mPreferences.contains(ARG_ROOM_ID))
-                        finish();
-                }
+                mHandler.post(
+                      new Runnable() {
+                          @Override
+                          public void run() {
+                              recreate();
+                          }
+                      }
+                );
+                setRoomId(roomId);
+            } else {
+                if (!mPreferences.contains(ARG_ROOM_ID))
+                    finish();
+            }
         }
     }
 
@@ -135,8 +137,8 @@ public class RoomViewer extends InjectingActivity {
         setContentView(R.layout.activity_room_viewer);
 
         gaTracker.send(
-                MapBuilder.createAppView()
-                        .set(Fields.customDimension(1), String.valueOf(mRoomId)).build()
+              MapBuilder.createAppView()
+                    .set(Fields.customDimension(1), String.valueOf(mRoomId)).build()
         );
     }
 
@@ -180,7 +182,7 @@ public class RoomViewer extends InjectingActivity {
     @Override
     public String toString() {
         return "RoomViewer{" +
-                "mRoomId=" + mRoomId +
-                '}';
+              "mRoomId=" + mRoomId +
+              '}';
     }
 }

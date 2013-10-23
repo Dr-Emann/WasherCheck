@@ -208,15 +208,13 @@ public class Room extends AbstractCollection<Machine> {
         public void remove() {
             innerIterator.remove();
         }
-
     }
-
 
     @Override
     public String toString() {
         return "Room{" +
-                "id=" + id +
-                ", timeLoaded=" + new Date(timeLoaded).toString() +
-                '}';
+              "id=" + id +
+              ", timeLoaded=" + new Date(timeLoaded).toString() +
+              '}';
     }
 }

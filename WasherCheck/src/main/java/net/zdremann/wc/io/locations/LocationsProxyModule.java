@@ -30,11 +30,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        complete = false,
-        injects = {
-                LocationsProxy.class
-        },
-        library = true
+      complete = false,
+      injects = {
+            LocationsProxy.class
+      },
+      library = true
 )
 public class LocationsProxyModule {
 
@@ -49,6 +49,4 @@ public class LocationsProxyModule {
     public MachineGrouping provideRoot(LocationsGetter getter) {
         return getter.load();
     }
-
-
 }

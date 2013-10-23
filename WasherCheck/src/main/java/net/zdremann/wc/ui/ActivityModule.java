@@ -35,16 +35,16 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        addsTo = ApplicationModule.class,
-        library = true,
-        injects = {
-                RoomViewer.class,
-                RoomViewFragment.class,
-                InjectingActivity.class,
-                InjectingFragment.class,
-                RoomChooserActivity.class,
-                RoomChooserFragment.class
-        }
+      addsTo = ApplicationModule.class,
+      library = true,
+      injects = {
+            RoomViewer.class,
+            RoomViewFragment.class,
+            InjectingActivity.class,
+            InjectingFragment.class,
+            RoomChooserActivity.class,
+            RoomChooserFragment.class
+      }
 )
 public class ActivityModule {
     private final Activity mActivity;

@@ -27,12 +27,12 @@ import net.zdremann.wc.ApplicationModule;
 import dagger.Module;
 
 @Module(
-        injects = {
-                InjectingProvider.class,
-                WasherCheckProvider.class
-        },
-        addsTo = ApplicationModule.class,
-        library = true
+      injects = {
+            InjectingProvider.class,
+            WasherCheckProvider.class
+      },
+      addsTo = ApplicationModule.class,
+      library = true
 )
 public class ProviderModule {
 }

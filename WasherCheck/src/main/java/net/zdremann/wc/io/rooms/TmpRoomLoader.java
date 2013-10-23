@@ -29,7 +29,9 @@ import net.zdremann.wc.provider.WasherCheckContract;
 
 public class TmpRoomLoader extends CursorLoader {
     public TmpRoomLoader(Context context, long roomId) {
-        super(context, WasherCheckContract.MachineStatus.fromRoomId(roomId),
-                WasherCheckContract.MachineStatus.ALL_COLUMNS, null, null, null);
+        super(
+              context, WasherCheckContract.MachineStatus.fromRoomId(roomId),
+              WasherCheckContract.MachineStatus.ALL_COLUMNS, null, null, null
+        );
     }
 }

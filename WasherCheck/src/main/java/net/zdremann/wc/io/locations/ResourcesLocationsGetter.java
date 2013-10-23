@@ -48,7 +48,9 @@ public class ResourcesLocationsGetter implements LocationsGetter {
     private static final Map<String, MachineGrouping.Type> ALLOWED_TYPES;
 
     static {
-        Map<String, MachineGrouping.Type> mutableAllowedTypes = new HashMap<String, MachineGrouping.Type>(5);
+        Map<String, MachineGrouping.Type> mutableAllowedTypes = new HashMap<String, MachineGrouping.Type>(
+              5
+        );
         mutableAllowedTypes.put("root", MachineGrouping.Type.ROOT);
         mutableAllowedTypes.put("school", MachineGrouping.Type.SCHOOL);
         mutableAllowedTypes.put("campus", MachineGrouping.Type.CAMPUS);
@@ -73,10 +75,10 @@ public class ResourcesLocationsGetter implements LocationsGetter {
         try {
             while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        if ("root".equals(parser.getName())) {
-                            return readGrouping(parser);
-                        }
+                case XmlPullParser.START_TAG:
+                    if ("root".equals(parser.getName())) {
+                        return readGrouping(parser);
+                    }
                 }
             }
         } catch (XmlPullParserException e) {
@@ -88,14 +90,17 @@ public class ResourcesLocationsGetter implements LocationsGetter {
     }
 
     @NotNull
-    private MachineGrouping readGrouping(@NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
+    private MachineGrouping readGrouping(
+          @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, "", null);
         int id;
         try {
             id = Integer.parseInt(parser.getAttributeValue(null, "id"));
         } catch (NumberFormatException nfe) {
-            throw new XmlPullParserException("Not a valid id:" + parser.getAttributeValue(null, "id") + " "
-                    + parser.getPositionDescription());
+            throw new XmlPullParserException(
+                  "Not a valid id:" + parser.getAttributeValue(null, "id") + " "
+                        + parser.getPositionDescription()
+            );
         }
         String name = parser.getAttributeValue(null, "name");
         MachineGrouping.Type type = getType(parser.getName());
@@ -113,20 +118,19 @@ public class ResourcesLocationsGetter implements LocationsGetter {
             } catch (NumberFormatException nfe) {
                 latitude = longitude = Double.NaN;
             }
-
         }
 
         String themeStr = parser.getAttributeValue(null, "theme");
 
         final MachineGroupingBuilder builder = new MachineGroupingBuilder()
-                .setId(id).setName(name).setType(type)
-                .setLatitude(latitude).setLongitude(longitude);
+              .setId(id).setName(name).setType(type)
+              .setLatitude(latitude).setLongitude(longitude);
 
         if (!TextUtils.isEmpty(themeStr))
             builder.setTheme(MachineGrouping.Theme.parse(themeStr));
 
         MachineGrouping grouping = builder
-                .build();
+              .build();
 
         List<MachineGrouping> children = new ArrayList<MachineGrouping>();
 
