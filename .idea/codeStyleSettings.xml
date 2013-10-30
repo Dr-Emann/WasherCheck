@@ -16,6 +16,8 @@
           </value>
         </option>
         <option name="LINE_SEPARATOR" value="&#13;&#10;" />
+        <option name="FIELD_NAME_PREFIX" value="m" />
+        <option name="STATIC_FIELD_NAME_PREFIX" value="s" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="5" />
         <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
