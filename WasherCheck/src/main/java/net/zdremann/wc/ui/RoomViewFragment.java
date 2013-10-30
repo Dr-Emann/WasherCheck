@@ -22,15 +22,18 @@
 
 package net.zdremann.wc.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.Spannable;
@@ -47,11 +50,13 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.zdremann.wc.ForActivity;
 import net.zdremann.wc.R;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
+import net.zdremann.wc.service.MachinesLoadedBroadcastReceiver;
 import net.zdremann.wc.service.RoomRefresher;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
@@ -64,7 +69,6 @@ import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static java.util.concurrent.TimeUnit.*;
 import static net.zdremann.wc.provider.WasherCheckContract.*;
@@ -73,26 +77,52 @@ public class RoomViewFragment extends InjectingListFragment
       implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
     public static final String ARG_SELECT_MODE = "select_mode";
+    private static final int MSG_REFRESH_SUCCESS = 0x000;
+    private static final int MSG_REFRESH_FAILURE = 0x001;
+    private static final int MSG_REFRESH_START = 0x002;
+
     private final Set<Integer> mSelectedIndices = new HashSet<Integer>();
     private final Runnable mRefreshRunnable = new Runnable() {
         @Override
         public void run() {
-            setIsLoading(true);
-            final RoomRefresher refresher = mRoomRefreshGetter.get();
-            refresher.execute(mRoomId);
+            mHandler.sendEmptyMessage(MSG_REFRESH_START);
+            mActivityContext.startService(RoomRefresher.createIntent(mActivityContext, mRoomId));
+        }
+    };
+    private final BroadcastReceiver mRefreshCompleteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean successful = intent.getBooleanExtra(
+                  MachinesLoadedBroadcastReceiver.EXTRA_SUCCESSFUL_LOAD, false
+            );
+            mHandler.sendEmptyMessage((successful) ? MSG_REFRESH_SUCCESS : MSG_REFRESH_FAILURE);
         }
     };
     MyRoomViewAdapter mRoomViewAdapter;
     SimpleSectionedListAdapter mAdapter;
-    @Inject
-    Provider<RoomRefresher> mRoomRefreshGetter;
     @Inject
     @ForActivity
     Context mActivityContext;
     private long mRoomId;
     private boolean mIsLoading = false;
     private MenuItem mRefreshItem;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case MSG_REFRESH_START:
+                setIsLoading(true);
+                break;
+            case MSG_REFRESH_FAILURE:
+                Toast.makeText(getActivity(), R.string.error_refresh_general, Toast.LENGTH_SHORT)
+                      .show();
+                //Intentional fall-through
+            case MSG_REFRESH_SUCCESS:
+                setIsLoading(false);
+                break;
+            }
+        }
+    };
     private ScheduledThreadPoolExecutor mRefreshPool;
 
     protected void setIsLoading(final boolean isLoading) {
@@ -120,8 +150,6 @@ public class RoomViewFragment extends InjectingListFragment
 
         final ArrayList<SimpleSectionedListAdapter.Section> sections =
               new ArrayList<SimpleSectionedListAdapter.Section>(Machine.Type.values().length);
-
-        setIsLoading(false);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -197,13 +225,11 @@ public class RoomViewFragment extends InjectingListFragment
         super.onResume();
         //mRefreshRunnable.run();
         mRefreshPool = new ScheduledThreadPoolExecutor(1);
-        mRefreshPool.scheduleWithFixedDelay(
-              new Runnable() {
-                  @Override
-                  public void run() {
-                      mHandler.post(mRefreshRunnable);
-                  }
-              }, 0, 5, MINUTES
+        mRefreshPool.scheduleWithFixedDelay(mRefreshRunnable, 0, 5, MINUTES);
+        mActivityContext.registerReceiver(
+              mRefreshCompleteReceiver, new IntentFilter(
+              MachinesLoadedBroadcastReceiver.BROADCAST_TAG
+        )
         );
     }
 
@@ -243,6 +269,7 @@ public class RoomViewFragment extends InjectingListFragment
     public void onPause() {
         super.onPause();
         mRefreshPool.shutdown();
+        mActivityContext.unregisterReceiver(mRefreshCompleteReceiver);
     }
 
     @Override
@@ -260,7 +287,7 @@ public class RoomViewFragment extends InjectingListFragment
               PendingNotificationColumns.MACHINE_ID,
               cursor.getInt(cursor.getColumnIndex(MachineStatusColumns.MACHINE_ID))
         );
-        cv.put(PendingNotificationColumns.DATE, System.currentTimeMillis());
+        cv.put(PendingNotificationColumns.NOTIF_CREATED, System.currentTimeMillis());
 
         switch (item.getItemId()) {
         case R.id.action_notify_available:
@@ -301,7 +328,7 @@ public class RoomViewFragment extends InjectingListFragment
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
         case R.id.action_refresh:
-            mRefreshRunnable.run();
+            mRefreshPool.execute(mRefreshRunnable);
             return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -341,7 +368,9 @@ public class RoomViewFragment extends InjectingListFragment
                 idx_number = newCursor.getColumnIndex(MachineStatus.NUMBER);
                 idx_type = newCursor.getColumnIndex(MachineStatus.MACHINE_TYPE);
                 idx_status = newCursor.getColumnIndex(MachineStatus.STATUS);
-                idx_time_remaining = newCursor.getColumnIndex(MachineStatus.TIME_REMAINING);
+                idx_time_remaining = newCursor.getColumnIndex(
+                      MachineStatus.REPORTED_TIME_REMAINING
+                );
             }
             return cursor;
         }

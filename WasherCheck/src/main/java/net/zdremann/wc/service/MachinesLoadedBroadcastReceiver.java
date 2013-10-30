@@ -26,11 +26,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-public class PendingNotifCheckNeededBroadcastRec extends WakefulBroadcastReceiver {
+public class MachinesLoadedBroadcastReceiver extends WakefulBroadcastReceiver {
+    public static final String BROADCAST_TAG = "net.zdremann.wc.MACHINES_LOADED";
+    public static final String EXTRA_ROOM_IDS = "net.zdremann.wc.roomIds";
+    public static final String EXTRA_SUCCESSFUL_LOAD = "net.zdremann.wc.successful";
+
+    public static Intent createBroadcastIntent(boolean successful, long... roomIds) {
+        final Intent intent = new Intent(BROADCAST_TAG);
+        intent.putExtra(EXTRA_ROOM_IDS, roomIds);
+        intent.putExtra(EXTRA_SUCCESSFUL_LOAD, successful);
+        return intent;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(context, NotificationService.class);
-        WakefulBroadcastReceiver.startWakefulService(context, serviceIntent);
+        Intent serviceIntent = PendingNotificationCheckService.createServiceIntent(
+              context, intent.getLongArrayExtra(EXTRA_ROOM_IDS)
+        );
+        startWakefulService(context, serviceIntent);
     }
 }

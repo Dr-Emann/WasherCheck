@@ -24,23 +24,16 @@ package net.zdremann.wc.service;
 
 import android.app.IntentService;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 import net.zdremann.wc.BuildConfig;
 import net.zdremann.wc.MyApplication;
 
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import dagger.ObjectGraph;
 
 public abstract class InjectingIntentService extends IntentService {
-
     protected ObjectGraph activityGraph;
-    @Inject
-    EasyTracker gaTracker;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -55,9 +48,7 @@ public abstract class InjectingIntentService extends IntentService {
     public void onCreate() {
         super.onCreate();
 
-        MyApplication application = (MyApplication) getApplication();
-        assert application != null;
-        activityGraph = application.getApplicationGraph().plus(getModules().toArray());
+        activityGraph = MyApplication.getApplicationGraph().plus(getModules().toArray());
 
         if (BuildConfig.DEBUG)
             activityGraph.validate();

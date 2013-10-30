@@ -39,17 +39,16 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-              {MACHINE_ID, STATUS, TIME_REMAINING, LAST_UPDATED};
+              {MACHINE_ID, STATUS, REPORTED_TIME_REMAINING, LAST_UPDATED};
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
         }
     }
 
-    public interface StatusUpdateColumns extends BaseColumns {
-        public static final String MACHINE_ID = "machine_id";
+    public interface StatusUpdateColumns extends BaseColumns, MachineReference {
         public static final String STATUS = "status";
-        public static final String TIME_REMAINING = "time_remaining";
+        public static final String REPORTED_TIME_REMAINING = "time_remaining";
         public static final String LAST_UPDATED = "last_updated";
     }
 
@@ -75,10 +74,9 @@ public class WasherCheckContract {
         }
     }
 
-    public static interface MachineColumns extends BaseColumns {
+    public static interface MachineColumns extends BaseColumns, RoomReference {
         public static final String NUMBER = "number";
         public static final String MACHINE_TYPE = "machine_type";
-        public static final String ROOM_ID = "room_id";
         public static final String ESUDS_ID = "esuds_id";
     }
 
@@ -120,7 +118,7 @@ public class WasherCheckContract {
 
         public static final String[] ALL_COLUMNS =
               {
-                    MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, DATE, EXTENDED,
+                    MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, NOTIF_CREATED, EXTENDED,
                     DESIRED_STATUS, EST_TIME_OF_COMPLETION
               };
 
@@ -134,6 +132,53 @@ public class WasherCheckContract {
 
     }
 
+    public static final class PendingNotificationRooms
+          implements PendingNotificationRoomsColumns {
+        private PendingNotificationRooms() {
+        }
+
+        public static final String PATH = "pending_notification_rooms";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.net.zdremann.wc.provider.notification_machine_rooms";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.net.zdremann.wc.provider.notification_machine_rooms";
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
+
+        public static final String[] ALL_COLUMNS =
+              {
+                    ROOM_ID
+              };
+    }
+
+    public static interface PendingNotificationRoomsColumns extends RoomReference {
+
+    }
+
+    public static final class PendingNotificationMachineStatus
+          implements PendingNotificationMachineStatusColumns {
+        private PendingNotificationMachineStatus() {
+        }
+
+        public static final String PATH = "pending_notification_machine_status";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.net.zdremann.wc.provider.notification_machine_status";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.net.zdremann.wc.provider.notification_machine_status";
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
+
+        public static final String[] ALL_COLUMNS =
+              {
+                    MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID,
+                    NOTIF_CREATED, EXTENDED, DESIRED_STATUS, STATUS, LAST_UPDATED,
+                    REPORTED_TIME_REMAINING, EST_TIME_OF_COMPLETION
+              };
+
+        public static Uri fromId(long id) {
+            return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
+        }
+    }
+
+    public static interface PendingNotificationMachineStatusColumns
+          extends PendingNotificationColumns, MachineColumns, StatusUpdateColumns {
+
+    }
+
     public static final class PendingNotification implements PendingNotificationColumns {
         private PendingNotification() {
         }
@@ -144,25 +189,19 @@ public class WasherCheckContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
         public static final String[] ALL_COLUMNS =
-              {_ID, MACHINE_ID, DATE, EXTENDED, DESIRED_STATUS, EST_TIME_OF_COMPLETION};
+              {_ID, MACHINE_ID, NOTIF_CREATED, EXTENDED, DESIRED_STATUS, EST_TIME_OF_COMPLETION};
 
         public static Uri fromId(long id) {
             return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id));
         }
     }
 
-    public static interface PendingNotificationColumns extends BaseColumns {
-        /**
-         * The id for the machine.
-         * <p>TYPE: INTEGER</p>
-         */
-        public static final String MACHINE_ID = "machine_id";
-
+    public static interface PendingNotificationColumns extends BaseColumns, MachineReference {
         /**
          * The date at which the notification was created
          * <p>TYPE: INTEGER</p>
          */
-        public static final String DATE = "date";
+        public static final String NOTIF_CREATED = "notif_create";
         /**
          * The extended status of the notification.
          * <p/>
@@ -176,7 +215,7 @@ public class WasherCheckContract {
          * @see net.zdremann.wc.model.Machine.Status
          * <p>TYPE: INTEGER</p>
          */
-        public static final String DESIRED_STATUS = "machine_status";
+        public static final String DESIRED_STATUS = "desired_status";
         /**
          * The estimated number of milliseconds until the pending notification is fulfilled
          * <p>TYPE: INTEGER</p>
@@ -196,7 +235,7 @@ public class WasherCheckContract {
         public static final String[] ALL_COLUMNS =
               {
                     _ID, MACHINE_ID, NUMBER, MACHINE_TYPE, ROOM_ID, ESUDS_ID, STATUS,
-                    TIME_REMAINING, LAST_UPDATED
+                    REPORTED_TIME_REMAINING, LAST_UPDATED
               };
 
         public static Uri fromId(long id) {
@@ -211,5 +250,17 @@ public class WasherCheckContract {
 
     public static interface MachineStatusColumns extends MachineColumns, StatusUpdateColumns {
 
+    }
+
+    static interface RoomReference {
+        public static final String ROOM_ID = "room_id";
+    }
+
+    static interface MachineReference {
+        /**
+         * The id for the machine.
+         * <p>TYPE: INTEGER</p>
+         */
+        public static final String MACHINE_ID = "machine_id";
     }
 }

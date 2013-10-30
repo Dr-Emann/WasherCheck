@@ -48,8 +48,7 @@ abstract class InjectingActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MyApplication application = (MyApplication) getApplication();
-        activityGraph = application.getApplicationGraph().plus(getModules().toArray());
+        activityGraph = MyApplication.getApplicationGraph().plus(getModules().toArray());
 
         if (BuildConfig.DEBUG)
             activityGraph.validate();

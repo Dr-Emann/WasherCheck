@@ -32,7 +32,7 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 
 public class MyApplication extends Application {
-    private ObjectGraph mObjectGraph;
+    private static ObjectGraph sObjectGraph;
 
     @Inject
     GoogleAnalytics googleAnalytics;
@@ -40,14 +40,14 @@ public class MyApplication extends Application {
     @Inject
     public MyApplication() {
         super();
-        mObjectGraph = ObjectGraph.create(new ApplicationModule(this));
+        sObjectGraph = ObjectGraph.create(new ApplicationModule(this));
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mObjectGraph.inject(this);
+        sObjectGraph.inject(this);
         googleAnalytics.setDryRun(BuildConfig.DEBUG);
         googleAnalytics.getLogger().setLogLevel(
               BuildConfig.DEBUG ?
@@ -56,7 +56,7 @@ public class MyApplication extends Application {
         );
     }
 
-    public ObjectGraph getApplicationGraph() {
-        return mObjectGraph;
+    public static ObjectGraph getApplicationGraph() {
+        return sObjectGraph;
     }
 }

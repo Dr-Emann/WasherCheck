@@ -23,7 +23,6 @@
 package net.zdremann.wc.provider;
 
 import android.content.ContentProvider;
-import android.content.Context;
 
 import net.zdremann.wc.MyApplication;
 
@@ -37,13 +36,7 @@ public abstract class InjectingProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        final Context context = getContext();
-
-        assert context != null;
-        final MyApplication app = (MyApplication) context.getApplicationContext();
-
-        assert app != null;
-        objectGraph = app.getApplicationGraph().plus(getModules().toArray());
+        objectGraph = MyApplication.getApplicationGraph().plus(getModules().toArray());
         objectGraph.inject(this);
         return false;
     }

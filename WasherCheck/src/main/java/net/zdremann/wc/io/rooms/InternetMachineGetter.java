@@ -70,9 +70,10 @@ public class InternetMachineGetter implements MachineGetter {
 
     @Override
     public List<Machine> getMachines(long roomId) throws IOException {
-        Reader reader = mDownloader.getReader(roomId);
         List<Machine> machines;
+        Reader reader = null;
         try {
+            reader = mDownloader.getReader(roomId);
             long timeStart = System.currentTimeMillis();
 
             machines = mParser.readMachines(roomId, reader);
@@ -94,6 +95,10 @@ public class InternetMachineGetter implements MachineGetter {
             );
             Log.d(TAG, "Wrong format when downloading for room " + roomId);
             throw new IOException(e);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
         }
     }
 

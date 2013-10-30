@@ -23,6 +23,7 @@
 package net.zdremann.wc;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -89,6 +90,12 @@ public class ApplicationModule {
     @Singleton
     AlarmManager provideAlarmManager(@ForApplication Context context) {
         return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    NotificationManager provideNotificationManager(@ForApplication Context context) {
+        return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Provides

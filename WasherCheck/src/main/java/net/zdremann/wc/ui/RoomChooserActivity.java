@@ -24,9 +24,9 @@ package net.zdremann.wc.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
+import net.zdremann.wc.Main;
 import net.zdremann.wc.R;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
@@ -51,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
-public class RoomChooserActivity extends InjectingActivity implements RoomChooserListener, LocationListener {
+public class RoomChooserActivity extends InjectingActivity implements RoomChooserListener {
 
     public static final String ARG_GROUPING_ID = "groupingId";
     public static final String ARG_FIRST_CHOICE = "firstChoice";
@@ -64,6 +65,9 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
     LocationManager mLocationManager;
     @Inject
     LocationsProxy mLocationsProxy;
+    @Inject
+    @Main
+    SharedPreferences mPreferences;
 
     public RoomChooserActivity() {
         super();
@@ -89,7 +93,6 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
             transaction.commit();
         }
 
-
         if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_FIRST_CHOICE, false))
             guessLocation();
     }
@@ -107,46 +110,59 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                MachineGrouping parent = mLocationsProxy.parentOf(mRootId);
-                FragmentManager fm = getSupportFragmentManager();
+        case android.R.id.home:
+            MachineGrouping parent = mLocationsProxy.parentOf(mRootId);
+            FragmentManager fm = getSupportFragmentManager();
 
-                if (parent == null)
-                    NavUtils.navigateUpFromSameTask(this);
-                else if (fm.getBackStackEntryCount() > 0) {
-                    updateTitle(parent);
-                    mRootId = parent.id;
-                    fm.popBackStack();
+            if (parent == null) {
+                if (!mPreferences.contains(RoomViewer.ARG_ROOM_ID)) {
+                    this.setResult(RESULT_CANCELED);
+                    this.finish();
                 } else {
-                    updateTitle(parent);
-                    mRootId = parent.id;
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    Fragment fragment = new RoomChooserFragment();
-
-                    transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
-                    Bundle data = new Bundle();
-                    data.putLong(ARG_GROUPING_ID, mRootId);
-
-                    fragment.setArguments(data);
-                    transaction.replace(android.R.id.content, fragment);
-                    transaction.commit();
+                    NavUtils.navigateUpFromSameTask(this);
                 }
-                return true;
-            case R.id.guess_location:
-                guessLocation();
-                return true;
+            } else if (fm.getBackStackEntryCount() > 0) {
+                updateTitle(parent);
+                mRootId = parent.id;
+                fm.popBackStack();
+            } else {
+                updateTitle(parent);
+                mRootId = parent.id;
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                Fragment fragment = new RoomChooserFragment();
+
+                transaction.setCustomAnimations(
+                      android.R.anim.slide_in_left, android.R.anim.slide_out_right
+                );
+
+                Bundle data = new Bundle();
+                data.putLong(ARG_GROUPING_ID, mRootId);
+
+                fragment.setArguments(data);
+                transaction.replace(android.R.id.content, fragment);
+                transaction.commit();
+            }
+            return true;
+        case R.id.guess_location:
+            guessLocation();
+            return true;
         }
         return false;
     }
 
     protected void guessLocation() {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-
-        if (mLocationManager.getProviders(criteria, true).size() > 0) {
-            Toast.makeText(this, "Guessing Location", Toast.LENGTH_SHORT).show();
-            mLocationManager.requestSingleUpdate(criteria, this, getMainLooper());
+        if (hasLocationAbility()) {
+            @Nullable
+            final Location lastKnownLocation = mLocationManager
+                  .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (lastKnownLocation == null)
+                return;
+            MachineGrouping candidate = mLocationsProxy.getClosestLocation(lastKnownLocation);
+            if (candidate != null && lastKnownLocation.distanceTo(candidate.location) < 8047) {
+                Toast.makeText(this, "Guessing Location: " + candidate.name, Toast.LENGTH_SHORT)
+                      .show();
+                onRoomChosen(candidate);
+            }
         }
     }
 
@@ -157,8 +173,8 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
             data.putExtra(RoomViewer.ARG_ROOM_ID, newRoot.id);
 
             gaTracker.send(
-                    MapBuilder.createEvent("Room", "Chosen", String.valueOf(mRootId), 0L)
-                            .set(Fields.customDimension(1), String.valueOf(mRootId)).build()
+                  MapBuilder.createEvent("Room", "Chosen", String.valueOf(mRootId), 0L)
+                        .set(Fields.customDimension(1), String.valueOf(mRootId)).build()
             );
 
             setResult(RESULT_OK, data);
@@ -168,8 +184,10 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.addToBackStack(null);
-            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-                    android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            transaction.setCustomAnimations(
+                  R.anim.slide_in_right, R.anim.slide_out_left,
+                  android.R.anim.slide_in_left, android.R.anim.slide_out_right
+            );
 
             Fragment fragment = new RoomChooserFragment();
             Bundle data = new Bundle();
@@ -192,32 +210,10 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
         return mLocationManager.getProviders(mLocationCriteria, true).size() > 0;
     }
 
-    public void onLocationChanged(@NotNull Location location) {
-        // Get location within 5 miles (8047 meters)
-        MachineGrouping candidate = mLocationsProxy.getClosestLocation(location);
-        if (candidate != null && location.distanceTo(candidate.location) < 8047) {
-            onRoomChosen(candidate);
-        }
-    }
-
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // We shouldn't get this, we only registered for one update
-        throw new IllegalStateException();
-    }
-
-    public void onProviderEnabled(String provider) {
-        // Do nothing, We shouldn't get this
-        throw new IllegalStateException();
-    }
-
-    public void onProviderDisabled(String provider) {
-        // Do nothing, because location is only a suggestion
-    }
-
     @Override
     public String toString() {
         return "RoomChooserActivity{" +
-                "mRootId=" + mRootId +
-                '}';
+              "mRootId=" + mRootId +
+              '}';
     }
 }

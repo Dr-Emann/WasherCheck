@@ -37,8 +37,7 @@ import javax.inject.Inject;
 
 public class WasherCheckDatabase extends SQLiteOpenHelper {
     private static final String DB_NAME = "WasherCheckDatabase.db";
-    private static final int DB_VERSION = 2;
-
+    private static final int DB_VERSION = 3;
     private final LocationsProxy mLocations;
 
     @Inject
@@ -55,6 +54,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
         MachineStatusView.onCreate(db);
         MachineGroupTable.onCreate(db, mLocations);
         PendingNotificationMachineView.onCreate(db);
+        PendingNotificationMachineStatusView.onCreate(db);
     }
 
     @Override
@@ -65,6 +65,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
         MachineStatusView.onUpgrade(db, oldVersion, newVersion);
         MachineGroupTable.onUpgrade(db, mLocations, oldVersion, newVersion);
         PendingNotificationMachineView.onUpgrade(db, oldVersion, newVersion);
+        PendingNotificationMachineStatusView.onUpgrade(db, oldVersion, newVersion);
     }
 
     static final class PendingNotificationTable
@@ -76,10 +77,10 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
                     _ID + " INTEGER PRIMARY KEY,\n" +
                     MACHINE_ID + " INTEGER NOT NULL " +
                     "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
-                    DATE + " INTEGER NOT NULL,\n" +
+                    NOTIF_CREATED + " INTEGER NOT NULL,\n" +
                     EXTENDED + " INTEGER NOT NULL DEFAULT " + 0 + " ,\n" +
                     DESIRED_STATUS + " INTEGER NOT NULL,\n" +
-                    EST_TIME_OF_COMPLETION + " INTEGER )";
+                    EST_TIME_OF_COMPLETION + " INTEGER NOT NULL DEFAULT " + Long.MAX_VALUE + " )";
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
@@ -101,10 +102,40 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
               "CREATE VIEW " + VIEW_NAME + " AS\n" +
                     "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
                     MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
-                    ESUDS_ID + ", " + DATE + ", " + EXTENDED + ", " + DESIRED_STATUS + "\n" +
+                    ESUDS_ID + ", " + NOTIF_CREATED + ", " + EXTENDED + ", " + DESIRED_STATUS + ", " +
+                    EST_TIME_OF_COMPLETION + "\n" +
                     "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
                     " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
                     PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID;
+
+        public static void onCreate(SQLiteDatabase db) {
+            db.execSQL(SQL_CREATE);
+        }
+
+        public static void onUpgrade(
+              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+            if (oldVersion < DB_VERSION) {
+                db.execSQL("DROP VIEW IF EXISTS " + VIEW_NAME);
+                onCreate(db);
+            }
+        }
+    }
+
+    static final class PendingNotificationMachineStatusView
+          implements WasherCheckContract.PendingNotificationMachineStatusColumns {
+        public static final String VIEW_NAME = WasherCheckContract.PendingNotificationMachineStatus.PATH;
+        public static final String SQL_CREATE =
+              "CREATE VIEW " + VIEW_NAME + " AS\n" +
+                    "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
+                    PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
+                    ESUDS_ID + ", " + NOTIF_CREATED + ", " + EXTENDED + ", " + DESIRED_STATUS + ", " +
+                    STATUS + ", " + LAST_UPDATED + ", " + REPORTED_TIME_REMAINING + ", " +
+                    EST_TIME_OF_COMPLETION + "\n" +
+                    "FROM " +
+                    MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
+                    " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " + PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID +
+                    " INNER JOIN " + StatusUpdateTable.TABLE_NAME +
+                    " ON " + StatusUpdateTable.TABLE_NAME + "." + MACHINE_ID + " = " + MachineTable.TABLE_NAME + "." + _ID;
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
@@ -212,7 +243,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
                     "ON CONFLICT REPLACE " +
                     "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
                     STATUS + " INTEGER NOT NULL,\n" +
-                    TIME_REMAINING + " INTEGER,\n" +
+                    REPORTED_TIME_REMAINING + " INTEGER,\n" +
                     LAST_UPDATED + " INTEGER NOT NULL )";
 
         public static void onCreate(SQLiteDatabase db) {
@@ -235,7 +266,7 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
               "CREATE VIEW " + VIEW_NAME + " AS\n" +
                     "SELECT " + MachineTable.TABLE_NAME + "." + _ID + ", " + MACHINE_ID + ", " + NUMBER + ", " +
                     MACHINE_TYPE + ", " + ROOM_ID + ", " + ESUDS_ID + ", " + STATUS + ", " +
-                    TIME_REMAINING + ", " + LAST_UPDATED + "\n" +
+                    REPORTED_TIME_REMAINING + ", " + LAST_UPDATED + "\n" +
                     "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + StatusUpdateTable.TABLE_NAME +
                     " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
                     StatusUpdateTable.TABLE_NAME + "." + MACHINE_ID;

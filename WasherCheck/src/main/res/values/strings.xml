@@ -79,5 +79,6 @@
     <string name="label_version">Version:</string>
 
     <string name="remove_notifications">Remove Pending Notifications</string>
+    <string name="error_refresh_general">Unable to refresh</string>
 
 </resources>

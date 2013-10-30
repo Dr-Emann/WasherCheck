@@ -24,63 +24,94 @@ package net.zdremann.wc.service;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.os.AsyncTask;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 
+import net.zdremann.wc.Main;
 import net.zdremann.wc.io.rooms.MachineGetter;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.provider.WasherCheckContract;
-
-import org.jetbrains.annotations.Nullable;
+import net.zdremann.wc.ui.RoomViewer;
 
 import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class RoomRefresher extends AsyncTask<Long, Void, Void> {
+import dagger.Lazy;
 
-    private final MachineGetter mMachineGetter;
-    private final ContentResolver mResolver;
+public class RoomRefresher extends InjectingIntentService {
+    private static final String TAG = "RoomRefresherService";
+    private static final String ARG_ROOM_IDS = "net.dremann.wc.room_ids";
 
     @Inject
-    public RoomRefresher(ContentResolver resolver, MachineGetter machineGetter) {
-        mMachineGetter = machineGetter;
-        mResolver = resolver;
+    MachineGetter mMachineGetter;
+    @Inject
+    ContentResolver mResolver;
+    @Inject
+    @Main
+    Lazy<SharedPreferences> mLazyPreferences;
+
+    public static Intent createIntent(Context ctx, long... roomIds) {
+        Intent intent = new Intent(ctx, RoomRefresher.class);
+        intent.putExtra(ARG_ROOM_IDS, roomIds);
+        return intent;
     }
 
-    @Nullable
+    public RoomRefresher() {
+        super(TAG);
+    }
+
     @Override
-    protected Void doInBackground(Long... params) {
-        assert params.length == 1;
-        long roomId = params[0];
-
-        try {
-            final List<Machine> machines = mMachineGetter.getMachines(roomId);
-            long time = System.currentTimeMillis();
-
-            ContentValues[] values = new ContentValues[machines.size()];
-            int i = 0;
-
-            for (Machine machine : machines) {
-                ContentValues cv = new ContentValues();
-                cv.put(WasherCheckContract.MachineStatus.ESUDS_ID, machine.esudsId);
-                cv.put(WasherCheckContract.MachineStatus.NUMBER, machine.num);
-                cv.put(WasherCheckContract.MachineStatus.MACHINE_TYPE, machine.type.ordinal());
-                cv.put(WasherCheckContract.MachineStatus.ROOM_ID, machine.roomId);
-                cv.put(WasherCheckContract.MachineStatus.STATUS, machine.status.ordinal());
-                cv.put(WasherCheckContract.MachineStatus.TIME_REMAINING, machine.timeRemaining);
-                cv.put(WasherCheckContract.MachineStatus.LAST_UPDATED, time);
-                values[i++] = cv;
-            }
-
-            mResolver.delete(WasherCheckContract.Machine.fromRoomId(roomId), null, null);
-
-            mResolver.bulkInsert(WasherCheckContract.MachineStatus.CONTENT_URI, values);
-
-            mResolver.notifyChange(WasherCheckContract.MachineStatus.fromRoomId(roomId), null);
-        } catch (IOException e) {
-            return null;
+    protected void onHandleIntent(Intent intent) {
+        long[] roomIds = intent.getLongArrayExtra(ARG_ROOM_IDS);
+        if (roomIds == null || roomIds.length == 0) {
+            Log.d(TAG, "Called without roomIds. This may be a mistake");
+            roomIds = new long[]{mLazyPreferences.get().getLong(RoomViewer.ARG_ROOM_ID, 0)};
         }
-        return null;
+
+        boolean successful = true;
+
+        for (long roomId : roomIds) {
+            try {
+                final List<Machine> machines = mMachineGetter.getMachines(roomId);
+                long time = System.currentTimeMillis();
+
+                ContentValues[] values = new ContentValues[machines.size()];
+                int i = 0;
+
+                for (Machine machine : machines) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(WasherCheckContract.MachineStatus.ESUDS_ID, machine.esudsId);
+                    cv.put(WasherCheckContract.MachineStatus.NUMBER, machine.num);
+                    cv.put(WasherCheckContract.MachineStatus.MACHINE_TYPE, machine.type.ordinal());
+                    cv.put(WasherCheckContract.MachineStatus.ROOM_ID, machine.roomId);
+                    cv.put(WasherCheckContract.MachineStatus.STATUS, machine.status.ordinal());
+                    cv.put(
+                          WasherCheckContract.MachineStatus.REPORTED_TIME_REMAINING,
+                          machine.timeRemaining
+                    );
+                    cv.put(WasherCheckContract.MachineStatus.LAST_UPDATED, time);
+                    values[i++] = cv;
+                }
+
+                mResolver.delete(WasherCheckContract.Machine.fromRoomId(roomId), null, null);
+
+                mResolver.bulkInsert(WasherCheckContract.MachineStatus.CONTENT_URI, values);
+
+                mResolver.notifyChange(WasherCheckContract.MachineStatus.fromRoomId(roomId), null);
+            } catch (IOException e) {
+                successful = false;
+            }
+        }
+
+        final Intent broadcastIntent =
+              MachinesLoadedBroadcastReceiver.createBroadcastIntent(successful, roomIds);
+        this.sendBroadcast(broadcastIntent);
+
+        WakefulBroadcastReceiver.completeWakefulIntent(intent);
     }
 }

@@ -22,6 +22,7 @@
 
 package net.zdremann.wc.provider;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -53,6 +54,9 @@ public class WasherCheckProvider extends InjectingProvider {
     private static final int MACHINE_STATUS_ID = 42;
     private static final int NOTIFICATIONS_MACHINES = 50;
     private static final int NOTIFICATIONS_MACHINES_ROOM = 51;
+    private static final int NOTIFICATIONS_MACHINES_STATUS = 60;
+    private static final int NOTIFICATIONS_MACHINES_STATUS_ROOM = 61;
+    private static final int NOTIFICATIONS_ROOMS = 70;
 
     static {
         URI_MATCHER.addURI(AUTHORITY, PendingNotification.PATH, NOTIFICATIONS);
@@ -76,10 +80,31 @@ public class WasherCheckProvider extends InjectingProvider {
         URI_MATCHER.addURI(
               AUTHORITY, PendingNotificationMachine.PATH + "/room/#", NOTIFICATIONS_MACHINES_ROOM
         );
+
+        URI_MATCHER.addURI(
+              AUTHORITY, PendingNotificationMachineStatus.PATH, NOTIFICATIONS_MACHINES_STATUS
+        );
+        URI_MATCHER.addURI(
+              AUTHORITY, PendingNotificationMachineStatus.PATH + "/room/#",
+              NOTIFICATIONS_MACHINES_STATUS_ROOM
+        );
+        URI_MATCHER.addURI(AUTHORITY, PendingNotificationRooms.PATH, NOTIFICATIONS_ROOMS);
     }
 
     @Inject
     WasherCheckDatabase mDbOpener;
+    @Inject
+    ContentResolver mContentResolver;
+
+    @Nullable
+    private static String appendWhere(@Nullable String current, @Nullable String toAppend) {
+        if (TextUtils.isEmpty(current))
+            return toAppend;
+        else if (TextUtils.isEmpty(toAppend))
+            return current;
+        else
+            return current + " AND " + toAppend;
+    }
 
     @Override
     public Cursor query(
@@ -87,6 +112,7 @@ public class WasherCheckProvider extends InjectingProvider {
           String sortOrder) {
         final int uriType = URI_MATCHER.match(uri);
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String groupBy = null;
         builder.setTables(getTable(uriType));
 
         switch (uriType) {
@@ -112,15 +138,16 @@ public class WasherCheckProvider extends InjectingProvider {
             break;
         case MACHINE_STATUS_ID:
             builder.appendWhere(MachineStatusColumns._ID + "=" + uri.getLastPathSegment());
+            // Intentional lack of break
         case MACHINE_STATUS:
             if (TextUtils.isEmpty(sortOrder))
                 sortOrder = MachineStatusColumns.ROOM_ID + "," + MachineStatusColumns.MACHINE_TYPE +
-                      "," + MachineStatusColumns.TIME_REMAINING + "," + MachineStatusColumns.NUMBER;
+                      "," + MachineStatusColumns.REPORTED_TIME_REMAINING + "," + MachineStatusColumns.NUMBER;
             break;
         case MACHINE_STATUS_BY_ROOM:
             if (TextUtils.isEmpty(sortOrder))
                 sortOrder = MachineStatusColumns.ROOM_ID + "," + MachineStatusColumns.MACHINE_TYPE +
-                      ", " + MachineStatusColumns.STATUS + "," + MachineStatusColumns.TIME_REMAINING +
+                      ", " + MachineStatusColumns.STATUS + "," + MachineStatusColumns.REPORTED_TIME_REMAINING +
                       "," + MachineStatusColumns.NUMBER;
             builder.appendWhere(MachineStatusColumns.ROOM_ID + "=" + uri.getLastPathSegment());
             break;
@@ -128,6 +155,16 @@ public class WasherCheckProvider extends InjectingProvider {
             builder.appendWhere(
                   PendingNotificationMachineColumns.ROOM_ID + "=" + uri.getLastPathSegment()
             );
+            break;
+        case NOTIFICATIONS_MACHINES_STATUS_ROOM:
+            builder.appendWhere(
+                  PendingNotificationMachineStatusColumns.ROOM_ID + "=" + uri.getLastPathSegment()
+            );
+            break;
+        case NOTIFICATIONS_ROOMS:
+            builder.setDistinct(true);
+            projection = PendingNotificationRooms.ALL_COLUMNS;
+            break;
         default:
             // No filter by default
         }
@@ -137,11 +174,11 @@ public class WasherCheckProvider extends InjectingProvider {
         assert db != null;
 
         Cursor cursor = builder
-              .query(db, projection, selection, selectionArgs, null, null, sortOrder);
+              .query(db, projection, selection, selectionArgs, groupBy, null, sortOrder);
 
         assert cursor != null;
 
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        cursor.setNotificationUri(mContentResolver, uri);
 
         return cursor;
     }
@@ -175,6 +212,11 @@ public class WasherCheckProvider extends InjectingProvider {
         case NOTIFICATIONS_MACHINES:
         case NOTIFICATIONS_MACHINES_ROOM:
             return PendingNotificationMachine.CONTENT_TYPE;
+        case NOTIFICATIONS_MACHINES_STATUS:
+        case NOTIFICATIONS_MACHINES_STATUS_ROOM:
+            return PendingNotificationMachineStatus.CONTENT_TYPE;
+        case NOTIFICATIONS_ROOMS:
+            return PendingNotificationRooms.CONTENT_TYPE;
         default:
             throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -200,6 +242,9 @@ public class WasherCheckProvider extends InjectingProvider {
         case MACHINE_STATUS_ID:
         case NOTIFICATIONS_MACHINES:
         case NOTIFICATIONS_MACHINES_ROOM:
+        case NOTIFICATIONS_MACHINES_STATUS:
+        case NOTIFICATIONS_MACHINES_STATUS_ROOM:
+        case NOTIFICATIONS_ROOMS:
             throw new UnsupportedOperationException("Cannot insert into URI: " + uri);
         case MACHINE_STATUS_BY_ROOM:
             values.put(MachineStatusColumns.ROOM_ID, Long.parseLong(uri.getLastPathSegment()));
@@ -246,8 +291,8 @@ public class WasherCheckProvider extends InjectingProvider {
             );
             cv.put(StatusUpdateColumns.STATUS, values.getAsInteger(MachineStatusColumns.STATUS));
             cv.put(
-                  StatusUpdateColumns.TIME_REMAINING,
-                  values.getAsLong(MachineStatusColumns.TIME_REMAINING)
+                  StatusUpdateColumns.REPORTED_TIME_REMAINING,
+                  values.getAsLong(MachineStatusColumns.REPORTED_TIME_REMAINING)
             );
             id = db.insertWithOnConflict(
                   StatusUpdateTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE
@@ -288,6 +333,9 @@ public class WasherCheckProvider extends InjectingProvider {
         case MACHINE_STATUS_ID:
         case NOTIFICATIONS_MACHINES:
         case NOTIFICATIONS_MACHINES_ROOM:
+        case NOTIFICATIONS_MACHINES_STATUS:
+        case NOTIFICATIONS_MACHINES_STATUS_ROOM:
+        case NOTIFICATIONS_ROOMS:
             throw new UnsupportedOperationException("Cannot delete from URI: " + uri);
 
         case NOTIFICATIONS_ID:
@@ -318,16 +366,6 @@ public class WasherCheckProvider extends InjectingProvider {
         return db.delete(tableName, selection, selectionArgs);
     }
 
-    @Nullable
-    private String appendWhere(@Nullable String current, @Nullable String toAppend) {
-        if (TextUtils.isEmpty(current))
-            return toAppend;
-        else if (TextUtils.isEmpty(toAppend))
-            return current;
-        else
-            return current + " AND " + toAppend;
-    }
-
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final int uriType = URI_MATCHER.match(uri);
@@ -346,7 +384,10 @@ public class WasherCheckProvider extends InjectingProvider {
         case MACHINE_STATUS_ID:
         case NOTIFICATIONS_MACHINES:
         case NOTIFICATIONS_MACHINES_ROOM:
-            throw new UnsupportedOperationException("Cannot delete from URI: " + uri);
+        case NOTIFICATIONS_MACHINES_STATUS:
+        case NOTIFICATIONS_MACHINES_STATUS_ROOM:
+        case NOTIFICATIONS_ROOMS:
+            throw new UnsupportedOperationException("Cannot update URI: " + uri);
 
         case NOTIFICATIONS_ID:
             selection = appendWhere(
@@ -397,6 +438,11 @@ public class WasherCheckProvider extends InjectingProvider {
             return MachineGroupTable.TABLE_NAME;
         case NOTIFICATIONS_MACHINES:
         case NOTIFICATIONS_MACHINES_ROOM:
+            return PendingNotificationMachineView.VIEW_NAME;
+        case NOTIFICATIONS_MACHINES_STATUS:
+        case NOTIFICATIONS_MACHINES_STATUS_ROOM:
+            return PendingNotificationMachineStatusView.VIEW_NAME;
+        case NOTIFICATIONS_ROOMS:
             return PendingNotificationMachineView.VIEW_NAME;
         default:
             throw new UnsupportedOperationException("Unknown URI");

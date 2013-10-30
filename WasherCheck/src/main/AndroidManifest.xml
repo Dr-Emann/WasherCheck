@@ -74,11 +74,20 @@
         </activity>
 
         <service android:name=".service.NotificationService"/>
+        <service android:name=".service.PendingNotificationCheckService"/>
+        <service android:name=".service.RoomRefresher"/>
 
         <provider
             android:name=".provider.WasherCheckProvider"
             android:authorities="net.zdremann.wc"
             android:exported="false"></provider>
+
+        <receiver
+            android:name=".service.MachinesLoadedBroadcastReceiver">
+            <intent-filter>
+                <action android:name="net.zdremann.wc.MACHINES_LOADED"/>
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".service.PendingNotifCheckNeededBroadcastRec">
