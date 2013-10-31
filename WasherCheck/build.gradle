@@ -83,11 +83,32 @@ android {
         versionName getVersionName()
     }
 
+    signingConfigs {
+        release {
+            storeFile file("tmp")
+        }
+    }
+
+    final Console console = System.console();
+    if (new File("signing.properties").canRead()) {
+        Properties props = new Properties()
+        props.load(new FileInputStream("signing.properties"))
+        android.signingConfigs.release.storeFile = file(props['keystore'])
+        android.signingConfigs.release.storePassword =  props['keystore.password']
+        android.signingConfigs.release.keyAlias = props['keyAlias']
+        android.signingConfigs.release.keyPassword props['keyPassword']
+    }
+    else {
+        println 'signing.properties not found'
+    }
+
     buildTypes {
         debug {
             packageNameSuffix ".debug"
             versionNameSuffix "-debug"
         }
+        release {
+            signingConfig signingConfigs.release
+        }
     }
-
 }
