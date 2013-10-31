@@ -25,7 +25,7 @@ package net.zdremann.wc.ui;
 import android.app.Activity;
 import android.os.Bundle;
 
-import net.zdremann.wc.R;
+import air.air.net.zdremann.zsuds.R;
 
 public class AboutActivity extends Activity {
     @Override

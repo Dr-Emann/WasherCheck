@@ -28,9 +28,9 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import net.zdremann.wc.R;
-
 import org.jetbrains.annotations.NotNull;
+
+import air.air.net.zdremann.zsuds.R;
 
 public class Machine implements Comparable<Machine>, Parcelable {
     public static final long NO_TIME_REMAINING = -1;

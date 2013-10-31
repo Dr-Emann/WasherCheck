@@ -29,7 +29,6 @@ import android.util.Log;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 
-import net.zdremann.wc.BuildConfig;
 import net.zdremann.wc.model.Machine;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +50,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.BuildConfig;
 
 public class InternetMachineGetter implements MachineGetter {
 

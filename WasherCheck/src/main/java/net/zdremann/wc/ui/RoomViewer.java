@@ -37,12 +37,14 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
 import net.zdremann.wc.Main;
-import net.zdremann.wc.R;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.provider.WasherCheckContract;
 
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.BuildConfig;
+import air.air.net.zdremann.zsuds.R;
 
 public class RoomViewer extends InjectingActivity {
     public static final String ARG_ROOM_ID = "room_id";
@@ -68,6 +70,7 @@ public class RoomViewer extends InjectingActivity {
 
         assert fakeIoMenuItem != null;
 
+        fakeIoMenuItem.setVisible(BuildConfig.DEBUG);
         fakeIoMenuItem.setChecked(mPreferences.getBoolean("net.zdremann.wc.fake_io", false));
         return true;
     }

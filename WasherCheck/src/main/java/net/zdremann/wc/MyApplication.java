@@ -29,6 +29,7 @@ import com.google.analytics.tracking.android.Logger;
 
 import javax.inject.Inject;
 
+import air.air.net.zdremann.zsuds.BuildConfig;
 import dagger.ObjectGraph;
 
 public class MyApplication extends Application {

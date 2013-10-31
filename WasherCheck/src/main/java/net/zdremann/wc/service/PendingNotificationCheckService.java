@@ -34,7 +34,6 @@ import android.database.Cursor;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import net.zdremann.wc.R;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.provider.WasherCheckContract.PendingNotification;
 import net.zdremann.wc.provider.WasherCheckContract.PendingNotificationMachineStatus;
@@ -43,6 +42,8 @@ import net.zdremann.wc.ui.RoomViewer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.R;
 
 import static java.util.concurrent.TimeUnit.*;
 

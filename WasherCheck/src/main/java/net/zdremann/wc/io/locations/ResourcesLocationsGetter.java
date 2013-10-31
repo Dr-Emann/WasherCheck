@@ -26,7 +26,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import net.zdremann.wc.ForApplication;
-import net.zdremann.wc.R;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.model.MachineGroupingBuilder;
 
@@ -43,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.R;
 
 public class ResourcesLocationsGetter implements LocationsGetter {
     private static final Map<String, MachineGrouping.Type> ALLOWED_TYPES;

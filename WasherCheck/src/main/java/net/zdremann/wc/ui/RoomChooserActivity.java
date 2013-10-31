@@ -41,7 +41,6 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
 import net.zdremann.wc.Main;
-import net.zdremann.wc.R;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.model.MachineGrouping.Type;
@@ -51,6 +50,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.R;
 
 public class RoomChooserActivity extends InjectingActivity implements RoomChooserListener {
 

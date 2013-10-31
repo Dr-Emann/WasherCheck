@@ -27,13 +27,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import net.zdremann.wc.R;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import air.air.net.zdremann.zsuds.R;
 
 import static net.zdremann.wc.model.MachineGroupingBuilder.LOCATION_PROVIDER;
 

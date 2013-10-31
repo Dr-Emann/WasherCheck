@@ -29,9 +29,9 @@ import android.database.Cursor;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import net.zdremann.wc.BuildConfig;
-
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.BuildConfig;
 
 import static java.util.concurrent.TimeUnit.*;
 import static net.zdremann.wc.provider.WasherCheckContract.PendingNotificationRooms;

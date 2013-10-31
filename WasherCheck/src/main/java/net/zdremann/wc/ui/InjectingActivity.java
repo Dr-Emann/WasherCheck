@@ -27,7 +27,6 @@ import android.support.v4.app.FragmentActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-import net.zdremann.wc.BuildConfig;
 import net.zdremann.wc.MyApplication;
 
 import java.util.Arrays;
@@ -35,6 +34,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import air.air.net.zdremann.zsuds.BuildConfig;
 import dagger.ObjectGraph;
 
 abstract class InjectingActivity extends FragmentActivity {

@@ -24,12 +24,12 @@ package net.zdremann.wc.service;
 
 import android.app.IntentService;
 
-import net.zdremann.wc.BuildConfig;
 import net.zdremann.wc.MyApplication;
 
 import java.util.Arrays;
 import java.util.List;
 
+import air.air.net.zdremann.zsuds.BuildConfig;
 import dagger.ObjectGraph;
 
 public abstract class InjectingIntentService extends IntentService {

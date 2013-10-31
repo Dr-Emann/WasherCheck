@@ -53,7 +53,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.zdremann.wc.ForActivity;
-import net.zdremann.wc.R;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.service.MachinesLoadedBroadcastReceiver;
@@ -69,6 +68,8 @@ import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
+
+import air.air.net.zdremann.zsuds.R;
 
 import static java.util.concurrent.TimeUnit.*;
 import static net.zdremann.wc.provider.WasherCheckContract.*;

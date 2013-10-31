@@ -79,7 +79,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 18
-        versionCode getVersionCode()
+        versionCode getVersionCode() + 20000000
         versionName getVersionName()
     }
 
