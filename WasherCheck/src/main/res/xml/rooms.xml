@@ -183,6 +183,24 @@
         </campus>
     </school>
     <school
+        id="-9"
+        name="Bluffton University"
+        latitude="40.896541"
+        longitude="-83.899124">
+        <room
+            id="1040047"
+            name="Hirschey Annex"/>
+        <room
+            id="716"
+            name="Neufeld Hall"/>
+        <room
+            id="1807"
+            name="Ramseyer Hall"/>
+        <room
+            id="877"
+            name="Ropp Hall"/>
+    </school>
+    <school
         id="-2"
         name="Carnegie Mellon University"
         theme="CMU"
@@ -239,6 +257,94 @@
         <room
             id="335"
             name="Woodlawn Apartment" />
+    </school>
+    <school
+        id="-10"
+        name="Case Western Reserve University"
+        latitude="41.504319"
+        longitude="-81.608809">
+        <room
+            id="1429"
+            name="Alumni"/>
+        <room
+            id="1398"
+            name="Clarke Tower"/>
+        <room
+            id="1405"
+            name="Cutler"/>
+        <room
+            id="1423"
+            name="Cutter"/>
+        <room
+            id="4193"
+            name="Glasser"/>
+        <room
+            id="1403"
+            name="Hitchcock"/>
+        <room
+            id="1431"
+            name="Howe"/>
+        <room
+            id="4188"
+            name="Kusch"/>
+        <room
+            id="4191"
+            name="Michelson"/>
+        <room
+            id="1409"
+            name="Norton"/>
+        <room
+            id="1407"
+            name="Pierce"/>
+        <room
+            id="1415"
+            name="Raymond"/>
+        <room
+            id="1413"
+            name="Sherman"/>
+        <room
+            id="1421"
+            name="Smith"/>
+        <room
+            id="1427"
+            name="Staley"/>
+        <room
+            id="1400"
+            name="Storrs"/>
+        <room
+            id="1419"
+            name="Taft"/>
+        <room
+            id="1417"
+            name="Taplin"/>
+        <room
+            id="1425"
+            name="Tippit"/>
+        <room
+            id="1411"
+            name="Tyler"/>
+        <hall
+            id="-147"
+            name="Village at 115">
+            <room
+                id="1443"
+                name="House 1"/>
+            <room
+                id="1444"
+                name="House 2"/>
+            <room
+                id="1446"
+                name="House 4"/>
+            <room
+                id="1447"
+                name="House 5"/>
+            <room
+                id="1448"
+                name="House 6"/>
+            <room
+                id="1449"
+                name="House 7"/>
+        </hall>
     </school>
     <school
         id="-3"
