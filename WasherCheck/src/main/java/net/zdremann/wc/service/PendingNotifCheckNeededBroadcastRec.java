@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 public class PendingNotifCheckNeededBroadcastRec extends WakefulBroadcastReceiver {
+    public static final String BROADCAST_TAG = "net.zdremann.wc.NEED_PENDING_NOTIF_CHECK";
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -38,6 +38,7 @@ import net.zdremann.wc.R;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.provider.WasherCheckContract.PendingNotification;
 import net.zdremann.wc.provider.WasherCheckContract.PendingNotificationMachineStatus;
+import net.zdremann.wc.ui.RoomViewer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -93,12 +94,14 @@ public class PendingNotificationCheckService extends InjectingIntentService {
                     long notifId = notifications.getInt(0);
                     int desiredStatus = notifications.getInt(3);
                     int currentStatus = notifications.getInt(2);
+                    long statusUpdateTime = notifications.getLong(1);
                     if (currentStatus <= desiredStatus) {
                         compleatedNotifs += 1;
                         mContentResolver.delete(PendingNotification.fromId(notifId), null, null);
                     } else {
                         long estimatedTimeRemaining = getRemainingTime(notifications);
-                        cv.put(PendingNotification.EST_TIME_OF_COMPLETION, estimatedTimeRemaining);
+                        long estTimeOfCompletion = statusUpdateTime + estimatedTimeRemaining;
+                        cv.put(PendingNotification.EST_TIME_OF_COMPLETION, estTimeOfCompletion);
                         mContentResolver.update(
                               PendingNotification.fromId(notifId), cv, null, null
                         );
@@ -113,6 +116,14 @@ public class PendingNotificationCheckService extends InjectingIntentService {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                   .setContentTitle("Machines Ready")
                   .setContentText(compleatedNotifs + " Machines are ready")
+                  .setNumber(compleatedNotifs)
+                  .setContentIntent(
+                        PendingIntent.getActivity(
+                              this, 0, new Intent(
+                              this, RoomViewer.class
+                        ), 0
+                        )
+                  )
                   .setSmallIcon(R.drawable.ic_launcher)
                   .setAutoCancel(true)
                   .setDefaults(Notification.DEFAULT_ALL);
@@ -132,10 +143,8 @@ public class PendingNotificationCheckService extends InjectingIntentService {
             if (nextCheckQuery.moveToFirst()) {
                 long nextCheck = nextCheckQuery.getLong(0);
                 if (nextCheck > 0) {
-                    PendingIntent serviceIntent = PendingIntent.getService(
-                          this, 0, new Intent(
-                          this, NotificationService.class
-                    ), 0
+                    PendingIntent serviceIntent = PendingIntent.getBroadcast(
+                          this, 0, new Intent(PendingNotifCheckNeededBroadcastRec.BROADCAST_TAG), 0
                     );
                     Log.d(
                           TAG, "Refreshing in " + MILLISECONDS.toSeconds(
@@ -143,7 +152,7 @@ public class PendingNotificationCheckService extends InjectingIntentService {
                     ) + " seconds"
                     );
                     mAlarmManager.set(
-                          AlarmManager.ELAPSED_REALTIME_WAKEUP, nextCheck, serviceIntent
+                          AlarmManager.RTC_WAKEUP, nextCheck, serviceIntent
                     );
                 }
             }
@@ -154,8 +163,8 @@ public class PendingNotificationCheckService extends InjectingIntentService {
 
     protected long getRemainingTime(@NotNull final Cursor notification) {
         long timeRemaining = notification.getLong(4);
-        if (timeRemaining < 0) {
-            int currentStatus = notification.getInt(3);
+        if (timeRemaining < 1000) {
+            int currentStatus = notification.getInt(2);
             if (currentStatus == Machine.Status.CYCLE_COMPLETE.ordinal())
                 return DEFAULT_TIME_CYCLE_COMPLETE;
             else if (currentStatus == Machine.Status.IN_USE.ordinal())
@@ -165,7 +174,7 @@ public class PendingNotificationCheckService extends InjectingIntentService {
             else
                 return DEFAULT_TIME_UNKNOWN;
         } else {
-            return (long) (0.6 * timeRemaining * 2 / Math.PI * Math.atan(timeRemaining / 3600000));
+            return Math.max(MINUTES.toMillis(1), timeRemaining * 6 / 10);
         }
     }
 }
