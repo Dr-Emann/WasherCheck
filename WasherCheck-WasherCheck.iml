@@ -23,33 +23,33 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/WasherCheck/build/classes/market/debug" />
+    <output url="file://$MODULE_DIR$/WasherCheck/build/classes/sideload/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/WasherCheck">
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/market/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/market/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/market/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/market/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/market/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/market/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/market/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/market/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/market/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/market/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/assets" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/res" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/assets" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/res" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/sideload/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/sideload/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/sideload/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/sideload/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/sideload/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/sideload/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/sideload/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/sideload/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/sideload/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/sideload/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/res" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/res" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/resources" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/java" isTestSource="false" />
@@ -84,8 +84,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-v4-19.0.0" level="project" />
     <orderEntry type="library" exported="" name="dagger-compiler-1.1.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-19.0.0" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="libGoogleAnalyticsServices" level="project" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
