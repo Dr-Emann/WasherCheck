@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
@@ -61,6 +62,7 @@ public class ResourcesLocationsGetter implements LocationsGetter {
     }
 
     private final Context mContext;
+    private final AtomicInteger mNextId = new AtomicInteger(-1);
 
     @Inject
     public ResourcesLocationsGetter(@ForApplication Context context) {
@@ -95,13 +97,18 @@ public class ResourcesLocationsGetter implements LocationsGetter {
           @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, "", null);
         int id;
-        try {
-            id = Integer.parseInt(parser.getAttributeValue(null, "id"));
-        } catch (NumberFormatException nfe) {
-            throw new XmlPullParserException(
-                  "Not a valid id:" + parser.getAttributeValue(null, "id") + " "
-                        + parser.getPositionDescription()
-            );
+        String idStr = parser.getAttributeValue(null, "id");
+        if (TextUtils.isEmpty(idStr)) {
+            id = mNextId.getAndDecrement();
+        } else {
+            try {
+                id = Integer.parseInt(idStr);
+            } catch (NumberFormatException nfe) {
+                throw new XmlPullParserException(
+                      "Not a valid id:" + idStr + " "
+                            + parser.getPositionDescription()
+                );
+            }
         }
         String name = parser.getAttributeValue(null, "name");
         MachineGrouping.Type type = getType(parser.getName());
