@@ -3,11 +3,11 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="Debug" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebug" />
-        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleTest" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
+        <option name="SELECTED_BUILD_VARIANT" value="SideloadDebug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleSideloadDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileSideloadDebug" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleSideloadTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateSideloadDebugSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/WasherCheck/build/source/aidl/debug" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
@@ -23,19 +23,33 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/WasherCheck/build/classes/debug" />
+    <output url="file://$MODULE_DIR$/WasherCheck/build/classes/market/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/WasherCheck">
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/market/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/market/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/market/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/market/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/market/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/market/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/market/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/market/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/market/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/market/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/res" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/market/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/res" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestMarket/resources" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/java" isTestSource="false" />
