@@ -98,7 +98,22 @@ android {
         android.signingConfigs.release.keyPassword props['keyPassword']
     }
     else {
-        println 'signing.properties not found'
+        String storeFile = System.getenv("SIGNING_STORE_FILE")
+        String storePass = System.getenv("SIGNING_STORE_PASSWORD")
+        String alias = System.getenv("SIGNING_KEY_ALIAS")
+        String keyPass = System.getenv("SIGNING_KEY_PASSWORD")
+
+        if (storeFile != null && storePass != null && alias != null && keyPass != null) {
+            android.signingConfigs.release.storeFile = file(storeFile)
+            android.signingConfigs.release.storePassword = storePass
+            android.signingConfigs.release.keyAlias = alias
+            android.signingConfigs.release.keyPassword keyPass
+        } else {
+            println 'signing.properties not found'
+            println 'you can also use the environment variables:'
+            println '\tSIGNING_STORE_FILE, SIGNING_STORE_PASSWORD, SIGNING_KEY_ALIAS, and SIGNING_KEY_PASSWORD'
+        }
+
     }
 
     buildTypes {
