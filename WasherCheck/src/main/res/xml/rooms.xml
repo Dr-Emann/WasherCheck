@@ -385,6 +385,57 @@
             name="Newman Towers Dryers"/>
     </school>
     <school
+        name="Northern Illinois University"
+        theme="CMU"
+        latitude="41.9374092"
+        longitude="-88.7728747">
+        <room
+            id="1014736"
+            name="Douglas Hall AB" />
+        <room
+            id="1014750"
+            name="Douglas Hall CD" />
+        <room
+            id="1014716"
+            name="Grant North C-Tower" />
+        <room
+            id="1014718"
+            name="Grant North D-Tower" />
+        <room
+            id="1014730"
+            name="Grant South A-Tower" />
+        <room
+            id="1014715"
+            name="Grant South B-Tower" />
+        <room
+            id="1014745"
+            name="Lincoln Hall AB" />
+        <room
+            id="1014747"
+            name="Lincoln Hall CD" />
+        <room
+            id="1014710"
+            name="Neptune North" />
+        <room
+            id="1014728"
+            name="Neptune East" />
+        <room
+            id="1014712"
+            name="Neptune West" />
+        <room
+            id="1014744"
+            name="Stevenson North C-Tower" />
+        <room
+            id="1014734"
+            name="Stevenson North D-Tower" />
+        <room
+            id="1014720"
+            name="Stevenson South A-Tower" />
+        <room
+            id="1014722"
+            name="Stevenson South B-Tower" />
+    </school>
+    <school
         name="University of Maryland"
         theme="UMaryland"
         latitude="38.987034"
