@@ -26,51 +26,51 @@
     <output url="file://$MODULE_DIR$/WasherCheck/build/classes/sideload/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/WasherCheck">
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/sideload/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/sideload/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/sideload/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/sideload/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/sideload/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/sideload/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/sideload/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/sideload/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/sideload/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/sideload/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/r/sideload/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/aidl/sideload/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/rs/sideload/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/source/buildConfig/sideload/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/sideload/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/build/res/rs/sideload/test" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/res" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/sideload/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/aidl" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/assets" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/res" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTestSideload/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/res" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/res" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/aidl" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/assets" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/res" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/WasherCheck/src/instrumentTest/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/apk" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/assets" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/bundles" />
@@ -79,6 +79,7 @@
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/libs" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/manifests" />
+      <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/res" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/WasherCheck/build/tmp" />
     </content>
