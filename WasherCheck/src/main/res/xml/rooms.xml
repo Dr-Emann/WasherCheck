@@ -21,6 +21,7 @@
   -->
 
 <root
+    xmlns="http://zach.dremann.net/wc/ns"
     id="0"
     name="root">
     <school

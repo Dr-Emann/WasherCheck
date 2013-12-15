@@ -85,9 +85,9 @@ public class ResourcesLocationsGetter implements LocationsGetter {
                 }
             }
         } catch (XmlPullParserException e) {
-            throw new IllegalStateException("XML Data is bad");
+            throw new IllegalStateException("XML Data is bad", e);
         } catch (IOException e) {
-            throw new IllegalStateException("XML Data is bad");
+            throw new IllegalStateException("XML Data is bad", e);
         }
         throw new IllegalStateException("XML Data is bad");
     }
@@ -95,7 +95,7 @@ public class ResourcesLocationsGetter implements LocationsGetter {
     @NotNull
     private MachineGrouping readGrouping(
           @NotNull XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, "", null);
+        parser.require(XmlPullParser.START_TAG, null, null);
         int id;
         String idStr = parser.getAttributeValue(null, "id");
         if (TextUtils.isEmpty(idStr)) {
@@ -156,7 +156,7 @@ public class ResourcesLocationsGetter implements LocationsGetter {
             child.parent = grouping;
         }
 
-        parser.require(XmlPullParser.END_TAG, "", null);
+        parser.require(XmlPullParser.END_TAG, null, null);
         return grouping;
     }
 

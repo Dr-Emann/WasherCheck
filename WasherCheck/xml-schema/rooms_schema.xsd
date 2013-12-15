@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://zach.dremann.net/wc/ns">
+    <xs:element name="root" type="rootType">
+    </xs:element>
+    <xs:complexType name="roomType">
+        <xs:attribute type="xs:integer" name="id" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="hallType">
+        <xs:sequence>
+            <xs:element type="roomType" name="room" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="rootType">
+        <xs:sequence>
+            <xs:element type="schoolType" name="school" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:integer" name="id" fixed="0"/>
+        <xs:attribute type="xs:string" name="name"/>
+    </xs:complexType>
+    <xs:complexType name="campusType">
+        <xs:sequence>
+            <xs:element type="roomType" name="room" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="hallType" name="hall" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="schoolType">
+        <xs:choice>
+            <xs:element type="campusType" name="campus" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="roomType" name="room" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="hallType" name="hall" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:choice>
+
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="theme" use="optional"/>
+        <xs:attribute type="xs:decimal" name="latitude" use="optional"/>
+        <xs:attribute type="xs:decimal" name="longitude" use="optional"/>
+
+    </xs:complexType>
+</xs:schema>
