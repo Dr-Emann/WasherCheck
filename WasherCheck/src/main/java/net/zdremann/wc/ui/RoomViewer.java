@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
+import net.zdremann.wc.BackupAgent;
 import net.zdremann.wc.Main;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
@@ -105,6 +106,7 @@ public class RoomViewer extends InjectingActivity {
             if (resultCode == RESULT_OK) {
                 long roomId = data.getLongExtra(ARG_ROOM_ID, 0);
                 mPreferences.edit().putLong(ARG_ROOM_ID, roomId).apply();
+                BackupAgent.requestBackup(this);
 
                 mHandler.post(
                       new Runnable() {

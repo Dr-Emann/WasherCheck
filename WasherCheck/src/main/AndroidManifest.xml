@@ -43,7 +43,8 @@
 
     <application
         android:name="net.zdremann.wc.MyApplication"
-        android:allowBackup="false"
+        android:allowBackup="true"
+        android:backupAgent="net.zdremann.wc.BackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
@@ -60,6 +61,9 @@
             android:name="net.zdremann.wc.ui.RoomChooserActivity"
             android:label="@string/title_room_chooser"
             android:parentActivityName="net.zdremann.wc.ui.RoomViewer">
+            <meta-data
+                android:name="com.google.android.backup.api_key"
+                android:value="AEdPqrEAAAAI200tI0NgclQFmgGxmYuRV7Sw5xJhatSoO55vEg"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.zdremann.wc.ui.RoomViewer"/>

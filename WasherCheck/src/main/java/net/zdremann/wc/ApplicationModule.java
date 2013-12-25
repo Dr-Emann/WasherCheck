@@ -53,6 +53,7 @@ import dagger.Provides;
       library = true
 )
 public class ApplicationModule {
+    public static final String MAIN_PREFS_NAME = "main";
     private final MyApplication mApplication;
 
     public ApplicationModule(MyApplication application) {
@@ -102,7 +103,7 @@ public class ApplicationModule {
     @Singleton
     @Main
     SharedPreferences provideMainSharedPreferences(@ForApplication Context context) {
-        return context.getSharedPreferences("main", Context.MODE_PRIVATE);
+        return context.getSharedPreferences(MAIN_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     @Provides
