@@ -22,31 +22,36 @@
 
 package net.zdremann.wc.io.rooms;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
-import com.google.analytics.tracking.android.Tracker;
-
 import net.zdremann.wc.model.Machine;
 
 import java.io.IOException;
 import java.util.List;
 
-abstract class InternetMachineGetter implements MachineGetter {
-    protected final Tracker gaTracker;
-    private final ConnectivityManager connectivityManager;
+public class FallbackMachineGetter implements MachineGetter {
+    private final List<? extends MachineGetter> getters;
 
-    InternetMachineGetter(Tracker gaTracker, ConnectivityManager connectivityManager) {
-        this.gaTracker = gaTracker;
-        this.connectivityManager = connectivityManager;
+    public FallbackMachineGetter(List<? extends MachineGetter> getters) {
+        this.getters = getters;
     }
 
     @Override
     public List<Machine> getMachines(long roomId) throws IOException {
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if(activeNetwork == null || !activeNetwork.isConnected()) {
-            throw new IOException("Not connected to the internet");
+        IOException lastException = null;
+        for (MachineGetter getter : getters) {
+            try {
+                return getter.getMachines(roomId);
+            }
+            catch (IOException e) {
+                // Continue to next getter
+                lastException = e;
+            }
+            catch (Exception ignore) {
+                // Ignore non-IO exceptions
+            }
         }
-        return null;
+        if(lastException != null)
+            throw lastException;
+        else
+            throw new IOException();
     }
 }

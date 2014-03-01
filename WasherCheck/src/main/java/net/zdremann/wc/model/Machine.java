@@ -34,6 +34,7 @@ import air.air.net.zdremann.zsuds.R;
 
 public class Machine implements Comparable<Machine>, Parcelable {
     public static final long NO_TIME_REMAINING = -1;
+    public static final long NO_ESUDS_ID = -1;
     public static final Creator<Machine> CREATOR = new Creator<Machine>() {
 
         @NotNull
@@ -46,7 +47,7 @@ public class Machine implements Comparable<Machine>, Parcelable {
             return new Machine[size];
         }
     };
-    public long id;
+
     public final int num;
     public final long roomId;
     @NotNull
@@ -57,13 +58,6 @@ public class Machine implements Comparable<Machine>, Parcelable {
     public long timeRemaining = NO_TIME_REMAINING;
 
     public Machine(final long roomId, final long esudsId, int num, @NotNull final Type type) {
-        this(-1, roomId, esudsId, num, type);
-    }
-
-    public Machine(
-          final long id, final long roomId, final long esudsId, int num,
-          @NotNull final Type type) {
-        this.id = id;
         this.esudsId = esudsId;
         this.num = num;
         this.type = type;
@@ -71,7 +65,6 @@ public class Machine implements Comparable<Machine>, Parcelable {
     }
 
     private Machine(Parcel in) {
-        this.id = in.readLong();
         this.roomId = in.readLong();
         this.esudsId = in.readLong();
         this.num = in.readInt();
@@ -154,7 +147,6 @@ public class Machine implements Comparable<Machine>, Parcelable {
     }
 
     public void writeToParcel(Parcel destination, int flags) {
-        destination.writeLong(id);
         destination.writeLong(roomId);
         destination.writeLong(esudsId);
         destination.writeInt(num);

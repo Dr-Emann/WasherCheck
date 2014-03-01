@@ -22,31 +22,30 @@
 
 package net.zdremann.wc.io.rooms;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.SharedPreferences;
 
-import com.google.analytics.tracking.android.Tracker;
+import net.zdremann.wc.Main;
 
-import net.zdremann.wc.model.Machine;
+import java.util.Arrays;
 
-import java.io.IOException;
-import java.util.List;
+import dagger.Module;
+import dagger.Provides;
 
-abstract class InternetMachineGetter implements MachineGetter {
-    protected final Tracker gaTracker;
-    private final ConnectivityManager connectivityManager;
-
-    InternetMachineGetter(Tracker gaTracker, ConnectivityManager connectivityManager) {
-        this.gaTracker = gaTracker;
-        this.connectivityManager = connectivityManager;
-    }
-
-    @Override
-    public List<Machine> getMachines(long roomId) throws IOException {
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if(activeNetwork == null || !activeNetwork.isConnected()) {
-            throw new IOException("Not connected to the internet");
-        }
-        return null;
+@Module(
+      complete = false,
+      library = true
+)
+public class RoomLoaderModule {
+    @Provides
+    MachineGetter provideMachineGetter(@Main SharedPreferences preferences,
+          EsudsMachineGetter esudsMachineGetter,
+          GaeMachineGetter gaeMachineGetter,
+          DescendingMachineGetter debugMachineGetter) {
+        if(!preferences.getBoolean("net.zdremann.wc.fake_io", false))
+            return new FallbackMachineGetter(
+              Arrays.asList(esudsMachineGetter, gaeMachineGetter, debugMachineGetter)
+            );
+        else
+            return debugMachineGetter;
     }
 }

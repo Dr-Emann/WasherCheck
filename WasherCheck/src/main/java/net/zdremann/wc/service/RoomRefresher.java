@@ -104,6 +104,7 @@ public class RoomRefresher extends InjectingIntentService {
 
                 mResolver.notifyChange(WasherCheckContract.MachineStatus.fromRoomId(roomId), null);
             } catch (IOException e) {
+                e.printStackTrace();
                 successful = false;
             }
         }

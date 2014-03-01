@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Zachary Dremann
+ * Copyright (c) 2013. Zachary Dremann
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,25 @@
 
 package net.zdremann.wc.io.rooms;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import net.zdremann.wc.io.rooms.EsudsMachineGetter;
+import net.zdremann.wc.io.rooms.MachineGetter;
 
-import com.google.analytics.tracking.android.Tracker;
+import java.util.Arrays;
 
-import net.zdremann.wc.model.Machine;
+import javax.inject.Singleton;
 
-import java.io.IOException;
-import java.util.List;
+import dagger.Module;
+import dagger.Provides;
 
-abstract class InternetMachineGetter implements MachineGetter {
-    protected final Tracker gaTracker;
-    private final ConnectivityManager connectivityManager;
-
-    InternetMachineGetter(Tracker gaTracker, ConnectivityManager connectivityManager) {
-        this.gaTracker = gaTracker;
-        this.connectivityManager = connectivityManager;
-    }
-
-    @Override
-    public List<Machine> getMachines(long roomId) throws IOException {
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if(activeNetwork == null || !activeNetwork.isConnected()) {
-            throw new IOException("Not connected to the internet");
-        }
-        return null;
+@Module(
+      complete = false,
+      library = true
+)
+public class RoomLoaderModule {
+    @Provides
+    @Singleton
+    MachineGetter provideMachineGetter(EsudsMachineGetter esudsMachineGetter,
+          GaeMachineGetter gaeMachineGetter) {
+        return new FallbackMachineGetter(Arrays.asList(esudsMachineGetter, gaeMachineGetter));
     }
 }
