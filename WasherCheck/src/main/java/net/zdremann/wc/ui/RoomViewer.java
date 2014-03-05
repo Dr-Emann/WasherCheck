@@ -26,7 +26,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -36,7 +35,6 @@ import android.view.MenuItem;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
-import air.air.net.zdremann.zsuds.BackupAgent;
 import net.zdremann.wc.Main;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
@@ -44,6 +42,7 @@ import net.zdremann.wc.provider.WasherCheckContract;
 
 import javax.inject.Inject;
 
+import air.air.net.zdremann.zsuds.BackupAgent;
 import air.air.net.zdremann.zsuds.BuildConfig;
 import air.air.net.zdremann.zsuds.R;
 
@@ -58,7 +57,6 @@ public class RoomViewer extends InjectingActivity {
     @Inject
     ContentResolver mResolver;
 
-    private Handler mHandler = new Handler();
     private long mRoomId;
 
     @Override
@@ -91,7 +89,7 @@ public class RoomViewer extends InjectingActivity {
             return true;
         case R.id.action_fake_io:
             boolean useFakeIo = !item.isChecked();
-            mPreferences.edit().putBoolean("net.zdremann.wc.fake_io", useFakeIo).apply();
+            mPreferences.edit().putBoolean("net.zdremann.wc.fake_io", useFakeIo).commit();
             item.setChecked(useFakeIo);
             return true;
         default:
@@ -105,17 +103,9 @@ public class RoomViewer extends InjectingActivity {
         case 0:
             if (resultCode == RESULT_OK) {
                 long roomId = data.getLongExtra(ARG_ROOM_ID, 0);
-                mPreferences.edit().putLong(ARG_ROOM_ID, roomId).apply();
+                mPreferences.edit().putLong(ARG_ROOM_ID, roomId).commit();
                 BackupAgent.requestBackup(this);
 
-                mHandler.post(
-                      new Runnable() {
-                          @Override
-                          public void run() {
-                              recreate();
-                          }
-                      }
-                );
                 setRoomId(roomId);
             } else {
                 if (!mPreferences.contains(ARG_ROOM_ID))
@@ -135,9 +125,6 @@ public class RoomViewer extends InjectingActivity {
         }
 
         MachineGrouping grouping = mLocationsProxy.getGrouping(mRoomId);
-
-        if (grouping != null)
-            setTheme(grouping.getTheme().getResource());
 
         setContentView(R.layout.activity_room_viewer);
 
@@ -167,7 +154,9 @@ public class RoomViewer extends InjectingActivity {
 
         final MachineGrouping roomGroup = mLocationsProxy.getGrouping(roomId);
 
-        setTitle(roomGroup != null ? roomGroup.name : null);
+        if(roomGroup != null)
+            getSupportActionBar().setBackgroundDrawable(roomGroup.getColorDrawable(this));
+        getSupportActionBar().setTitle(roomGroup != null ? roomGroup.name : null);
 
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 

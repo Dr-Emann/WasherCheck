@@ -36,6 +36,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
@@ -48,7 +50,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,8 +64,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -82,7 +81,6 @@ public class RoomViewFragment extends InjectingListFragment
     private static final int MSG_REFRESH_FAILURE = 0x001;
     private static final int MSG_REFRESH_START = 0x002;
 
-    private final Set<Integer> mSelectedIndices = new HashSet<Integer>();
     private final Runnable mRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -130,9 +128,9 @@ public class RoomViewFragment extends InjectingListFragment
         mIsLoading = isLoading;
         if (mRefreshItem != null) {
             if (isLoading) {
-                mRefreshItem.setActionView(R.layout.actionbar_indeterminite_progress);
+                MenuItemCompat.setActionView(mRefreshItem, R.layout.actionbar_indeterminite_progress);
             } else {
-                mRefreshItem.setActionView(null);
+                MenuItemCompat.setActionView(mRefreshItem, null);
             }
         }
     }
@@ -163,7 +161,7 @@ public class RoomViewFragment extends InjectingListFragment
                     sections.add(
                           new SimpleSectionedListAdapter.Section(
                                 cursor.getPosition(),
-                                currentType.toString(mActivityContext)
+                                currentType.toString(mActivityContext).toUpperCase()
                           )
                     );
 
@@ -226,7 +224,7 @@ public class RoomViewFragment extends InjectingListFragment
         super.onResume();
         //mRefreshRunnable.run();
         mRefreshPool = new ScheduledThreadPoolExecutor(1);
-        mRefreshPool.scheduleWithFixedDelay(mRefreshRunnable, 0, 5, MINUTES);
+        mRefreshPool.scheduleWithFixedDelay(mRefreshRunnable, 0, 5 * 60, SECONDS);
         mActivityContext.registerReceiver(
               mRefreshCompleteReceiver, new IntentFilter(
               MachinesLoadedBroadcastReceiver.BROADCAST_TAG
@@ -319,9 +317,9 @@ public class RoomViewFragment extends InjectingListFragment
         mRefreshItem = menu.findItem(R.id.action_refresh);
         assert mRefreshItem != null;
         if (mIsLoading) {
-            mRefreshItem.setActionView(R.layout.actionbar_indeterminite_progress);
+            MenuItemCompat.setActionView(mRefreshItem, R.layout.actionbar_indeterminite_progress);
         } else {
-            mRefreshItem.setActionView(null);
+            MenuItemCompat.setActionView(mRefreshItem, null);
         }
     }
 

@@ -26,7 +26,7 @@
     name="root">
     <school
         name="Binghamton University"
-        theme="Binghampton"
+        color="#006A4E"
         latitude="42.085038"
         longitude="-75.968792">
         <campus
@@ -187,7 +187,7 @@
     </school>
     <school
         name="Carnegie Mellon University"
-        theme="CMU"
+        color="#B01C2E"
         latitude="40.44391"
         longitude="-79.941612">
         <room
@@ -330,7 +330,7 @@
     </school>
     <school
         name="Loyola University"
-        theme="Loyola"
+        color="#a30042"
         latitude="39.34613"
         longitude="-76.618784">
         <room
@@ -387,7 +387,7 @@
     </school>
     <school
         name="Northern Illinois University"
-        theme="CMU"
+        color="#B01C2E"
         latitude="41.9374092"
         longitude="-88.7728747">
         <room
@@ -438,7 +438,7 @@
     </school>
     <school
         name="University of Maryland"
-        theme="UMaryland"
+        color="#DC241F"
         latitude="38.987034"
         longitude="-76.940015">
         <hall
@@ -516,7 +516,6 @@
     </school>
     <school
         name="University of Southern Mississippi"
-        theme="SouthernMiss"
         latitude="31.329079"
         longitude="-89.332158">
         <room
@@ -534,7 +533,7 @@
     </school>
     <school
         name="Stevenson University"
-        theme="Stevenson"
+        color="#00552E"
         latitude="39.427276"
         longitude="-76.779634">
         <room
@@ -579,7 +578,7 @@
     </school>
     <school
         name="Wayne State University"
-        theme="WayneState"
+        color="#1F6157"
         latitude="42.357164"
         longitude="-83.065141">
         <room

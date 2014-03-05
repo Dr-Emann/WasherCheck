@@ -22,8 +22,7 @@
 
 package net.zdremann.wc.io.rooms;
 
-import net.zdremann.wc.io.rooms.EsudsMachineGetter;
-import net.zdremann.wc.io.rooms.MachineGetter;
+import android.os.Build;
 
 import java.util.Arrays;
 
@@ -41,6 +40,10 @@ public class RoomLoaderModule {
     @Singleton
     MachineGetter provideMachineGetter(EsudsMachineGetter esudsMachineGetter,
           GaeMachineGetter gaeMachineGetter) {
-        return new FallbackMachineGetter(Arrays.asList(esudsMachineGetter, gaeMachineGetter));
+        return new FallbackMachineGetter(
+              Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
+              Arrays.asList(esudsMachineGetter, gaeMachineGetter) :
+              Arrays.asList(esudsMachineGetter)
+        );
     }
 }

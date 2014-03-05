@@ -23,6 +23,7 @@
 package net.zdremann.wc.io.rooms;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import net.zdremann.wc.Main;
 
@@ -43,7 +44,9 @@ public class RoomLoaderModule {
           DescendingMachineGetter debugMachineGetter) {
         if(!preferences.getBoolean("net.zdremann.wc.fake_io", false))
             return new FallbackMachineGetter(
-              Arrays.asList(esudsMachineGetter, gaeMachineGetter, debugMachineGetter)
+                  (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
+              Arrays.asList(esudsMachineGetter, gaeMachineGetter, debugMachineGetter) :
+              Arrays.asList(esudsMachineGetter, debugMachineGetter))
             );
         else
             return debugMachineGetter;

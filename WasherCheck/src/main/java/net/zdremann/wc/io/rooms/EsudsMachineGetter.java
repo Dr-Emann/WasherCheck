@@ -23,7 +23,7 @@
 package net.zdremann.wc.io.rooms;
 
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -96,7 +96,10 @@ public class EsudsMachineGetter extends InternetMachineGetter {
                   MapBuilder.createException("parsing: " + e.getMessage(), false).build()
             );
             Log.d(TAG, "Wrong format when downloading for room " + roomId);
-            throw new IOException(e);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+                throw new IOException(e);
+            else
+                throw new IOException();
         } finally {
             if (reader != null) {
                 reader.close();

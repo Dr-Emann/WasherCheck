@@ -24,18 +24,16 @@ package net.zdremann.wc.model;
 
 import android.location.Location;
 
-import org.jetbrains.annotations.Nullable;
-
 public class MachineGroupingBuilder {
     static final String LOCATION_PROVIDER = "static";
     private final Location location = new Location(LOCATION_PROVIDER);
     private long id;
     private String name;
     private MachineGrouping.Type type;
-    private MachineGrouping.Theme theme;
+    private Integer color;
 
-    public MachineGroupingBuilder setTheme(@Nullable MachineGrouping.Theme theme) {
-        this.theme = theme;
+    public MachineGroupingBuilder setColor(Integer color) {
+        this.color = color;
         return this;
     }
 
@@ -72,6 +70,6 @@ public class MachineGroupingBuilder {
     public MachineGrouping build() {
         if (name == null)
             throw new IllegalStateException("Name is required to be set");
-        return new MachineGrouping(id, name, type, location, theme);
+        return new MachineGrouping(id, name, type, location, color);
     }
 }

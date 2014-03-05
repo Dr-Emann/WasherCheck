@@ -22,10 +22,12 @@
 
 package net.zdremann.wc.model;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +45,7 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
             Location loc = new Location(LOCATION_PROVIDER);
             MachineGrouping value = new MachineGrouping(
                   in.readLong(), in.readString(), Type.ofInt(in.readInt()), loc,
-                  Theme.ofInt(in.readInt())
+                  (Integer)in.readValue(ClassLoader.getSystemClassLoader())
             );
             loc.setLatitude(in.readDouble());
             loc.setLongitude(in.readDouble());
@@ -72,18 +74,18 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
     @Nullable
     public MachineGrouping parent;
     @Nullable
-    private Theme mTheme;
+    public Integer color;
 
     public MachineGrouping(
           final long id,
           @NotNull final String name,
           @NotNull final Type type,
-          @NotNull final Location location, @Nullable final Theme theme) {
+          @NotNull final Location location, @Nullable final Integer color) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.location = location;
-        this.mTheme = theme;
+        this.color = color;
     }
 
     @Override
@@ -134,53 +136,28 @@ public class MachineGrouping implements Parcelable, Comparable<MachineGrouping> 
         destination.writeInt(type.ordinal());
         destination.writeDouble(location.getLatitude());
         destination.writeDouble(location.getLongitude());
-        destination.writeInt(getTheme().ordinal());
+        destination.writeValue(getColor());
         destination.writeTypedList(children);
     }
 
-    @NotNull
-    public Theme getTheme() {
-        if (mTheme != null)
-            return mTheme;
-        else if (parent != null)
-            return parent.getTheme();
-        else
-            return Theme.UNKNOWN;
+    @Nullable
+    public Integer getColor() {
+        MachineGrouping current = this;
+        while(current != null) {
+            if(current.color != null)
+                return current.color;
+            current = current.parent;
+        }
+        return null;
     }
 
-    public static enum Theme {
-        BINGHAMPTON(R.style.Theme_Binghampton),
-        CMU(R.style.Theme_Cmu),
-        LOYOLA(R.style.Theme_Loyola),
-        UMARYLAND(R.style.Theme_Maryland),
-        SOUTHERNMISS(R.style.Theme_Southernmiss),
-        STEVENSON(R.style.Theme_Stevenson),
-        WAYNESTATE(R.style.Theme_Waynestate),
-        UNKNOWN(0);
-
-        public static Theme parse(@Nullable String str) {
-            if (TextUtils.isEmpty(str))
-                return null;
-            for (Theme theme : values()) {
-                if (theme.toString().equalsIgnoreCase(str))
-                    return theme;
-            }
-            return UNKNOWN;
-        }
-
-        private final int themeId;
-
-        Theme(int id) {
-            this.themeId = id;
-        }
-
-        public int getResource() {
-            return themeId;
-        }
-
-        public static Theme ofInt(int i) {
-            return values()[i];
-        }
+    @NotNull
+    public Drawable getColorDrawable(Context context) {
+        Integer color = getColor();
+        if(color == null)
+            return new ColorDrawable(context.getResources().getColor(R.color.actionbar_default));
+        else
+            return new ColorDrawable(color);
     }
 
     public static enum Type {

@@ -33,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.NoSuchElementException;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -41,7 +43,7 @@ public class LocationsProxy {
     @NotNull
     private MachineGrouping mRoot;
     private final LongSparseArray<MachineGrouping> mLocations = new LongSparseArray<MachineGrouping>();
-    private final NavigableMap<Location, MachineGrouping> mLocationMap = new TreeMap<Location, MachineGrouping>(
+    private final SortedMap<Location, MachineGrouping> mLocationMap = new TreeMap<Location, MachineGrouping>(
           new Comparator<Location>() {
               @Override
               public int compare(final Location lhs, final Location rhs) {
@@ -67,21 +69,31 @@ public class LocationsProxy {
     @Nullable
     public MachineGrouping getClosestLocation(@NotNull Location target) {
         @Nullable
-        final Map.Entry<Location, MachineGrouping> above;
+        MachineGrouping above;
         @Nullable
-        final Map.Entry<Location, MachineGrouping> below;
+        MachineGrouping below;
+        MachineGrouping closest;
 
-        above = mLocationMap.ceilingEntry(target);
-        below = mLocationMap.floorEntry(target);
+        if(mLocationMap.containsKey(target)) {
+            return mLocationMap.get(target);
+        }
+        try {
+            above = mLocationMap.get(mLocationMap.headMap(target).lastKey());
+        } catch (NoSuchElementException e) {
+            above = null;
+        }
 
-        @Nullable
-        final Map.Entry<Location, MachineGrouping> closest;
+        try {
+            below = mLocationMap.get(mLocationMap.tailMap(target).lastKey());
+        } catch (NoSuchElementException e) {
+            below = null;
+        }
 
         if (above == null)
             closest = below;
         else if (below == null)
             closest = above;
-        else if (target.distanceTo(above.getKey()) < target.distanceTo(below.getKey()))
+        else if (target.distanceTo(above.location) < target.distanceTo(below.location))
             closest = above;
         else
             closest = below;
@@ -89,7 +101,7 @@ public class LocationsProxy {
         if (closest == null)
             return null;
 
-        return closest.getValue();
+        return closest;
     }
 
     @Nullable

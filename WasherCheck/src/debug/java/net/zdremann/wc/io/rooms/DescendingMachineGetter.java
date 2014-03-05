@@ -36,6 +36,7 @@ public class DescendingMachineGetter implements MachineGetter {
     public static final long ITERATION_LENGTH = MILLISECONDS.convert(10, SECONDS);
     private static final int MACHINES_RETURNED = 8 * 3;
     private static final int NUM_ITERATIONS = Machine.Status.values().length;
+    private static final long MINUTE = 1000L * 60;
 
     @Inject
     public DescendingMachineGetter() {
@@ -50,7 +51,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.WASHER);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = MILLISECONDS.convert(1, MINUTES);
+                machine.timeRemaining = MINUTE;
             }
             machines.add(machine);
         }
@@ -58,7 +59,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = MILLISECONDS.convert(30, MINUTES);
+                machine.timeRemaining = 30 * MINUTE;
             }
             machines.add(machine);
         }
@@ -66,7 +67,7 @@ public class DescendingMachineGetter implements MachineGetter {
             final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN);
             machine.status = status;
             if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = MILLISECONDS.convert(60, MINUTES);
+                machine.timeRemaining = 60 * MINUTE;
             }
             machines.add(machine);
         }

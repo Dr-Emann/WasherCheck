@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013. Zachary Dremann
+ * Copyright (c) 2014. Zachary Dremann
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,11 +48,12 @@ import air.air.net.zdremann.zsuds.R;
 import static java.util.concurrent.TimeUnit.*;
 
 public class PendingNotificationCheckService extends InjectingIntentService {
+    private static final long MINUTE = 60 * 1000L;
     public static final String TAG = "PendingNotificationCheckService";
-    private static final long DEFAULT_TIME_CYCLE_COMPLETE = MINUTES.toMillis(5);
+    private static final long DEFAULT_TIME_CYCLE_COMPLETE = 5 * MINUTE;
     private static final long DEFAULT_TIME_IN_USE = DEFAULT_TIME_CYCLE_COMPLETE;
-    private static final long DEFAULT_TIME_UNAVAILABLE = MINUTES.toMillis(45);
-    private static final long DEFAULT_TIME_UNKNOWN = MINUTES.toMillis(30);
+    private static final long DEFAULT_TIME_UNAVAILABLE = 45 * MINUTE;
+    private static final long DEFAULT_TIME_UNKNOWN = 30 * MINUTE;
     private static final String[] NOTIFICATION_PROJECTION = {
           PendingNotificationMachineStatus._ID, PendingNotificationMachineStatus.NOTIF_CREATED,
           PendingNotificationMachineStatus.STATUS, PendingNotificationMachineStatus.DESIRED_STATUS,
@@ -175,7 +176,7 @@ public class PendingNotificationCheckService extends InjectingIntentService {
             else
                 return DEFAULT_TIME_UNKNOWN;
         } else {
-            return Math.max(MINUTES.toMillis(1), timeRemaining * 6 / 10);
+            return Math.max(MINUTE, timeRemaining * 6 / 10);
         }
     }
 }

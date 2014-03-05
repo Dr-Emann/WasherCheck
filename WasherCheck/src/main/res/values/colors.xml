@@ -32,5 +32,7 @@
     <color name="machine_unavailable_disabled">#80000000</color>
     <color name="machine_unknown">#ff000000</color>
     <color name="machine_unknown_disabled">#80000000</color>
+    
+    <color name="actionbar_default">#2d2d2d</color>
 
 </resources>

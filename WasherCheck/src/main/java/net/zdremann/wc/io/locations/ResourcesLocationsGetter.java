@@ -23,6 +23,7 @@
 package net.zdremann.wc.io.locations;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 
 import net.zdremann.wc.ForApplication;
@@ -128,14 +129,19 @@ public class ResourcesLocationsGetter implements LocationsGetter {
             }
         }
 
-        String themeStr = parser.getAttributeValue(null, "theme");
+        String colorStr = parser.getAttributeValue(null, "color");
 
         final MachineGroupingBuilder builder = new MachineGroupingBuilder()
               .setId(id).setName(name).setType(type)
               .setLatitude(latitude).setLongitude(longitude);
 
-        if (!TextUtils.isEmpty(themeStr))
-            builder.setTheme(MachineGrouping.Theme.parse(themeStr));
+        if (!TextUtils.isEmpty(colorStr)) {
+            try {
+                builder.setColor(Color.parseColor(colorStr));
+            } catch (Exception e) {
+                // Don't set the color if it can't be parsed
+            }
+        }
 
         MachineGrouping grouping = builder
               .build();

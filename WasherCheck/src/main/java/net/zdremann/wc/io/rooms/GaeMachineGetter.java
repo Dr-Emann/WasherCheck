@@ -22,8 +22,9 @@
 
 package net.zdremann.wc.io.rooms;
 
+import android.annotation.TargetApi;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.JsonReader;
 
 import com.google.analytics.tracking.android.MapBuilder;
@@ -40,6 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class GaeMachineGetter extends InternetMachineGetter {
 
     @Inject

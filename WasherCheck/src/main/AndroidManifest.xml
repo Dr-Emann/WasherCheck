@@ -22,13 +22,7 @@
 
 <manifest
     package="air.air.net.zdremann.zsuds"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1"
-    android:versionName="0.8">
-
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="18"/>
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -71,10 +65,10 @@
         <activity
             android:name="net.zdremann.wc.ui.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".ui.RoomChooserActivity">
+            android:parentActivityName="net.zdremann.wc.ui.RoomChooserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.RoomChooserActivity"/>
+                android:value="net.zdremann.wc.ui.RoomChooserActivity"/>
         </activity>
 
         <service android:name="net.zdremann.wc.service.NotificationService"/>

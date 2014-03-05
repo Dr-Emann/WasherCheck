@@ -37,9 +37,10 @@ import static java.util.concurrent.TimeUnit.*;
 import static net.zdremann.wc.provider.WasherCheckContract.PendingNotificationRooms;
 
 public class NotificationService extends InjectingIntentService {
+    private static final long MINUTE = 60 * 1000L;
 
     public static final String TAG = "NotificationService";
-    private static final long DEFAULT_WAIT_FOR_CYCLE_COMPLETE = MILLISECONDS.convert(5, MINUTES);
+    private static final long DEFAULT_WAIT_FOR_CYCLE_COMPLETE = 5 * MINUTE;
     private static final long WIGGLE_CHECK_TIME = MILLISECONDS.convert(30, SECONDS);
 
     @Inject

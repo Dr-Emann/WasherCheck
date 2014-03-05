@@ -214,8 +214,8 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
             insertStatement.bindDouble(5, grouping.location.getLongitude());
             if (grouping.parent != null)
                 insertStatement.bindLong(6, grouping.parent.id);
-            if (grouping.getTheme() != MachineGrouping.Theme.UNKNOWN)
-                insertStatement.bindLong(7, grouping.getTheme().ordinal());
+            if (grouping.getColor() != null)
+                insertStatement.bindLong(7, grouping.getColor());
             insertStatement.executeInsert();
             insertStatement.clearBindings();
             for (MachineGrouping child : grouping.children) {

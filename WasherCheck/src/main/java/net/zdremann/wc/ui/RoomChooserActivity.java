@@ -103,7 +103,7 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
         getMenuInflater().inflate(R.menu.room_chooser, menu);
 
         mGuessLocationItem = menu.findItem(R.id.guess_location);
-        mGuessLocationItem.setEnabled(hasLocationAbility());
+        mGuessLocationItem.setVisible(hasLocationAbility());
 
         return true;
     }

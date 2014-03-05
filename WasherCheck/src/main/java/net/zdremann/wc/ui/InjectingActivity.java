@@ -23,7 +23,7 @@
 package net.zdremann.wc.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -37,7 +37,7 @@ import javax.inject.Inject;
 import air.air.net.zdremann.zsuds.BuildConfig;
 import dagger.ObjectGraph;
 
-abstract class InjectingActivity extends FragmentActivity {
+abstract class InjectingActivity extends ActionBarActivity {
 
     @Inject
     EasyTracker gaTracker;
