@@ -20,12 +20,14 @@
  * THE SOFTWARE.
  */
 
-package net.zdremann.wc;
+package air.air.net.zdremann.zsuds;
 
 import android.app.backup.BackupAgentHelper;
 import android.app.backup.BackupManager;
 import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.Context;
+
+import net.zdremann.wc.ApplicationModule;
 
 public class BackupAgent extends BackupAgentHelper {
     static final String MY_PREFS_BACKUP_KEY = "myprefs";
@@ -40,7 +42,7 @@ public class BackupAgent extends BackupAgentHelper {
     }
 
     public static void requestBackup(Context context) {
-        BackupManager bm = new BackupManager(context);
+        BackupManager bm = new BackupManager(context.getApplicationContext());
         bm.dataChanged();
     }
 }

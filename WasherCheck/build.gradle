@@ -118,7 +118,6 @@ android {
 
     buildTypes {
         debug {
-            packageNameSuffix ".debug"
             versionNameSuffix "-debug"
         }
         release {
@@ -130,10 +129,6 @@ android {
         market {
             packageName "air.air.net.zdremann.zsuds"
             versionCode getVersionCode() + 20000000
-        }
-        sideload {
-            packageName "net.zdremann.wc"
-            versionCode getVersionCode()
         }
     }
 }
