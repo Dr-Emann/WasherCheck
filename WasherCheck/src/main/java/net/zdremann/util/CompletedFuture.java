@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013. Zachary Dremann
+ * Copyright (c) 2014. Zachary Dremann
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +20,42 @@
  * THE SOFTWARE.
  */
 
-package net.zdremann.wc.service;
+package net.zdremann.util;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import org.jetbrains.annotations.NotNull;
 
-public class PendingNotifCheckNeededBroadcastRec extends WakefulBroadcastReceiver {
-    public static final String BROADCAST_TAG = "net.zdremann.wc.NEED_PENDING_NOTIF_CHECK";
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+public class CompletedFuture<V> implements Future<V> {
+    private final V value;
+
+    public CompletedFuture(V value) {
+        this.value = value;
+    }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(context, NotificationService.class);
-        WakefulBroadcastReceiver.startWakefulService(context, serviceIntent);
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return false;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
+
+    @Override
+    public boolean isDone() {
+        return true;
+    }
+
+    @Override
+    public V get() {
+        return value;
+    }
+
+    @Override
+    public V get(long timeout, @NotNull TimeUnit unit) {
+        return value;
     }
 }

@@ -22,17 +22,31 @@
 
 package net.zdremann.wc.service;
 
+import android.app.Service;
+
 import net.zdremann.wc.ApplicationModule;
 
 import dagger.Module;
+import dagger.Provides;
 
 @Module(
       addsTo = ApplicationModule.class,
+      library = true,
       injects = {
-            NotificationService.class,
             InjectingIntentService.class,
-            PendingNotificationCheckService.class
+            GcmBroadcastService.class,
+            ClearCompletedNotificationsService.class
       }
 )
 public class ServiceModule {
+    private final Service mService;
+
+    public ServiceModule(Service service) {
+        mService = service;
+    }
+
+    @Provides
+    Service provideService() {
+        return mService;
+    }
 }

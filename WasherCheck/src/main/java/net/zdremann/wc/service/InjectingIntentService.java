@@ -72,6 +72,6 @@ public abstract class InjectingIntentService extends IntentService {
     }
 
     protected List<Object> getModules() {
-        return Arrays.<Object>asList(new ServiceModule());
+        return Arrays.<Object>asList(new ServiceModule(this));
     }
 }

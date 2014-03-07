@@ -37,7 +37,7 @@ import javax.inject.Inject;
 
 public class WasherCheckDatabase extends SQLiteOpenHelper {
     private static final String DB_NAME = "WasherCheckDatabase.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 5;
     private final LocationsProxy mLocations;
 
     @Inject
@@ -49,38 +49,32 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         MachineTable.onCreate(db);
-        PendingNotificationTable.onCreate(db);
         StatusUpdateTable.onCreate(db);
         MachineStatusView.onCreate(db);
         MachineGroupTable.onCreate(db, mLocations);
-        PendingNotificationMachineView.onCreate(db);
-        PendingNotificationMachineStatusView.onCreate(db);
+        CompletedMachineNotificationTable.onCreate(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         MachineTable.onUpgrade(db, oldVersion, newVersion);
-        PendingNotificationTable.onUpgrade(db, oldVersion, newVersion);
         StatusUpdateTable.onUpgrade(db, oldVersion, newVersion);
         MachineStatusView.onUpgrade(db, oldVersion, newVersion);
         MachineGroupTable.onUpgrade(db, mLocations, oldVersion, newVersion);
-        PendingNotificationMachineView.onUpgrade(db, oldVersion, newVersion);
-        PendingNotificationMachineStatusView.onUpgrade(db, oldVersion, newVersion);
+        CompletedMachineNotificationTable.onUpgrade(db, oldVersion, newVersion);
     }
 
-    static final class PendingNotificationTable
-          implements WasherCheckContract.PendingNotificationColumns {
-
-        public static final String TABLE_NAME = WasherCheckContract.PendingNotification.PATH;
+    public static final class CompletedMachineNotificationTable {
+        public static final String TABLE_NAME = "CompletedMachineNotifications";
         public static final String SQL_CREATE =
               "CREATE TABLE " + TABLE_NAME + " (\n" +
-                    _ID + " INTEGER PRIMARY KEY,\n" +
-                    MACHINE_ID + " INTEGER NOT NULL " +
-                    "REFERENCES " + MachineTable.TABLE_NAME + "(" + MachineTable._ID + "),\n" +
-                    NOTIF_CREATED + " INTEGER NOT NULL,\n" +
-                    EXTENDED + " INTEGER NOT NULL DEFAULT " + 0 + " ,\n" +
-                    DESIRED_STATUS + " INTEGER NOT NULL,\n" +
-                    EST_TIME_OF_COMPLETION + " INTEGER NOT NULL DEFAULT " + Long.MAX_VALUE + " )";
+                    "_ID" + " INTEGER PRIMARY KEY,\n" +
+                    "machine_number" + " INTEGER NOT NULL,\n" +
+                    "machine_type" + " INTEGER NOT NULL,\n" +
+                    "machine_status" + " INTEGER NOT NULL,\n" +
+                    "room_id" + " INTEGER NOT NULL,\n" +
+                    "date" + " INTEGER NOT NULL\n" +
+                    ")";
 
         public static void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
@@ -90,61 +84,6 @@ public class WasherCheckDatabase extends SQLiteOpenHelper {
               final SQLiteDatabase db, final int oldVersion, final int newVersion) {
             if (oldVersion < DB_VERSION) {
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-                onCreate(db);
-            }
-        }
-    }
-
-    static final class PendingNotificationMachineView
-          implements WasherCheckContract.PendingNotificationMachineColumns {
-        public static final String VIEW_NAME = WasherCheckContract.PendingNotificationMachine.PATH;
-        public static final String SQL_CREATE =
-              "CREATE VIEW " + VIEW_NAME + " AS\n" +
-                    "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
-                    MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
-                    ESUDS_ID + ", " + NOTIF_CREATED + ", " + EXTENDED + ", " + DESIRED_STATUS + ", " +
-                    EST_TIME_OF_COMPLETION + "\n" +
-                    "FROM " + MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
-                    " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " +
-                    PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID;
-
-        public static void onCreate(SQLiteDatabase db) {
-            db.execSQL(SQL_CREATE);
-        }
-
-        public static void onUpgrade(
-              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-            if (oldVersion < DB_VERSION) {
-                db.execSQL("DROP VIEW IF EXISTS " + VIEW_NAME);
-                onCreate(db);
-            }
-        }
-    }
-
-    static final class PendingNotificationMachineStatusView
-          implements WasherCheckContract.PendingNotificationMachineStatusColumns {
-        public static final String VIEW_NAME = WasherCheckContract.PendingNotificationMachineStatus.PATH;
-        public static final String SQL_CREATE =
-              "CREATE VIEW " + VIEW_NAME + " AS\n" +
-                    "SELECT " + PendingNotificationTable.TABLE_NAME + "." + _ID + ", " +
-                    PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID + ", " + NUMBER + ", " + MACHINE_TYPE + ", " + ROOM_ID + ", " +
-                    ESUDS_ID + ", " + NOTIF_CREATED + ", " + EXTENDED + ", " + DESIRED_STATUS + ", " +
-                    STATUS + ", " + LAST_UPDATED + ", " + REPORTED_TIME_REMAINING + ", " +
-                    EST_TIME_OF_COMPLETION + "\n" +
-                    "FROM " +
-                    MachineTable.TABLE_NAME + " INNER JOIN " + PendingNotificationTable.TABLE_NAME +
-                    " ON " + MachineTable.TABLE_NAME + "." + _ID + " = " + PendingNotificationTable.TABLE_NAME + "." + MACHINE_ID +
-                    " INNER JOIN " + StatusUpdateTable.TABLE_NAME +
-                    " ON " + StatusUpdateTable.TABLE_NAME + "." + MACHINE_ID + " = " + MachineTable.TABLE_NAME + "." + _ID;
-
-        public static void onCreate(SQLiteDatabase db) {
-            db.execSQL(SQL_CREATE);
-        }
-
-        public static void onUpgrade(
-              final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-            if (oldVersion < DB_VERSION) {
-                db.execSQL("DROP VIEW IF EXISTS " + VIEW_NAME);
                 onCreate(db);
             }
         }

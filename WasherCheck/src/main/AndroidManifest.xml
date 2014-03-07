@@ -25,18 +25,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        android:maxSdkVersion="15"/>
+    <uses-permission android:name="net.zdremann.wc.permission.C2D_MESSAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <uses-feature
         android:name="android.hardware.location"
         android:required="false"/>
     <uses-feature
         android:name="android.hardware.location.network"
-		  android:required="false"/>
+        android:required="false"/>
 
     <application
         android:name="net.zdremann.wc.MyApplication"
@@ -48,6 +53,9 @@
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAI200tI0NgclQFmgGxmYuRV7Sw5xJhatSoO55vEg"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
         <activity
             android:name="net.zdremann.wc.ui.RoomViewer"
             android:label="@string/title_activity_room_viewer">
@@ -74,9 +82,9 @@
                 android:value="net.zdremann.wc.ui.RoomChooserActivity"/>
         </activity>
 
-        <service android:name="net.zdremann.wc.service.NotificationService"/>
-        <service android:name="net.zdremann.wc.service.PendingNotificationCheckService"/>
         <service android:name="net.zdremann.wc.service.RoomRefresher"/>
+        <service android:name="net.zdremann.wc.service.GcmBroadcastService"/>
+        <service android:name="net.zdremann.wc.service.ClearCompletedNotificationsService"/>
 
         <provider
             android:name="net.zdremann.wc.provider.WasherCheckProvider"
@@ -84,19 +92,20 @@
             android:exported="false"></provider>
 
         <receiver
-            android:name="net.zdremann.wc.service.MachinesLoadedBroadcastReceiver">
-        <intent-filter>
-                <action android:name="net.zdremann.wc.MACHINES_LOADED"/>
+            android:name="net.zdremann.wc.service.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="net.dremann.wc"/>
             </intent-filter>
         </receiver>
 
         <receiver
-            android:name="net.zdremann.wc.service.PendingNotifCheckNeededBroadcastRec">
-        <intent-filter>
-                <action android:name="net.zdremann.wc.NEED_PENDING_NOTIF_CHECK"/>
+            android:name="net.zdremann.wc.service.MachinesLoadedBroadcastReceiver">
+            <intent-filter>
+                <action android:name="net.zdremann.wc.MACHINES_LOADED"/>
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

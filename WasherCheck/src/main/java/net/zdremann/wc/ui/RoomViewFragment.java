@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,17 +54,35 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import net.zdremann.wc.ForActivity;
+import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.service.MachinesLoadedBroadcastReceiver;
 import net.zdremann.wc.service.RoomRefresher;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -80,6 +99,7 @@ public class RoomViewFragment extends InjectingListFragment
     private static final int MSG_REFRESH_SUCCESS = 0x000;
     private static final int MSG_REFRESH_FAILURE = 0x001;
     private static final int MSG_REFRESH_START = 0x002;
+    private static final long MINUTE = 60 * 1000;
 
     private final Runnable mRefreshRunnable = new Runnable() {
         @Override
@@ -102,6 +122,14 @@ public class RoomViewFragment extends InjectingListFragment
     @Inject
     @ForActivity
     Context mActivityContext;
+
+    @Inject
+    GoogleCloudMessaging mGoogleCloudMessaging;
+
+    @Inject
+    @GcmRegistrationId
+    Future<String> mGcmRegistrationId;
+
     private long mRoomId;
     private boolean mIsLoading = false;
     private MenuItem mRefreshItem;
@@ -161,7 +189,7 @@ public class RoomViewFragment extends InjectingListFragment
                     sections.add(
                           new SimpleSectionedListAdapter.Section(
                                 cursor.getPosition(),
-                                currentType.toString(mActivityContext).toUpperCase()
+                                currentType.toString(mActivityContext)
                           )
                     );
 
@@ -237,7 +265,9 @@ public class RoomViewFragment extends InjectingListFragment
         super.onStart();
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-        registerForContextMenu(getListView());
+
+        if(mGoogleCloudMessaging != null)
+            registerForContextMenu(getListView());
     }
 
     @Override
@@ -278,36 +308,71 @@ public class RoomViewFragment extends InjectingListFragment
         assert menuInfo != null;
         final int index = menuInfo.position;
         final Cursor cursor = (Cursor) mAdapter.getItem(index);
-
-        final ContentResolver contentResolver = getActivity().getContentResolver();
-
-        final ContentValues cv = new ContentValues();
-        cv.put(
-              PendingNotificationColumns.MACHINE_ID,
-              cursor.getInt(cursor.getColumnIndex(MachineStatusColumns.MACHINE_ID))
-        );
-        cv.put(PendingNotificationColumns.NOTIF_CREATED, System.currentTimeMillis());
+        final Machine.Status desiredStatus;
 
         switch (item.getItemId()) {
         case R.id.action_notify_available:
-            cv.put(
-                  PendingNotificationMachineColumns.DESIRED_STATUS,
-                  Machine.Status.AVAILABLE.ordinal()
-            );
+            desiredStatus = Machine.Status.AVAILABLE;
             break;
         case R.id.action_notify_cycle_complete:
-            cv.put(
-                  PendingNotificationMachineColumns.DESIRED_STATUS,
-                  Machine.Status.CYCLE_COMPLETE.ordinal()
-            );
+            desiredStatus = Machine.Status.CYCLE_COMPLETE;
             break;
         default:
             return super.onContextItemSelected(item);
         }
 
-        contentResolver.insert(PendingNotification.CONTENT_URI, cv);
-        Intent intent = new Intent("net.zdremann.wc.NEED_PENDING_NOTIF_CHECK");
-        getActivity().sendBroadcast(intent);
+        new AsyncTask<Void, Void, HttpResponse>() {
+
+            @Override
+            protected HttpResponse doInBackground(Void... params) {
+                try {
+                    HttpClient client = new DefaultHttpClient();
+                    HttpPost post = new HttpPost("http://net-zdremann-wc.appspot.com/register");
+                    List<NameValuePair> pair = new ArrayList<NameValuePair>();
+                    pair.add(new BasicNameValuePair("room-id", String.valueOf(mRoomId)));
+                    pair.add(new BasicNameValuePair("device-id", mGcmRegistrationId.get()));
+                    pair.add(new BasicNameValuePair("machine-number", cursor.getString(
+                          cursor.getColumnIndex(
+                                MachineStatusColumns.NUMBER
+                          )
+                    )));
+                    pair.add(new BasicNameValuePair("machine-type", cursor.getString(
+                          cursor.getColumnIndex(MachineStatusColumns.MACHINE_TYPE)
+                    )));
+                    pair.add(new BasicNameValuePair("machine-status", String.valueOf(
+                          desiredStatus.ordinal()
+                    )));
+                    post.setEntity(new UrlEncodedFormEntity(pair));
+
+                    return client.execute(post);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(HttpResponse httpResponse) {
+                super.onPostExecute(httpResponse);
+                if(httpResponse.getStatusLine().getStatusCode() != 200) {
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    try {
+                        httpResponse.getEntity().writeTo(buffer);
+                        Toast.makeText(getActivity(), buffer.toString(), Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.execute();
+
+        //contentResolver.insert(PendingNotification.CONTENT_URI, cv);
+        //Intent intent = new Intent("net.zdremann.wc.NEED_PENDING_NOTIF_CHECK");
+        //getActivity().sendBroadcast(intent);
         return true;
     }
 
@@ -400,7 +465,7 @@ public class RoomViewFragment extends InjectingListFragment
 
             if (timeRemaining >= 0) {
                 String timeText = String
-                      .format("%.0f", (double) timeRemaining / MINUTES.toMillis(1));
+                      .format("%.0f", (double) timeRemaining / MINUTE);
                 String timePostfix = res.getString(R.string.minutes_remaining_postfix);
 
                 Spannable spanRange = new SpannableString(timeText + " " + timePostfix);

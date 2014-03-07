@@ -22,23 +22,40 @@
 
 package net.zdremann.wc.ui;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.Main;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
-import net.zdremann.wc.provider.WasherCheckContract;
+import net.zdremann.wc.service.ClearCompletedNotificationsService;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
@@ -48,14 +65,21 @@ import air.air.net.zdremann.zsuds.R;
 
 public class RoomViewer extends InjectingActivity {
     public static final String ARG_ROOM_ID = "room_id";
+    private static final String TAG = "RoomViewer";
+
     @Inject
     LocationsProxy mLocationsProxy;
+
     @Inject
     @Main
     SharedPreferences mPreferences;
 
     @Inject
-    ContentResolver mResolver;
+    GoogleCloudMessaging mGoogleCloudMessaging;
+
+    @Inject
+    @GcmRegistrationId
+    Future<String> mGcmRegistrationId;
 
     private long mRoomId;
 
@@ -71,7 +95,17 @@ public class RoomViewer extends InjectingActivity {
 
         fakeIoMenuItem.setVisible(BuildConfig.DEBUG);
         fakeIoMenuItem.setChecked(mPreferences.getBoolean("net.zdremann.wc.fake_io", false));
+
+        MenuItem removePendingNotifications = menu.findItem(R.id.action_remove_notifications);
+        assert removePendingNotifications != null;
+        removePendingNotifications.setVisible(mGoogleCloudMessaging != null);
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     @Override
@@ -84,8 +118,47 @@ public class RoomViewer extends InjectingActivity {
             startChooseRoom();
             return true;
         case R.id.action_remove_notifications:
-            // Delete all, use a null where clause
-            mResolver.delete(WasherCheckContract.PendingNotification.CONTENT_URI, null, null);
+            new AsyncTask<Void, Void, HttpResponse>() {
+                @Override
+                protected HttpResponse doInBackground(Void... params) {
+                    try {
+                        HttpClient client = new DefaultHttpClient();
+                        HttpPost post = new HttpPost(
+                              "http://net-zdremann-wc.appspot.com/unregister"
+                        );
+                        List<NameValuePair> pair = new ArrayList<NameValuePair>();
+                        pair.add(new BasicNameValuePair("device-id", mGcmRegistrationId.get()));
+                        post.setEntity(new UrlEncodedFormEntity(pair));
+
+                        return client.execute(post);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(HttpResponse httpResponse) {
+                    super.onPostExecute(httpResponse);
+                    if (httpResponse == null || httpResponse.getStatusLine()
+                          .getStatusCode() != 200) {
+                        gaTracker.send(
+                              MapBuilder.createException("Unable to remove notifications", false)
+                                    .build()
+                        );
+
+                        Toast.makeText(
+                              RoomViewer.this,
+                              "Unable to remove notifications, please try again",
+                              Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+            }.execute();
             return true;
         case R.id.action_fake_io:
             boolean useFakeIo = !item.isChecked();
@@ -115,16 +188,13 @@ public class RoomViewer extends InjectingActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void onResume() {
+        super.onResume();
         if (mPreferences.contains(ARG_ROOM_ID)) {
             setRoomId(mPreferences.getLong(ARG_ROOM_ID, 0));
         } else {
             startChooseSchool(true);
         }
-
-        MachineGrouping grouping = mLocationsProxy.getGrouping(mRoomId);
 
         setContentView(R.layout.activity_room_viewer);
 
@@ -132,6 +202,8 @@ public class RoomViewer extends InjectingActivity {
               MapBuilder.createAppView()
                     .set(Fields.customDimension(1), String.valueOf(mRoomId)).build()
         );
+
+        startService(new Intent(this, ClearCompletedNotificationsService.class));
     }
 
     protected void startChooseRoom() {
@@ -154,7 +226,7 @@ public class RoomViewer extends InjectingActivity {
 
         final MachineGrouping roomGroup = mLocationsProxy.getGrouping(roomId);
 
-        if(roomGroup != null)
+        if (roomGroup != null)
             getSupportActionBar().setBackgroundDrawable(roomGroup.getColorDrawable(this));
         getSupportActionBar().setTitle(roomGroup != null ? roomGroup.name : null);
 

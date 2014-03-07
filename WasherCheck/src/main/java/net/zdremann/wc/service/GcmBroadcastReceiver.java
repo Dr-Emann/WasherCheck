@@ -24,22 +24,27 @@ package net.zdremann.wc.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-public class MachinesLoadedBroadcastReceiver extends WakefulBroadcastReceiver {
-    public static final String BROADCAST_TAG = "net.zdremann.wc.MACHINES_LOADED";
-    public static final String EXTRA_ROOM_IDS = "net.zdremann.wc.roomIds";
-    public static final String EXTRA_SUCCESSFUL_LOAD = "net.zdremann.wc.successful";
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-    public static Intent createBroadcastIntent(boolean successful, long... roomIds) {
-        final Intent intent = new Intent(BROADCAST_TAG);
-        intent.putExtra(EXTRA_ROOM_IDS, roomIds);
-        intent.putExtra(EXTRA_SUCCESSFUL_LOAD, successful);
-        return intent;
-    }
+public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+
+    private static final String TAG = "GcmBroadcastReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //Do nothing
+        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+        String messageType = gcm.getMessageType(intent);
+
+        Bundle extras = intent.getExtras();
+        if (extras != null && !extras.isEmpty()) {
+            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+                Intent serviceIntent = new Intent(context, GcmBroadcastService.class);
+                serviceIntent.putExtras(intent.getExtras());
+                startWakefulService(context, serviceIntent);
+            }
+        }
     }
 }

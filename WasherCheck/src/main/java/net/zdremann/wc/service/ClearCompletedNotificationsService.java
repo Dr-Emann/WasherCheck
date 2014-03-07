@@ -22,24 +22,42 @@
 
 package net.zdremann.wc.service;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
-public class MachinesLoadedBroadcastReceiver extends WakefulBroadcastReceiver {
-    public static final String BROADCAST_TAG = "net.zdremann.wc.MACHINES_LOADED";
-    public static final String EXTRA_ROOM_IDS = "net.zdremann.wc.roomIds";
-    public static final String EXTRA_SUCCESSFUL_LOAD = "net.zdremann.wc.successful";
+import net.zdremann.wc.provider.WasherCheckDatabase;
 
-    public static Intent createBroadcastIntent(boolean successful, long... roomIds) {
-        final Intent intent = new Intent(BROADCAST_TAG);
-        intent.putExtra(EXTRA_ROOM_IDS, roomIds);
-        intent.putExtra(EXTRA_SUCCESSFUL_LOAD, successful);
-        return intent;
+import javax.inject.Inject;
+
+public class ClearCompletedNotificationsService extends InjectingIntentService {
+    private static final String NAME = "ClearCompletedNotificationsService";
+
+    @Inject
+    WasherCheckDatabase mDbOpener;
+
+    public ClearCompletedNotificationsService() {
+        super(NAME);
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        //Do nothing
+    protected void onHandleIntent(Intent intent) {
+        SQLiteDatabase db = null;
+        try {
+            db = mDbOpener.getWritableDatabase();
+        } catch (SQLiteException e) {
+            Log.e(NAME, "Unable to open database", e);
+        }
+        try {
+            if (db != null)
+                db.delete(
+                      WasherCheckDatabase.CompletedMachineNotificationTable.TABLE_NAME,
+                      null, null
+                );
+        } finally {
+            if (db != null)
+                db.close();
+        }
     }
 }

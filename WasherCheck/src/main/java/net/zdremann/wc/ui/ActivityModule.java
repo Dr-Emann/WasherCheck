@@ -24,10 +24,30 @@ package net.zdremann.wc.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import net.zdremann.wc.AppVersion;
 import net.zdremann.wc.ApplicationModule;
 import net.zdremann.wc.ForActivity;
+import net.zdremann.wc.ForApplication;
+import net.zdremann.wc.GcmRegistrationId;
+import net.zdremann.wc.Main;
+
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import javax.inject.Singleton;
 
@@ -47,6 +67,10 @@ import dagger.Provides;
       }
 )
 public class ActivityModule {
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_APP_VERSION = "app_version";
+    private static final String SENDER_ID = "639684360936";
     private final Activity mActivity;
 
     public ActivityModule(Activity activity) {
@@ -54,14 +78,110 @@ public class ActivityModule {
     }
 
     @Provides
-    @ForActivity
-    public Context provideActivityContext() {
+    public Activity provideActivity() {
         return mActivity;
+    }
+
+    @Provides
+    @ForActivity
+    public Context provideActivityContext(Activity activity) {
+        return activity;
     }
 
     @Provides
     @Singleton
     public LayoutInflater provideLayoutInflater(@ForActivity Context context) {
         return LayoutInflater.from(context);
+    }
+
+    @Provides
+    GoogleCloudMessaging provideGcm(Activity activity) {
+        if (checkPlayServices())
+            return GoogleCloudMessaging.getInstance(activity);
+        else
+            return null;
+    }
+
+    @Provides
+    @GcmRegistrationId
+    Future<String> provideGcmRegistrationId(
+          @ForApplication final Context context,
+          @Main final SharedPreferences preferences,
+          final GoogleCloudMessaging gcm) {
+        final FutureTask<String> task = new FutureTask<String>(
+              new Callable<String>() {
+                  @Override
+                  public String call() throws Exception {
+                      final String registrationId = preferences.getString(PROPERTY_REG_ID, "");
+                      if (TextUtils.isEmpty(registrationId)) {
+                          Log.i("Gcm Registration", "Registration not found");
+                          try {
+                              String regId = gcm.register(SENDER_ID);
+
+                              storeRegistrationId(context, preferences, regId);
+                              return regId;
+                          } catch (IOException e) {
+                              Log.e("GcmRegister", "Can't register for GCM", e);
+                              throw e;
+                          }
+                      } else {
+                          return registrationId;
+                      }
+                  }
+              }
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            AsyncTask.THREAD_POOL_EXECUTOR.execute(task);
+        else {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void[] params) {
+                    task.run();
+                    return null;
+                }
+            }.execute();
+        }
+        return task;
+    }
+
+    private void storeRegistrationId(Context context, SharedPreferences preferences, String regId) {
+        int appVersion = provideAppVersion(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PROPERTY_REG_ID, regId);
+        editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.commit();
+    }
+
+    @Provides
+    @AppVersion
+    public int provideAppVersion(@ForApplication Context context) {
+        try {
+            //noinspection ConstantConditions
+            PackageInfo packageInfo = context.getPackageManager()
+                  .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // Should never happen
+            throw new RuntimeException("Could not get package name", e);
+        }
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mActivity);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (resultCode != ConnectionResult.SERVICE_MISSING &&
+                  resultCode != ConnectionResult.SERVICE_INVALID &&
+                  GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(
+                      resultCode, mActivity,
+                      PLAY_SERVICES_RESOLUTION_REQUEST
+                ).show();
+            } else {
+                Log.i("PlayServiceCheck", "Unsupported device");
+            }
+            return false;
+        }
+        return true;
     }
 }
