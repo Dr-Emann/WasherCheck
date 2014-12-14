@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.os.Build;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
@@ -71,7 +72,11 @@ public class ApplicationModule {
     @Provides
     GoogleAnalytics provideGoogleAnalytics(@ForApplication Context context) {
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-        analytics.setDryRun(BuildConfig.DEBUG);
+        analytics.setDryRun(
+              BuildConfig.DEBUG ||
+                    BuildConfig.VERSION_NAME.contains("dirty") ||
+                    Build.FINGERPRINT.startsWith("generic")
+        );
         analytics.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.VERBOSE : Logger.LogLevel.WARNING);
         return analytics;
     }
