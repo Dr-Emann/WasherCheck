@@ -25,7 +25,7 @@ package net.zdremann.wc.ui;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.Tracker;
 
 import net.zdremann.wc.MyApplication;
 
@@ -40,7 +40,7 @@ import dagger.ObjectGraph;
 abstract class InjectingActivity extends ActionBarActivity {
 
     @Inject
-    EasyTracker gaTracker;
+    Tracker gaTracker;
 
     protected ObjectGraph activityGraph;
 
@@ -59,13 +59,11 @@ abstract class InjectingActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        gaTracker.activityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        gaTracker.activityStop(this);
     }
 
     public void inject(Object injected) {

@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/number"
-        style="?android:textAppearanceListItem"
+        style="?android:textAppearanceLarge"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/status"
-        style="?android:textAppearanceListItem"
+        style="?android:textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -54,7 +54,7 @@
 
     <TextView
         android:id="@+id/time_remaining"
-        style="?android:textAppearanceListItem"
+        style="?android:textAppearanceLarge"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

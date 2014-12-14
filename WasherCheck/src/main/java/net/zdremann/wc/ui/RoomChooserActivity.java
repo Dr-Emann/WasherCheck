@@ -37,8 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.analytics.HitBuilders;
 
 import net.zdremann.wc.Main;
 import net.zdremann.wc.io.locations.LocationsProxy;
@@ -173,9 +172,18 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
             Intent data = new Intent();
             data.putExtra(RoomViewer.ARG_ROOM_ID, newRoot.id);
 
+            MachineGrouping college = newRoot;
+            while(college.type != Type.SCHOOL) {
+                college = college.parent;
+                assert college != null;
+            }
+
             gaTracker.send(
-                  MapBuilder.createEvent("Room", "Chosen", String.valueOf(mRootId), 0L)
-                        .set(Fields.customDimension(1), String.valueOf(mRootId)).build()
+                  new HitBuilders.EventBuilder()
+                        .setCategory("room").setAction("changed")
+                        .setLabel(String.valueOf(mRootId))
+                        .setCustomDimension(1, String.valueOf(mRootId))
+                        .setCustomDimension(2, String.valueOf(college.name)).build()
             );
 
             setResult(RESULT_OK, data);

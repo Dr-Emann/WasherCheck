@@ -30,15 +30,17 @@ import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
+import com.google.android.gms.analytics.Tracker;
 
 import net.zdremann.wc.io.IOModule;
 import net.zdremann.wc.service.RoomRefresher;
 
 import javax.inject.Singleton;
 
+import air.air.net.zdremann.zsuds.BuildConfig;
+import air.air.net.zdremann.zsuds.R;
 import dagger.Module;
 import dagger.Provides;
 
@@ -68,17 +70,14 @@ public class ApplicationModule {
 
     @Provides
     GoogleAnalytics provideGoogleAnalytics(@ForApplication Context context) {
-        return GoogleAnalytics.getInstance(context);
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
+        analytics.setDryRun(BuildConfig.DEBUG);
+        analytics.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.VERBOSE : Logger.LogLevel.WARNING);
+        return analytics;
     }
-
-    @Provides
-    public EasyTracker provideEasyTracker(@ForApplication Context context) {
-        return EasyTracker.getInstance(context);
-    }
-
-    @Provides
-    Tracker provideGoogleTracker(EasyTracker easyTracker) {
-        return easyTracker;
+    @Provides @Singleton
+    Tracker provideGoogleTracker(GoogleAnalytics googleAnalytics) {
+        return googleAnalytics.newTracker(R.xml.global_tracker);
     }
 
     @Provides

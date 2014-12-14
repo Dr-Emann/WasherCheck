@@ -27,8 +27,8 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.util.JsonReader;
 
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import net.zdremann.wc.model.Machine;
 
@@ -72,40 +72,42 @@ public class GaeMachineGetter extends InternetMachineGetter {
             Machine.Type type = Machine.Type.UNKNOWN;
             while(reader.hasNext()) {
                 String nextName = reader.nextName();
-                if("esuds_id".equals(nextName)) {
+                switch (nextName) {
+                case "esuds_id":
                     esuds_id = reader.nextLong();
-                }
-                else if("number".equals(nextName)) {
+                    break;
+                case "number":
                     number = reader.nextInt();
-                }
-                else if("status".equals(nextName)) {
+                    break;
+                case "status":
                     String statusStr = reader.nextString();
-                    if("Available".equalsIgnoreCase(statusStr))
+                    if ("Available".equalsIgnoreCase(statusStr))
                         status = Machine.Status.AVAILABLE;
-                    else if("Cycle Complete".equalsIgnoreCase(statusStr))
+                    else if ("Cycle Complete".equalsIgnoreCase(statusStr))
                         status = Machine.Status.CYCLE_COMPLETE;
-                    else if("In Use".equalsIgnoreCase(statusStr))
+                    else if ("In Use".equalsIgnoreCase(statusStr))
                         status = Machine.Status.IN_USE;
-                    else if("Unavailable".equalsIgnoreCase(statusStr))
+                    else if ("Unavailable".equalsIgnoreCase(statusStr))
                         status = Machine.Status.UNAVAILABLE;
                     else
                         status = Machine.Status.UNAVAILABLE;
-                }
-                else if("type".equals(nextName)) {
+                    break;
+                case "type":
                     String typeName = reader.nextString();
                     assert typeName != null;
-                    if(typeName.toLowerCase().contains("washer"))
+                    if (typeName.toLowerCase().contains("washer"))
                         type = Machine.Type.WASHER;
-                    else if(typeName.toLowerCase().contains("dryer"))
+                    else if (typeName.toLowerCase().contains("dryer"))
                         type = Machine.Type.DRYER;
                     else
                         type = Machine.Type.UNKNOWN;
-                }
-                else if("timeRemaining".equals(nextName)) {
+                    break;
+                case "timeRemaining":
                     timeRemaining = reader.nextLong();
-                }
-                else {
+                    break;
+                default:
                     reader.skipValue();
+                    break;
                 }
             }
 
@@ -119,7 +121,9 @@ public class GaeMachineGetter extends InternetMachineGetter {
         }
         long timeEnd = System.currentTimeMillis();
         gaTracker.send(
-              MapBuilder.createTiming("loading", timeEnd - timeStart, "room_loading", null).build()
+              new HitBuilders.TimingBuilder()
+                    .setCategory("loading").setValue(timeEnd - timeStart)
+                    .setVariable("room_loading").build()
         );
 
         return result;

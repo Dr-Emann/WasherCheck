@@ -45,7 +45,7 @@ public class RoomLoaderModule {
         if(!preferences.getBoolean("net.zdremann.wc.fake_io", false))
             return new FallbackMachineGetter(
                   (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
-              Arrays.asList(esudsMachineGetter, gaeMachineGetter, debugMachineGetter) :
+              Arrays.asList(gaeMachineGetter, esudsMachineGetter, debugMachineGetter) :
               Arrays.asList(esudsMachineGetter, debugMachineGetter))
             );
         else

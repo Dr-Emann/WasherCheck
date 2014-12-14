@@ -28,8 +28,8 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import net.zdremann.wc.model.Machine;
 
@@ -83,17 +83,23 @@ public class EsudsMachineGetter extends InternetMachineGetter {
             long parseTime = System.currentTimeMillis() - timeStart;
 
             gaTracker.send(
-                  MapBuilder.createTiming("loading", parseTime, "room_loading", "parsing").build()
+                  new HitBuilders.TimingBuilder()
+                        .setCategory("loading").setValue(parseTime)
+                        .setVariable("room_loading").setLabel("parsing").build()
             );
             return machines;
         } catch (IOException e) {
             gaTracker.send(
-                  MapBuilder.createException("downloading: " + e.getMessage(), false).build()
+                  new HitBuilders.ExceptionBuilder().setFatal(false).setDescription(
+                        "downloading: " + e.getMessage()
+                  ).build()
             );
             throw e;
         } catch (XmlPullParserException e) {
             gaTracker.send(
-                  MapBuilder.createException("parsing: " + e.getMessage(), false).build()
+                  new HitBuilders.ExceptionBuilder().setFatal(false).setDescription(
+                        "Wrong format when downloading room: " + roomId
+                  ).build()
             );
             Log.d(TAG, "Wrong format when downloading for room " + roomId);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
@@ -168,7 +174,9 @@ public class EsudsMachineGetter extends InternetMachineGetter {
 
             long timeSpent = SystemClock.elapsedRealtime() - timeStart;
             gaTracker.send(
-                  MapBuilder.createTiming("loading", timeSpent, "room_loading", "download").build()
+                  new HitBuilders.TimingBuilder()
+                        .setCategory("loading").setValue(timeSpent)
+                        .setVariable("room_loading").setLabel("download").build()
             );
 
             if (BuildConfig.DEBUG)

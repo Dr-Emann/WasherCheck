@@ -25,7 +25,7 @@ package net.zdremann.wc.io.rooms;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.google.analytics.tracking.android.Tracker;
+import com.google.android.gms.analytics.Tracker;
 
 import net.zdremann.wc.model.Machine;
 

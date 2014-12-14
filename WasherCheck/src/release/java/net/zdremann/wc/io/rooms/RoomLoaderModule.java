@@ -42,7 +42,7 @@ public class RoomLoaderModule {
           GaeMachineGetter gaeMachineGetter) {
         return new FallbackMachineGetter(
               Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
-              Arrays.asList(esudsMachineGetter, gaeMachineGetter) :
+              Arrays.asList(gaeMachineGetter, esudsMachineGetter) :
               Arrays.asList(esudsMachineGetter)
         );
     }

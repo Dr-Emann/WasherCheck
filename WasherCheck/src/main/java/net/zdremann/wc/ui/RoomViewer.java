@@ -22,9 +22,12 @@
 
 package net.zdremann.wc.ui;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -33,8 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.zdremann.wc.GcmRegistrationId;
@@ -66,6 +68,7 @@ import air.air.net.zdremann.zsuds.R;
 public class RoomViewer extends InjectingActivity {
     public static final String ARG_ROOM_ID = "room_id";
     private static final String TAG = "RoomViewer";
+    public static final float STATUS_BAR_DARKEN_AMOUNT = 0.85f;
 
     @Inject
     LocationsProxy mLocationsProxy;
@@ -147,8 +150,9 @@ public class RoomViewer extends InjectingActivity {
                     if (httpResponse == null || httpResponse.getStatusLine()
                           .getStatusCode() != 200) {
                         gaTracker.send(
-                              MapBuilder.createException("Unable to remove notifications", false)
-                                    .build()
+                              new HitBuilders.ExceptionBuilder()
+                                    .setDescription("Unable to remove notifications")
+                                    .setFatal(false).build()
                         );
 
                         Toast.makeText(
@@ -198,11 +202,6 @@ public class RoomViewer extends InjectingActivity {
 
         setContentView(R.layout.activity_room_viewer);
 
-        gaTracker.send(
-              MapBuilder.createAppView()
-                    .set(Fields.customDimension(1), String.valueOf(mRoomId)).build()
-        );
-
         startService(new Intent(this, ClearCompletedNotificationsService.class));
     }
 
@@ -226,8 +225,21 @@ public class RoomViewer extends InjectingActivity {
 
         final MachineGrouping roomGroup = mLocationsProxy.getGrouping(roomId);
 
-        if (roomGroup != null)
+        if (roomGroup != null) {
             getSupportActionBar().setBackgroundDrawable(roomGroup.getColorDrawable(this));
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if(roomGroup.getColor() != null) {
+                    int color = roomGroup.getColor();
+                    float[] hsv = new float[3];
+                    Color.colorToHSV(color, hsv);
+                    // darken the color
+                    hsv[2] *= STATUS_BAR_DARKEN_AMOUNT;
+                    int darkerColor = Color.HSVToColor(hsv);
+                    getWindow().setStatusBarColor(darkerColor);
+                    setTaskDescription(new ActivityManager.TaskDescription(null, null, color));
+                }
+            }
+        }
         getSupportActionBar().setTitle(roomGroup != null ? roomGroup.name : null);
 
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

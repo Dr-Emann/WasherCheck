@@ -24,26 +24,26 @@
 
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.0+'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:4.1.+'
-    compile 'com.squareup.dagger:dagger:1.2.0+'
-    compile 'com.squareup.dagger:dagger-compiler:1.2.0+'
-    compile 'com.android.support:support-v4:19.0.+'
-    compile 'com.android.support:appcompat-v7:19.0.+'
+    compile 'com.google.android.gms:play-services-base:6.5.+'
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile files('libs/annotations.jar')
-    compile files('libs/libGoogleAnalyticsServices.jar')
+    //compile files('libs/libGoogleAnalyticsServices.jar')
 }
 
 def getVersionCode = { ->
@@ -75,13 +75,13 @@ def getVersionName = { ->
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
-        minSdkVersion = 8
-        versionName = getVersionName()
-        targetSdkVersion = 19
+        minSdkVersion 9
+        versionName getVersionName()
+        targetSdkVersion 21
     }
 
     signingConfigs {
@@ -129,7 +129,7 @@ android {
 
     productFlavors {
         market {
-            packageName "air.air.net.zdremann.zsuds"
+            applicationId "air.air.net.zdremann.zsuds"
             versionCode getVersionCode() + 20000000
         }
     }

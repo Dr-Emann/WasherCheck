@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2013. Zachary Dremann
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,29 +20,8 @@
   ~ THE SOFTWARE.
   -->
 
-<resources>
-    <style name="AppBaseTheme.DarkBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="ic_menu_refresh">@drawable/ic_menu_refresh_dark</item>
-        <item name="android:listSeparatorTextViewStyle">@style/ListSeparator</item>
-    </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme.DarkBar">
-
-    </style>
-
-    <style name="BaseListSeparator">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:background">@drawable/list_section_divider_holo_light</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">8dip</item>
-    </style>
-
-    <style name="ListSeparator" parent="BaseListSeparator" />
-
-    <attr name="ic_menu_refresh" format="reference" />
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+    <string name="ga_trackingId">UA-42540550-1</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_reportUncaughtExceptions">true</bool>
 </resources>
