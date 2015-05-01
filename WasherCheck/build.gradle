@@ -27,7 +27,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.1'
     }
 }
 apply plugin: 'com.android.application'
@@ -40,8 +40,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:6.5.+'
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile files('libs/annotations.jar')
     //compile files('libs/libGoogleAnalyticsServices.jar')
 }
@@ -75,13 +75,13 @@ def getVersionName = { ->
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 9
         versionName getVersionName()
-        targetSdkVersion 21
+        targetSdkVersion 22
     }
 
     signingConfigs {
