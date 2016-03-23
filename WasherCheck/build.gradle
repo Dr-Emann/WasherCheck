@@ -20,68 +20,17 @@
  * THE SOFTWARE.
  */
 
-
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.1'
-    }
-}
 apply plugin: 'com.android.application'
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'com.google.android.gms:play-services-base:6.5.+'
-    compile 'com.squareup.dagger:dagger:1.2.2'
-    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.android.support:support-v4:22.1.1'
-    compile 'com.android.support:appcompat-v7:22.1.1'
-    compile files('libs/annotations.jar')
-    //compile files('libs/libGoogleAnalyticsServices.jar')
-}
-
-def getVersionCode = { ->
-    try {
-        def code = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'tag', '--list'
-            standardOutput = code
-        }
-        return code.toString().split("\n").size()
-    }
-    catch (ignored) {
-        return -1;
-    }
-}
-
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'describe', '--tags', '--dirty'
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    }
-    catch (ignored) {
-        return null;
-    }
-}
-
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 9
-        versionName getVersionName()
-        targetSdkVersion 22
+        targetSdkVersion 23
+        versionName calcVersionName()
+        versionCode calcVersionCode()
     }
 
     signingConfigs {
@@ -124,13 +73,58 @@ android {
         }
         release {
             signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     productFlavors {
         market {
             applicationId "air.air.net.zdremann.zsuds"
-            versionCode getVersionCode() + 20000000
+            versionCode (calcVersionCode() + 20000000)
         }
     }
+}
+
+dependencies {
+    compile 'com.google.android.gms:play-services-analytics:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
+    compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile files('libs/annotations.jar')
+    //compile files('libs/libGoogleAnalyticsServices.jar')
+}
+
+def calcVersionCode() {
+    try {
+        def code = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'tag', '--list'
+            standardOutput = code
+        }
+        return code.toString().split("\n").size()
+    }
+    catch (ignored) {
+        return -1;
+    }
+}
+
+def calcVersionName() {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--dirty'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
+    catch (ignored) {
+        return null;
+    }
+}
+
+repositories {
+    mavenCentral()
 }

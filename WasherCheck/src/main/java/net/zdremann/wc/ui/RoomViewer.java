@@ -39,21 +39,27 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.zdremann.util.AsyncTaskResult;
 import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.Main;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.service.ClearCompletedNotificationsService;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -121,44 +127,54 @@ public class RoomViewer extends InjectingActivity {
             startChooseRoom();
             return true;
         case R.id.action_remove_notifications:
-            new AsyncTask<Void, Void, HttpResponse>() {
+            new AsyncTask<Void, Void, AsyncTaskResult<Void>>() {
                 @Override
-                protected HttpResponse doInBackground(Void... params) {
+                protected AsyncTaskResult<Void> doInBackground(Void... params) {
+                    URL url;
                     try {
-                        HttpClient client = new DefaultHttpClient();
-                        HttpPost post = new HttpPost(
-                              "http://net-zdremann-wc.appspot.com/unregister"
-                        );
-                        List<NameValuePair> pair = new ArrayList<NameValuePair>();
-                        pair.add(new BasicNameValuePair("device-id", mGcmRegistrationId.get()));
-                        post.setEntity(new UrlEncodedFormEntity(pair));
-
-                        return client.execute(post);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                        url = new URL("http://net-zdremann-wc.appspot.com/unregister");
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException("This should never happen", e);
                     }
-                    return null;
+                    HttpURLConnection urlConnection = null;
+                    try {
+                        urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setDoOutput(true);
+                        urlConnection.setDoInput(true);
+                        Writer out = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                        out.write(URLEncoder.encode("device-id", "UTF-8"));
+                        out.write('=');
+                        out.write(URLEncoder.encode(mGcmRegistrationId.get(), "UTF-8"));
+                        out.flush();
+                        out.close();
+
+                        InputStream in = urlConnection.getInputStream();
+                        in.close();
+                        return new AsyncTaskResult<Void>((Void)null);
+                    }
+                    catch (Exception e) {
+                        return new AsyncTaskResult<Void>(e);
+                    }
+                    finally {
+                        if (urlConnection != null) {
+                            urlConnection.disconnect();
+                        }
+                    }
                 }
 
                 @Override
-                protected void onPostExecute(HttpResponse httpResponse) {
-                    super.onPostExecute(httpResponse);
-                    if (httpResponse == null || httpResponse.getStatusLine()
-                          .getStatusCode() != 200) {
+                protected void onPostExecute(AsyncTaskResult<Void> httpResponse) {
+                    if (!httpResponse.isResult()) {
                         gaTracker.send(
-                              new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Unable to remove notifications")
-                                    .setFatal(false).build()
+                                new HitBuilders.ExceptionBuilder()
+                                        .setDescription("Unable to remove notifications")
+                                        .setFatal(false).build()
                         );
 
                         Toast.makeText(
-                              RoomViewer.this,
-                              "Unable to remove notifications, please try again",
-                              Toast.LENGTH_LONG
+                                RoomViewer.this,
+                                "Unable to remove notifications, please try again",
+                                Toast.LENGTH_LONG
                         ).show();
                     }
                 }

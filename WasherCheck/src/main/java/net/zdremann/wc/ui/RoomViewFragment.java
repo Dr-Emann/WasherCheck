@@ -54,6 +54,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.zdremann.util.AsyncTaskResult;
+import net.zdremann.util.HttpPost;
 import net.zdremann.wc.ForActivity;
 import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
@@ -62,19 +64,21 @@ import net.zdremann.wc.service.MachinesLoadedBroadcastReceiver;
 import net.zdremann.wc.service.RoomRefresher;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -316,51 +320,54 @@ public class RoomViewFragment extends InjectingListFragment
             return super.onContextItemSelected(item);
         }
 
-        new AsyncTask<Void, Void, HttpResponse>() {
+        new AsyncTask<Void, Void, AsyncTaskResult<Void>>() {
 
             @Override
-            protected HttpResponse doInBackground(Void... params) {
+            protected AsyncTaskResult<Void> doInBackground(Void... params) {
+                URL url;
                 try {
-                    HttpClient client = new DefaultHttpClient();
-                    HttpPost post = new HttpPost("http://net-zdremann-wc.appspot.com/register");
-                    List<NameValuePair> pair = new ArrayList<NameValuePair>();
-                    pair.add(new BasicNameValuePair("room-id", String.valueOf(mRoomId)));
-                    pair.add(new BasicNameValuePair("device-id", mGcmRegistrationId.get()));
-                    pair.add(new BasicNameValuePair("machine-number", cursor.getString(
-                          cursor.getColumnIndex(
-                                MachineStatusColumns.NUMBER
-                          )
-                    )));
-                    pair.add(new BasicNameValuePair("machine-type", cursor.getString(
-                          cursor.getColumnIndex(MachineStatusColumns.MACHINE_TYPE)
-                    )));
-                    pair.add(new BasicNameValuePair("machine-status", String.valueOf(
-                          desiredStatus.ordinal()
-                    )));
-                    post.setEntity(new UrlEncodedFormEntity(pair));
-
-                    return client.execute(post);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    url = new URL("http://net-zdremann-wc.appspot.com/register");
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException("This should never happen", e);
                 }
-                return null;
+                HttpURLConnection urlConnection = null;
+                try {
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setDoInput(true);
+                    Writer out = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                    HashMap<String, String> values = new HashMap<String, String>();
+                    values.put("room-id", String.valueOf(mRoomId));
+                    values.put("device-id", mGcmRegistrationId.get());
+                    values.put("machine-number", cursor.getString(
+                            cursor.getColumnIndexOrThrow(MachineStatusColumns.NUMBER)
+                    ));
+                    values.put("machine-type", cursor.getString(
+                            cursor.getColumnIndexOrThrow(MachineStatusColumns.MACHINE_TYPE)
+                    ));
+                    values.put("machine-status", String.valueOf(desiredStatus.ordinal()));
+                    HttpPost.writePostQuery(out, values);
+                    out.flush();
+                    out.close();
+
+                    InputStream in = urlConnection.getInputStream();
+                    in.close();
+                    return new AsyncTaskResult<Void>((Void)null);
+                }
+                catch (Exception e) {
+                    return new AsyncTaskResult<Void>(e);
+                }
+                finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
             }
 
             @Override
-            protected void onPostExecute(HttpResponse httpResponse) {
-                super.onPostExecute(httpResponse);
-                if(httpResponse.getStatusLine().getStatusCode() != 200) {
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    try {
-                        httpResponse.getEntity().writeTo(buffer);
-                        Toast.makeText(getActivity(), buffer.toString(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            protected void onPostExecute(AsyncTaskResult<Void> httpResponse) {
+                if (!httpResponse.isResult()) {
+                    Toast.makeText(getActivity(), "Unable to set notification", Toast.LENGTH_LONG).show();
                 }
             }
         }.execute();
