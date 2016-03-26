@@ -22,13 +22,16 @@
 
 package net.zdremann.wc.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -115,51 +118,54 @@ public class RoomChooserActivity extends BaseActivity implements RoomChooserList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case android.R.id.home:
-            MachineGrouping parent = mLocationsProxy.parentOf(mRootId);
-            FragmentManager fm = getSupportFragmentManager();
+            case android.R.id.home:
+                MachineGrouping parent = mLocationsProxy.parentOf(mRootId);
+                FragmentManager fm = getSupportFragmentManager();
 
-            if (parent == null) {
-                if (!mPreferences.contains(RoomViewer.ARG_ROOM_ID)) {
-                    this.setResult(RESULT_CANCELED);
-                    this.finish();
+                if (parent == null) {
+                    if (!mPreferences.contains(RoomViewer.ARG_ROOM_ID)) {
+                        this.setResult(RESULT_CANCELED);
+                        this.finish();
+                    } else {
+                        NavUtils.navigateUpFromSameTask(this);
+                    }
+                } else if (fm.getBackStackEntryCount() > 0) {
+                    updateTitle(parent);
+                    mRootId = parent.id;
+                    fm.popBackStack();
                 } else {
-                    NavUtils.navigateUpFromSameTask(this);
+                    updateTitle(parent);
+                    mRootId = parent.id;
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    Fragment fragment = new RoomChooserFragment();
+
+                    transaction.setCustomAnimations(
+                            android.R.anim.slide_in_left, android.R.anim.slide_out_right
+                    );
+
+                    Bundle data = new Bundle();
+                    data.putLong(ARG_GROUPING_ID, mRootId);
+
+                    fragment.setArguments(data);
+                    transaction.replace(android.R.id.content, fragment);
+                    transaction.commit();
                 }
-            } else if (fm.getBackStackEntryCount() > 0) {
-                updateTitle(parent);
-                mRootId = parent.id;
-                fm.popBackStack();
-            } else {
-                updateTitle(parent);
-                mRootId = parent.id;
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                Fragment fragment = new RoomChooserFragment();
-
-                transaction.setCustomAnimations(
-                      android.R.anim.slide_in_left, android.R.anim.slide_out_right
-                );
-
-                Bundle data = new Bundle();
-                data.putLong(ARG_GROUPING_ID, mRootId);
-
-                fragment.setArguments(data);
-                transaction.replace(android.R.id.content, fragment);
-                transaction.commit();
-            }
-            return true;
-        case R.id.guess_location:
-            guessLocation();
-            return true;
+                return true;
+            case R.id.guess_location:
+                guessLocation();
+                return true;
         }
         return false;
     }
 
     protected void guessLocation() {
         if (hasLocationAbility()) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
             @Nullable
             final Location lastKnownLocation = mLocationManager
-                  .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (lastKnownLocation == null)
                 return;
             MachineGrouping candidate = mLocationsProxy.getClosestLocation(lastKnownLocation);
