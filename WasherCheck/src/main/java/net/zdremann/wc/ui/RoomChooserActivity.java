@@ -33,13 +33,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.zdremann.wc.ActivityComponent;
 import net.zdremann.wc.Main;
+import net.zdremann.wc.WcApplication;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.model.MachineGrouping.Type;
@@ -52,7 +56,7 @@ import javax.inject.Inject;
 
 import air.air.net.zdremann.zsuds.R;
 
-public class RoomChooserActivity extends InjectingActivity implements RoomChooserListener {
+public class RoomChooserActivity extends BaseActivity implements RoomChooserListener {
 
     public static final String ARG_GROUPING_ID = "groupingId";
     public static final String ARG_FIRST_CHOICE = "firstChoice";
@@ -78,7 +82,8 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        getComponent().inject(this);
+
         mRootId = getIntent().getLongExtra(ARG_GROUPING_ID, Long.MIN_VALUE);
 
         MachineGrouping grouping = mLocationsProxy.getGrouping(mRootId);
@@ -178,7 +183,7 @@ public class RoomChooserActivity extends InjectingActivity implements RoomChoose
                 assert college != null;
             }
 
-            gaTracker.send(
+            WcApplication.getComponent().gaTracker().send(
                   new HitBuilders.EventBuilder()
                         .setCategory("room").setAction("changed")
                         .setLabel(String.valueOf(mRootId))

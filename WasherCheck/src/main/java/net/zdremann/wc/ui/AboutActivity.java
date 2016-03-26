@@ -22,15 +22,15 @@
 
 package net.zdremann.wc.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import air.air.net.zdremann.zsuds.R;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        getComponent().inject(this);
     }
 }

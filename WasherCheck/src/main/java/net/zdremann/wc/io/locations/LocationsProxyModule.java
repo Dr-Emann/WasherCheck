@@ -29,13 +29,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(
-      complete = false,
-      injects = {
-            LocationsProxy.class
-      },
-      library = true
-)
+@Module
 public class LocationsProxyModule {
 
     @Provides

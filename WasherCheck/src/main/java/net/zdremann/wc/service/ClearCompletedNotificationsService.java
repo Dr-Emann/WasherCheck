@@ -22,23 +22,31 @@
 
 package net.zdremann.wc.service;
 
+import android.app.IntentService;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import net.zdremann.wc.WcApplication;
 import net.zdremann.wc.provider.WasherCheckDatabase;
 
 import javax.inject.Inject;
 
-public class ClearCompletedNotificationsService extends InjectingIntentService {
-    private static final String NAME = "ClearCompletedNotificationsService";
+public class ClearCompletedNotificationsService extends IntentService {
+    private static final String NAME = "ClearCompNotifService";
 
     @Inject
     WasherCheckDatabase mDbOpener;
 
     public ClearCompletedNotificationsService() {
         super(NAME);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        WcApplication.getComponent().inject(this);
     }
 
     @Override

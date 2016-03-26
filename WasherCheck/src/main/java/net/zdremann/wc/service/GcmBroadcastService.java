@@ -33,9 +33,13 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.android.gms.gcm.GcmListenerService;
+
+import net.zdremann.wc.WcApplication;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.provider.WasherCheckDatabase;
 import net.zdremann.wc.ui.RoomViewer;
@@ -44,7 +48,7 @@ import javax.inject.Inject;
 
 import air.air.net.zdremann.zsuds.R;
 
-public class GcmBroadcastService extends InjectingIntentService {
+public class GcmBroadcastService extends GcmListenerService {
     private static final String NAME = "GcmBroadcastService";
     private static final int NOTIFICATION_ID = 1;
 
@@ -54,108 +58,108 @@ public class GcmBroadcastService extends InjectingIntentService {
     @Inject
     NotificationManager mNotificationManager;
 
-    public GcmBroadcastService() {
-        super(NAME);
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        WcApplication.getComponent().inject(this);
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onMessageReceived(String from, Bundle data) {
+        super.onMessageReceived(from, data);
+
+        int machineNumber;
+        int machineType;
+        int machineStatus;
+        long roomId;
+        long date = System.currentTimeMillis();
         try {
-            int machineNumber;
-            int machineType;
-            int machineStatus;
-            long roomId;
-            long date = System.currentTimeMillis();
+            machineNumber = Integer.parseInt(data.getString("machine-number"));
+        } catch (NumberFormatException e) {
+            machineNumber = -1;
+        }
+        try {
+            machineType = Integer.parseInt(data.getString("machine-type"));
+        } catch (NumberFormatException e) {
+            machineType = Machine.Type.UNKNOWN.ordinal();
+        }
+        try {
+            roomId = Long.parseLong(data.getString("machine-type"));
+        } catch (NumberFormatException e) {
+            roomId = -1;
+        }
+        try {
+            machineStatus = Integer.parseInt(data.getString("machine-status"));
+        } catch (NumberFormatException e) {
+            machineStatus = -1;
+        }
+        SQLiteDatabase db = null;
+        int count = 1;
+        String title;
+        String text;
+        String tickerText;
+        try {
+            db = mDbOpener.getWritableDatabase();
+        } catch (SQLiteException e) {
+            Log.e(NAME, "Cannot open database");
+            count = 1;
+        }
+        if (db != null) {
+            ContentValues cv = new ContentValues();
+            cv.put("machine_number", machineNumber);
+            cv.put("machine_type", machineType);
+            cv.put("machine_status", machineStatus);
+            cv.put("room_id", roomId);
+            cv.put("date", date);
             try {
-                machineNumber = Integer.parseInt(intent.getStringExtra("machine-number"));
-            } catch (NumberFormatException e) {
-                machineNumber = -1;
-            }
-            try {
-                machineType = Integer.parseInt(intent.getStringExtra("machine-type"));
-            } catch (NumberFormatException e) {
-                machineType = Machine.Type.UNKNOWN.ordinal();
-            }
-            try {
-                roomId = Long.parseLong(intent.getStringExtra("machine-type"));
-            } catch (NumberFormatException e) {
-                roomId = -1;
-            }
-            try {
-                machineStatus = Integer.parseInt(intent.getStringExtra("machine-status"));
-            } catch (NumberFormatException e) {
-                machineStatus = -1;
-            }
-            SQLiteDatabase db = null;
-            int count = 1;
-            String title;
-            String text;
-            String tickerText;
-            try {
-                db = mDbOpener.getWritableDatabase();
-            } catch (SQLiteException e) {
-                Log.e(NAME, "Cannot open database");
+                db.insertOrThrow(
+                        WasherCheckDatabase.CompletedMachineNotificationTable.TABLE_NAME, null, cv
+                );
+
+                Cursor c = db.query(
+                        WasherCheckDatabase.CompletedMachineNotificationTable.TABLE_NAME,
+                        new String[]{"count(*)"},
+                        null, null,
+                        null, null, null
+                );
+                c.moveToFirst();
+                count = c.getInt(0);
+                c.close();
+            } catch (SQLException e) {
+                Log.e(NAME, "Unable to write to database", e);
                 count = 1;
             }
-            if (db != null) {
-                ContentValues cv = new ContentValues();
-                cv.put("machine_number", machineNumber);
-                cv.put("machine_type", machineType);
-                cv.put("machine_status", machineStatus);
-                cv.put("room_id", roomId);
-                cv.put("date", date);
-                try {
-                    db.insertOrThrow(
-                          WasherCheckDatabase.CompletedMachineNotificationTable.TABLE_NAME, null, cv
-                    );
-
-                    Cursor c = db.query(
-                          WasherCheckDatabase.CompletedMachineNotificationTable.TABLE_NAME,
-                          new String[]{"count(*)"},
-                          null, null,
-                          null, null, null
-                    );
-                    c.moveToFirst();
-                    count = c.getInt(0);
-                    c.close();
-                } catch (SQLException e) {
-                    Log.e(NAME, "Unable to write to database", e);
-                    count = 1;
-                }
-                finally {
-                    db.close();
-                }
+            finally {
+                db.close();
             }
-
-            if (count == 1) {
-                text = singleMachineText(this, machineNumber, machineType, machineStatus);
-            } else {
-                text = getString(R.string.notify_text_multiple_machines, count);
-            }
-
-            tickerText = "Machine(s) ready";
-            title = "Machine(s) ready";
-
-            Intent activityIntent = new Intent(this, RoomViewer.class);
-            activityIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            Intent cancelIntent = new Intent(this, ClearCompletedNotificationsService.class);
-            PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
-            PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);
-            Notification notification = new NotificationCompat.Builder(this)
-                  .setTicker(tickerText)
-                  .setContentTitle(title)
-                  .setContentText(text)
-                  .setSmallIcon(R.drawable.ic_launcher)
-                  .setDefaults(Notification.DEFAULT_ALL)
-                  .setWhen(System.currentTimeMillis())
-                  .setContentIntent(activityPendingIntent)
-                  .setDeleteIntent(cancelPendingIntent)
-                  .setAutoCancel(true)
-                  .build();
-            mNotificationManager.notify(NOTIFICATION_ID, notification);
-        } finally {
-            GcmBroadcastReceiver.completeWakefulIntent(intent);
         }
+
+        if (count == 1) {
+            text = singleMachineText(this, machineNumber, machineType, machineStatus);
+        } else {
+            text = getString(R.string.notify_text_multiple_machines, count);
+        }
+
+        tickerText = "Machine(s) ready";
+        title = "Machine(s) ready";
+
+        Intent activityIntent = new Intent(this, RoomViewer.class);
+        activityIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent cancelIntent = new Intent(this, ClearCompletedNotificationsService.class);
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
+        PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(tickerText)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(activityPendingIntent)
+                .setDeleteIntent(cancelPendingIntent)
+                .setAutoCancel(true)
+                .build();
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     private static String singleMachineText(

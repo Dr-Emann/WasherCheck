@@ -22,14 +22,22 @@
 
 package net.zdremann.wc.provider;
 
+import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import net.zdremann.wc.ApplicationComponent;
+import net.zdremann.wc.ApplicationModule;
+import net.zdremann.wc.DaggerApplicationComponent;
+import net.zdremann.wc.WcApplication;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +46,7 @@ import javax.inject.Inject;
 import static net.zdremann.wc.provider.WasherCheckContract.*;
 import static net.zdremann.wc.provider.WasherCheckDatabase.*;
 
-public class WasherCheckProvider extends InjectingProvider {
+public class WasherCheckProvider extends ContentProvider {
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int MACHINES = 10;
     private static final int MACHINES_BY_ROOM = 11;
@@ -67,6 +75,8 @@ public class WasherCheckProvider extends InjectingProvider {
         URI_MATCHER.addURI(AUTHORITY, MachineStatus.PATH + "/#", MACHINE_STATUS_ID);
     }
 
+    private ApplicationComponent mComponent;
+
     @Inject
     WasherCheckDatabase mDbOpener;
     @Inject
@@ -83,9 +93,19 @@ public class WasherCheckProvider extends InjectingProvider {
     }
 
     @Override
+    public boolean onCreate() {
+        Context context = getContext();
+        assert context != null;
+        mComponent = DaggerApplicationComponent.builder()
+            .applicationModule(new ApplicationModule(context)).build();
+        mComponent.inject(this);
+        return false;
+    }
+
+    @Override
     public Cursor query(
-          Uri uri, String[] projection, String selection, String[] selectionArgs,
-          String sortOrder) {
+            @NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
+            String sortOrder) {
         final int uriType = URI_MATCHER.match(uri);
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         String groupBy = null;

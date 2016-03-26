@@ -29,8 +29,10 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,29 +42,22 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.zdremann.util.AsyncTaskResult;
+import net.zdremann.wc.ActivityComponent;
 import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.Main;
+import net.zdremann.wc.WcApplication;
 import net.zdremann.wc.io.locations.LocationsProxy;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.service.ClearCompletedNotificationsService;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.inject.Inject;
@@ -71,7 +66,7 @@ import air.air.net.zdremann.zsuds.BackupAgent;
 import air.air.net.zdremann.zsuds.BuildConfig;
 import air.air.net.zdremann.zsuds.R;
 
-public class RoomViewer extends InjectingActivity {
+public class RoomViewer extends BaseActivity {
     public static final String ARG_ROOM_ID = "room_id";
     private static final String TAG = "RoomViewer";
     public static final float STATUS_BAR_DARKEN_AMOUNT = 0.85f;
@@ -83,6 +78,7 @@ public class RoomViewer extends InjectingActivity {
     @Main
     SharedPreferences mPreferences;
 
+    @Nullable
     @Inject
     GoogleCloudMessaging mGoogleCloudMessaging;
 
@@ -91,6 +87,12 @@ public class RoomViewer extends InjectingActivity {
     Future<String> mGcmRegistrationId;
 
     private long mRoomId;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getComponent().inject(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -165,7 +167,7 @@ public class RoomViewer extends InjectingActivity {
                 @Override
                 protected void onPostExecute(AsyncTaskResult<Void> httpResponse) {
                     if (!httpResponse.isResult()) {
-                        gaTracker.send(
+                        WcApplication.getComponent().gaTracker().send(
                                 new HitBuilders.ExceptionBuilder()
                                         .setDescription("Unable to remove notifications")
                                         .setFatal(false).build()

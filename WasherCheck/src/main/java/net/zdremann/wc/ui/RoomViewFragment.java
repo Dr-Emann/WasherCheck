@@ -33,6 +33,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
@@ -54,9 +56,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.zdremann.ForActivity;
 import net.zdremann.util.AsyncTaskResult;
 import net.zdremann.util.HttpPost;
-import net.zdremann.wc.ForActivity;
 import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.io.rooms.TmpRoomLoader;
 import net.zdremann.wc.model.Machine;
@@ -65,22 +67,16 @@ import net.zdremann.wc.service.RoomRefresher;
 import net.zdremann.wc.ui.widget.SimpleSectionedListAdapter;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -91,7 +87,7 @@ import air.air.net.zdremann.zsuds.R;
 import static java.util.concurrent.TimeUnit.*;
 import static net.zdremann.wc.provider.WasherCheckContract.*;
 
-public class RoomViewFragment extends InjectingListFragment
+public class RoomViewFragment extends BaseListFragment
       implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String ARG_ROOM_ID = "room_id";
     public static final String ARG_SELECT_MODE = "select_mode";
@@ -123,6 +119,7 @@ public class RoomViewFragment extends InjectingListFragment
     Context mActivityContext;
 
     @Inject
+    @Nullable
     GoogleCloudMessaging mGoogleCloudMessaging;
 
     @Inject
@@ -160,6 +157,12 @@ public class RoomViewFragment extends InjectingListFragment
                 MenuItemCompat.setActionView(mRefreshItem, null);
             }
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getComponent().injectFragment(this);
     }
 
     @Override

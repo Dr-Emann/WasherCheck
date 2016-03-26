@@ -25,7 +25,7 @@ package net.zdremann.wc.io.locations;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import net.zdremann.wc.ForApplication;
+import net.zdremann.ForApplication;
 import net.zdremann.wc.model.MachineGrouping;
 
 import javax.inject.Inject;

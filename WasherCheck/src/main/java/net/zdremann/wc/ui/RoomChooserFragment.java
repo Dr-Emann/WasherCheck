@@ -23,7 +23,9 @@
 package net.zdremann.wc.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,7 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 
-public class RoomChooserFragment extends InjectingListFragment {
+public class RoomChooserFragment extends BaseListFragment {
     private long mRootId;
     private MachineGroupingAdapter mAdapter;
     private MachineGrouping mRoot;
@@ -53,9 +55,10 @@ public class RoomChooserFragment extends InjectingListFragment {
     Lazy<LocationsProxy> mLocations;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mChooseListener = (RoomChooserListener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getComponent().injectFragment(this);
+        mChooseListener = (RoomChooserListener) getActivity();
 
         Bundle args = getArguments();
         mRootId = args.getLong(RoomChooserActivity.ARG_GROUPING_ID, RoomChooserActivity.ROOT_ID);

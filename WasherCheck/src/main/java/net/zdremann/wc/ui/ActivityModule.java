@@ -29,18 +29,22 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
+import net.zdremann.ActivityScope;
+import net.zdremann.ForActivity;
+import net.zdremann.ForApplication;
+import net.zdremann.util.CompletedFuture;
 import net.zdremann.wc.AppVersion;
-import net.zdremann.wc.ApplicationModule;
-import net.zdremann.wc.ForActivity;
-import net.zdremann.wc.ForApplication;
 import net.zdremann.wc.GcmRegistrationId;
 import net.zdremann.wc.Main;
 
@@ -49,23 +53,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module(
-      addsTo = ApplicationModule.class,
-      library = true,
-      injects = {
-            RoomViewer.class,
-            RoomViewFragment.class,
-            InjectingActivity.class,
-            InjectingFragment.class,
-            RoomChooserActivity.class,
-            RoomChooserFragment.class
-      }
-)
+@Module
 public class ActivityModule {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String PROPERTY_REG_ID = "registration_id";
@@ -89,12 +81,13 @@ public class ActivityModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityScope
     public LayoutInflater provideLayoutInflater(@ForActivity Context context) {
         return LayoutInflater.from(context);
     }
 
     @Provides
+    @Nullable
     GoogleCloudMessaging provideGcm(Activity activity) {
         if (checkPlayServices())
             return GoogleCloudMessaging.getInstance(activity);
@@ -107,7 +100,10 @@ public class ActivityModule {
     Future<String> provideGcmRegistrationId(
           @ForApplication final Context context,
           @Main final SharedPreferences preferences,
-          final GoogleCloudMessaging gcm) {
+          @Nullable final GoogleCloudMessaging gcm) {
+        if (gcm == null) {
+            return new CompletedFuture<String>(null);
+        }
         final FutureTask<String> task = new FutureTask<String>(
               new Callable<String>() {
                   @Override
@@ -168,15 +164,11 @@ public class ActivityModule {
     }
 
     private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mActivity);
+        GoogleApiAvailability googleApi = GoogleApiAvailability.getInstance();
+        int resultCode = googleApi.isGooglePlayServicesAvailable(mActivity);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (resultCode != ConnectionResult.SERVICE_MISSING &&
-                  resultCode != ConnectionResult.SERVICE_INVALID &&
-                  GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(
-                      resultCode, mActivity,
-                      PLAY_SERVICES_RESOLUTION_REQUEST
-                ).show();
+            if (googleApi.isUserResolvableError(resultCode)) {
+                googleApi.getErrorDialog(mActivity, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Log.i("PlayServiceCheck", "Unsupported device");
             }

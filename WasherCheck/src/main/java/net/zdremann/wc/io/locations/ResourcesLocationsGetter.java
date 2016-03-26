@@ -26,7 +26,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 
-import net.zdremann.wc.ForApplication;
+import net.zdremann.ForApplication;
 import net.zdremann.wc.model.MachineGrouping;
 import net.zdremann.wc.model.MachineGroupingBuilder;
 

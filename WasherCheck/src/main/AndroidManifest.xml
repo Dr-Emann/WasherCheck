@@ -24,9 +24,11 @@
     package="air.air.net.zdremann.zsuds"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <permission android:name="air.air.net.zdremann.zsuds.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="air.air.net.zdremann.zsuds.permission.C2D_MESSAGE" />
+
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="net.zdremann.wc.permission.C2D_MESSAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -41,7 +43,7 @@
         android:required="false"/>
 
     <application
-        android:name="net.zdremann.wc.MyApplication"
+        android:name="net.zdremann.wc.WcApplication"
         android:allowBackup="true"
         android:backupAgent=".BackupAgent"
         android:icon="@drawable/ic_launcher"
@@ -80,27 +82,34 @@
         </activity>
 
         <service android:name="net.zdremann.wc.service.RoomRefresher"/>
-        <service android:name="net.zdremann.wc.service.GcmBroadcastService"/>
         <service android:name="net.zdremann.wc.service.ClearCompletedNotificationsService"/>
+
+        <service android:name="net.zdremann.wc.service.GcmBroadcastService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
 
         <provider
             android:name="net.zdremann.wc.provider.WasherCheckProvider"
             android:authorities="net.zdremann.wc"
-            android:exported="false"></provider>
-
-        <receiver
-            android:name="net.zdremann.wc.service.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category android:name="net.dremann.wc"/>
-            </intent-filter>
-        </receiver>
+            android:exported="false" />
 
         <receiver
             android:name="net.zdremann.wc.service.MachinesLoadedBroadcastReceiver">
             <intent-filter>
                 <action android:name="net.zdremann.wc.MACHINES_LOADED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
             </intent-filter>
         </receiver>
     </application>

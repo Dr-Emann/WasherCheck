@@ -22,8 +22,12 @@
 
 package net.zdremann.wc.ui;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 
-public class NotificationListFragment extends Fragment {
-
+public class NotificationListFragment extends BaseFragment {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getComponent().injectFragment(this);
+    }
 }

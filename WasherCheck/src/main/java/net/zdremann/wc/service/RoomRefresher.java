@@ -22,6 +22,7 @@
 
 package net.zdremann.wc.service;
 
+import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import net.zdremann.wc.Main;
+import net.zdremann.wc.WcApplication;
 import net.zdremann.wc.io.rooms.MachineGetter;
 import net.zdremann.wc.model.Machine;
 import net.zdremann.wc.provider.WasherCheckContract;
@@ -43,7 +45,7 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 
-public class RoomRefresher extends InjectingIntentService {
+public class RoomRefresher extends IntentService {
     private static final String TAG = "RoomRefresherService";
     private static final String ARG_ROOM_IDS = "net.dremann.wc.room_ids";
 
@@ -63,6 +65,12 @@ public class RoomRefresher extends InjectingIntentService {
 
     public RoomRefresher() {
         super(TAG);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        WcApplication.getComponent().inject(this);
     }
 
     @Override

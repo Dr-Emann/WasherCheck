@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Zachary Dremann
+ * Copyright (c) 2013. Zachary Dremann
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,20 @@
  * THE SOFTWARE.
  */
 
-package net.zdremann.wc.service;
+package net.zdremann.wc
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import android.content.Context
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import net.zdremann.ForApplication
 
-public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+import dagger.Module
+import dagger.Provides
 
-    private static final String TAG = "GcmBroadcastReceiver";
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-        String messageType = gcm.getMessageType(intent);
-
-        Bundle extras = intent.getExtras();
-        if (extras != null && !extras.isEmpty()) {
-            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                Intent serviceIntent = new Intent(context, GcmBroadcastService.class);
-                serviceIntent.putExtras(intent.getExtras());
-                startWakefulService(context, serviceIntent);
-            }
-        }
+@Module
+class ApplicationModule(private val mApplicationContext: Context) {
+    @Provides
+    @ForApplication
+    fun provideApplicationContext(): Context {
+        return mApplicationContext
     }
 }

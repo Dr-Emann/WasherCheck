@@ -28,6 +28,7 @@ import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.Context;
 
 import net.zdremann.wc.ApplicationModule;
+import net.zdremann.wc.ContextModule;
 
 public class BackupAgent extends BackupAgentHelper {
     static final String MY_PREFS_BACKUP_KEY = "myprefs";
@@ -36,7 +37,7 @@ public class BackupAgent extends BackupAgentHelper {
     public void onCreate() {
         SharedPreferencesBackupHelper helper = new SharedPreferencesBackupHelper(
               this,
-              ApplicationModule.MAIN_PREFS_NAME
+              ContextModule.MAIN_PREFS_NAME
         );
         addHelper(MY_PREFS_BACKUP_KEY, helper);
     }
