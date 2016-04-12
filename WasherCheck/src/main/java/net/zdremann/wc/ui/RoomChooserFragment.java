@@ -57,6 +57,11 @@ public class RoomChooserFragment extends BaseListFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getComponent().injectFragment(this);
         mChooseListener = (RoomChooserListener) getActivity();
 
@@ -64,11 +69,6 @@ public class RoomChooserFragment extends BaseListFragment {
         mRootId = args.getLong(RoomChooserActivity.ARG_GROUPING_ID, RoomChooserActivity.ROOT_ID);
         mAdapter = new MachineGroupingAdapter();
         setListAdapter(mAdapter);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         mRoot = mLocations.get().getGrouping(mRootId); //TODO: run in separate thread
     }
 

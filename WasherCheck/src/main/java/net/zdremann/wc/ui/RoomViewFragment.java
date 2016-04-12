@@ -160,12 +160,6 @@ public class RoomViewFragment extends BaseListFragment
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getComponent().injectFragment(this);
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         return new TmpRoomLoader(mActivityContext, mRoomId);
     }
@@ -229,6 +223,7 @@ public class RoomViewFragment extends BaseListFragment
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getComponent().injectFragment(this);
 
         mRoomViewAdapter = new MyRoomViewAdapter(mActivityContext);
         mAdapter = new SimpleSectionedListAdapter(
