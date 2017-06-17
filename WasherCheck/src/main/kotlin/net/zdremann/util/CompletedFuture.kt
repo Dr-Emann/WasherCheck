@@ -20,42 +20,20 @@
  * THE SOFTWARE.
  */
 
-package net.zdremann.util;
+package net.zdremann.util
 
-import org.jetbrains.annotations.NotNull;
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+class CompletedFuture<V>(private val value: V) : Future<V> {
+    override fun get(): V = value
 
-public class CompletedFuture<V> implements Future<V> {
-    private final V value;
+    override fun get(timeout: Long, unit: TimeUnit?): V = value
 
-    public CompletedFuture(V value) {
-        this.value = value;
-    }
+    override fun isDone(): Boolean = true
 
-    @Override
-    public boolean cancel(boolean mayInterruptIfRunning) {
-        return false;
-    }
+    override fun isCancelled(): Boolean = false
 
-    @Override
-    public boolean isCancelled() {
-        return false;
-    }
+    override fun cancel(mayInterruptIfRunning: Boolean): Boolean = false
 
-    @Override
-    public boolean isDone() {
-        return true;
-    }
-
-    @Override
-    public V get() {
-        return value;
-    }
-
-    @Override
-    public V get(long timeout, @NotNull TimeUnit unit) {
-        return value;
-    }
 }

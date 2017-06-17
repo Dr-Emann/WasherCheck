@@ -350,10 +350,10 @@ public class RoomViewFragment extends BaseListFragment
 
                     InputStream in = urlConnection.getInputStream();
                     in.close();
-                    return new AsyncTaskResult<Void>((Void)null);
+                    return AsyncTaskResult.value(null);
                 }
                 catch (Exception e) {
-                    return new AsyncTaskResult<Void>(e);
+                    return AsyncTaskResult.error(e);
                 }
                 finally {
                     if (urlConnection != null) {
@@ -364,7 +364,7 @@ public class RoomViewFragment extends BaseListFragment
 
             @Override
             protected void onPostExecute(AsyncTaskResult<Void> httpResponse) {
-                if (!httpResponse.isResult()) {
+                if (!httpResponse.isValue()) {
                     Toast.makeText(getActivity(), "Unable to set notification", Toast.LENGTH_LONG).show();
                 }
             }

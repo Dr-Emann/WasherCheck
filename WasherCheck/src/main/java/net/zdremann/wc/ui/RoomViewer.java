@@ -152,10 +152,10 @@ public class RoomViewer extends BaseActivity {
 
                         InputStream in = urlConnection.getInputStream();
                         in.close();
-                        return new AsyncTaskResult<Void>((Void)null);
+                        return AsyncTaskResult.value(null);
                     }
                     catch (Exception e) {
-                        return new AsyncTaskResult<Void>(e);
+                        return AsyncTaskResult.error(e);
                     }
                     finally {
                         if (urlConnection != null) {
@@ -166,7 +166,7 @@ public class RoomViewer extends BaseActivity {
 
                 @Override
                 protected void onPostExecute(AsyncTaskResult<Void> httpResponse) {
-                    if (!httpResponse.isResult()) {
+                    if (!httpResponse.isValue()) {
                         WcApplication.getComponent().gaTracker().send(
                                 new HitBuilders.ExceptionBuilder()
                                         .setDescription("Unable to remove notifications")
