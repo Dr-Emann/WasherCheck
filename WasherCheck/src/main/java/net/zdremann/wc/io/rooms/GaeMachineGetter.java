@@ -33,6 +33,7 @@ import com.google.android.gms.analytics.Tracker;
 import net.zdremann.wc.model.Machine;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -58,9 +59,15 @@ public class GaeMachineGetter extends InternetMachineGetter {
         long timeStart = System.currentTimeMillis();
         HttpURLConnection connection;
         connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(true);
         connection.setUseCaches(false);
+        connection.setDefaultUseCaches(false);
+        connection.setDoInput(true);
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+        InputStream inputStream = connection.getInputStream();
         JsonReader reader = new JsonReader(
-              new InputStreamReader(connection.getInputStream())
+              new InputStreamReader(inputStream)
         );
         reader.beginArray();
         while(reader.hasNext()) {
