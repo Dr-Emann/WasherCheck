@@ -81,7 +81,7 @@ public class Room extends AbstractCollection<Machine> {
         }
 
         for (final Machine machine : typedMachines) {
-            if (machine.num == number)
+            if (machine.getNum() == number)
                 return machine;
         }
 
@@ -152,7 +152,7 @@ public class Room extends AbstractCollection<Machine> {
         if (machine == null)
             return false;
 
-        List<Machine> machines = get(machine.type);
+        List<Machine> machines = get(machine.getType());
         return machines.add(machine);
     }
 

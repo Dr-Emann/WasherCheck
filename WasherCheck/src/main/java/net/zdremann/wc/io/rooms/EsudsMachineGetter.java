@@ -264,10 +264,7 @@ public class EsudsMachineGetter extends InternetMachineGetter {
 
             parser.nextTag();
             parser.require(XmlPullParser.END_TAG, "", "tr");
-            Machine machine = new Machine(roomId, machineId, machineNum, machineType);
-            machine.status = machineStatus;
-            machine.timeRemaining = machineTimeRemaining;
-            return machine;
+            return new Machine(roomId, machineId, machineNum, machineType, machineStatus, machineTimeRemaining);
         }
 
         protected int readId(

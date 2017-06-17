@@ -93,14 +93,14 @@ public class RoomRefresher extends IntentService {
 
                 for (Machine machine : machines) {
                     ContentValues cv = new ContentValues();
-                    cv.put(WasherCheckContract.MachineStatus.ESUDS_ID, machine.esudsId);
-                    cv.put(WasherCheckContract.MachineStatus.NUMBER, machine.num);
-                    cv.put(WasherCheckContract.MachineStatus.MACHINE_TYPE, machine.type.ordinal());
-                    cv.put(WasherCheckContract.MachineStatus.ROOM_ID, machine.roomId);
-                    cv.put(WasherCheckContract.MachineStatus.STATUS, machine.status.ordinal());
+                    cv.put(WasherCheckContract.MachineStatus.ESUDS_ID, machine.getEsudsId());
+                    cv.put(WasherCheckContract.MachineStatus.NUMBER, machine.getNum());
+                    cv.put(WasherCheckContract.MachineStatus.MACHINE_TYPE, machine.getType().ordinal());
+                    cv.put(WasherCheckContract.MachineStatus.ROOM_ID, machine.getRoomId());
+                    cv.put(WasherCheckContract.MachineStatus.STATUS, machine.getStatus().ordinal());
                     cv.put(
                           WasherCheckContract.MachineStatus.REPORTED_TIME_REMAINING,
-                          machine.timeRemaining
+                          machine.getTimeRemaining()
                     );
                     cv.put(WasherCheckContract.MachineStatus.LAST_UPDATED, time);
                     values[i++] = cv;

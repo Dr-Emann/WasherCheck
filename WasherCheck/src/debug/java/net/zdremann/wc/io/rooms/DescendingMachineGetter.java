@@ -48,26 +48,23 @@ public class DescendingMachineGetter implements MachineGetter {
         final ArrayList<Machine> machines = new ArrayList<Machine>();
 
         for (int i = 0; i < MACHINES_RETURNED / 3; ++i) {
-            final Machine machine = new Machine(roomId, -1, i, Machine.Type.WASHER);
-            machine.status = status;
-            if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = MINUTE;
+            final Machine machine = new Machine(roomId, -1, i, Machine.Type.WASHER, status);
+            if (machine.getStatus().compareTo(Machine.Status.IN_USE) == 0) {
+                machine.setTimeRemaining(MINUTE);
             }
             machines.add(machine);
         }
         for (int i = MACHINES_RETURNED / 3; i < 2 * MACHINES_RETURNED / 3; ++i) {
-            final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER);
-            machine.status = status;
-            if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = 30 * MINUTE;
+            final Machine machine = new Machine(roomId, -1, i, Machine.Type.DRYER, status);
+            if (machine.getStatus().compareTo(Machine.Status.IN_USE) == 0) {
+                machine.setTimeRemaining(30 * MINUTE);
             }
             machines.add(machine);
         }
         for (int i = 2 * MACHINES_RETURNED / 3; i < MACHINES_RETURNED; ++i) {
-            final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN);
-            machine.status = status;
-            if (machine.status.compareTo(Machine.Status.IN_USE) == 0) {
-                machine.timeRemaining = 60 * MINUTE;
+            final Machine machine = new Machine(roomId, -1, i, Machine.Type.UNKNOWN, status);
+            if (machine.getStatus().compareTo(Machine.Status.IN_USE) == 0) {
+                machine.setTimeRemaining(60 * MINUTE);
             }
             machines.add(machine);
         }

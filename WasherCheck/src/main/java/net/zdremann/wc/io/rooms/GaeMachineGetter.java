@@ -120,9 +120,7 @@ public class GaeMachineGetter extends InternetMachineGetter {
 
             reader.endObject();
 
-            Machine machine = new Machine(roomId, esuds_id, number, type);
-            machine.status = status;
-            machine.timeRemaining = timeRemaining;
+            Machine machine = new Machine(roomId, esuds_id, number, type, status, timeRemaining);
 
             result.add(machine);
         }
