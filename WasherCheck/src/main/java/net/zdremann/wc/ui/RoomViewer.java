@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.zdremann.util.AsyncTaskResult;
@@ -85,6 +86,9 @@ public class RoomViewer extends BaseActivity {
     @Inject
     @GcmRegistrationId
     Future<String> mGcmRegistrationId;
+
+    @Inject
+    Tracker mTracker;
 
     private long mRoomId;
 
@@ -217,6 +221,10 @@ public class RoomViewer extends BaseActivity {
         } else {
             startChooseSchool(true);
         }
+
+        mTracker.setScreenName("RoomViewer");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(1, String.valueOf(mRoomId)).build());
+
 
         setContentView(R.layout.activity_room_viewer);
 

@@ -1,6 +1,5 @@
 package net.zdremann.wc
 
-import air.air.net.zdremann.zsuds.BuildConfig
 import air.air.net.zdremann.zsuds.R
 import android.app.AlarmManager
 import android.app.NotificationManager
@@ -9,7 +8,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.location.LocationManager
 import android.net.ConnectivityManager
-import android.os.Build
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import dagger.Module
@@ -21,12 +19,7 @@ import javax.inject.Singleton
 class ContextModule {
     @Provides
     internal fun provideGoogleAnalytics(@ForApplication context: Context): GoogleAnalytics {
-        val analytics = GoogleAnalytics.getInstance(context)
-        analytics.setDryRun(
-                BuildConfig.DEBUG ||
-                        BuildConfig.VERSION_NAME.contains("dirty") ||
-                        Build.FINGERPRINT.startsWith("generic"))
-        return analytics
+        return GoogleAnalytics.getInstance(context)
     }
 
     @Provides

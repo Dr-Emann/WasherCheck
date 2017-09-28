@@ -43,6 +43,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import net.zdremann.wc.ActivityComponent;
 import net.zdremann.wc.Main;
@@ -68,6 +69,8 @@ public class RoomChooserActivity extends BaseActivity implements RoomChooserList
     private long mRootId;
     private MenuItem mGuessLocationItem;
 
+    @Inject
+    Tracker mTracker;
     @Inject
     LocationManager mLocationManager;
     @Inject
@@ -103,6 +106,14 @@ public class RoomChooserActivity extends BaseActivity implements RoomChooserList
 
         if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_FIRST_CHOICE, false))
             guessLocation();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mTracker.setScreenName("RoomChooserActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
